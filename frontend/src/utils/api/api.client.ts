@@ -3,7 +3,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { useAlertStore } from '@/store/useAlertStore';
 
 const apiClient = axios.create({
-    baseURL: '/api',
+    baseURL: process.env.NEXT_PUBLIC_API_URL || '/api',
     headers: {
         'Content-Type': 'application/json',
     },
