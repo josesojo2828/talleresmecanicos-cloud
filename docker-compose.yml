@@ -53,7 +53,7 @@ services:
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-your_nextauth_secret}
       NODE_ENV: production
     ports:
-      - "3002:3000"
+      - "3010:3000"
     networks:
       - tm_network
 
