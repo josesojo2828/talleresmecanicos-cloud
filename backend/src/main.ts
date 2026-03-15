@@ -5,7 +5,7 @@ import { GlobalExceptionFilter } from './shared/interceptor/exception.intercepto
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api/v1');
   app.enableShutdownHooks()
 
   app.useGlobalInterceptors(new ResponseInterceptor());
