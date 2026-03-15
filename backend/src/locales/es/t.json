@@ -1,0 +1,107 @@
+{
+    "success": {
+        "create": "Creación exitosa",
+        "update": "Actualización exitosa",
+        "delete": "Eliminación completada",
+        "process": "Operación procesada correctamente",
+        "default": "Solicitud exitosa",
+        "login": "Inicio de sesión exitoso",
+        "logout": "Cierre de sesión exitoso"
+    },
+    "error": {
+        "default": "Ocurrió un error inesperado",
+        "generic": "Ocurrió un error inesperado en el servidor",
+        "bad_request": "La solicitud contiene datos incorrectos",
+        "unauthorized": "No tienes permisos para realizar esta acción",
+        "forbidden": "Acceso denegado",
+        "exists": "El registro ya existe en el sistema",
+        "not_found": "No se encontró el recurso solicitado",
+        "db": {
+            "relation_not_found": "No se encontró uno de los registros relacionados (Ej: El Usuario o Plan no existen)",
+            "unique_constraint": "No se pudo procesar: El registro ya existe (Dato duplicado)",
+            "foreign_key_constraint": "No se puede eliminar o modificar porque tiene datos asociados",
+            "invalid_data": "El formato de los datos es inválido (Posiblemente un ID incorrecto)"
+        }
+    },
+    "application": {
+        "management": "Gestión de Aplicación",
+        "category": { "title": "Gestión de Categorías", "name": "Categoría" },
+        "resource": { "title": "Gestión de Recursos", "name": "Recurso" },
+        "question": { "title": "Preguntas Frecuentes", "name": "Pregunta" },
+        "messages": { "title": "Mensajes Web", "name": "Mensaje" },
+        "testimonial": { "title": "Testimonios", "name": "Testimonio" },
+        "about": { "title": "Sobre Nosotros", "name": "Sobre Nosotros" },
+        "objective": { "title": "Objetivos", "name": "Objetivo" },
+        "social_media": { "title": "Redes Sociales", "name": "Red Social" }
+    },
+    "category": { "name": "Nombre", "description": "Descripción", "icon": "Icono", "color": "Color" },
+    "resource": { "name": "Nombre", "description": "Descripción", "category": "Categoría", "enabled": "Habilitado" },
+    "question": { "question": "Pregunta", "answer": "Respuesta", "enabled": "Habilitado" },
+    "messages": { "name": "Nombre", "email": "Correo Electrónico", "message": "Mensaje", "read": "Leído" },
+    "testimonial": { "name": "Nombre", "message": "Mensaje" },
+    "about": { "mision": "Misión", "vision": "Visión", "values": "Valores" },
+    "objective": { "objective": "Objetivo", "description": "Descripción", "icon": "Icono" },
+    "social_media": { "name": "Nombre", "url": "Enlace (URL)", "icon": "Icono" },
+    "action": {
+        "add": "Agregar",
+        "edit": "Editar",
+        "delete": "Borrar",
+        "view": "Ver",
+        "createdAt": "Creado el"
+    },
+    "workshop": {
+        "title": "Talleres",
+        "subtitle": "Administración de talleres mecánicos",
+        "name": "Nombre del Taller",
+        "description": "Descripción",
+        "address": "Dirección Física",
+        "phone": "Teléfono fijo",
+        "whatsapp": "WhatsApp",
+        "website": "Sitio Web",
+        "latitude": "Latitud",
+        "longitude": "Longitud",
+        "openingHours": "Horario de Atención",
+        "country": "País",
+        "city": "Ciudad",
+        "categories": "Categorías de Servicio",
+        "enabled": "Habilitado / Visible",
+        "category": {
+            "title": "Categorías de Talleres",
+            "name": "Nombre de Categoría",
+            "description": "Descripción de la categoría"
+        }
+    },
+    "forum": {
+        "post": {
+            "title": "Foro de Comunidad",
+            "title_label": "Título del Tema",
+            "content": "Contenido del mensaje"
+        },
+        "enabled": "Habilitado / Moderado"
+    },
+    "publication": {
+        "title": "Publicaciones y Ofertas",
+        "title_label": "Título del Anuncio",
+        "content": "Detalle de la publicación",
+        "enabled": "Activo"
+    },
+    "regions": {
+        "country": { "title": "Gestión de Países" },
+        "city": { "title": "Gestión de Ciudades" }
+    },
+    "country": {
+        "name": "Nombre del País",
+        "enabled": "Habilitado"
+    },
+    "city": {
+        "name": "Nombre de la Ciudad",
+        "country": "País Perteneciente",
+        "enabled": "Habilitado"
+    },
+    "user": {
+        "management": "Gestión de Usuarios",
+        "title": "Usuarios",
+        "subtitle": "Listado de usuarios del sistema",
+        "my_management": "Mi Cuenta"
+    }
+}

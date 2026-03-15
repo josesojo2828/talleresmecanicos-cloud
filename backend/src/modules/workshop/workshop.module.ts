@@ -1,0 +1,49 @@
+import { Module } from "@nestjs/common";
+import { PrismaService } from "src/config/prisma.service";
+
+// Controllers
+import { WorkshopCrudController } from "./infrastructure/controllers/workshop.crud";
+import { MyWorkshopController } from "./infrastructure/controllers/my-workshop.controller";
+import { WorkshopCategoryCrudController } from "./infrastructure/controllers/workshop-category.crud";
+import { PublicationCrudController } from "./infrastructure/controllers/publication.crud";
+
+// Use Cases
+import { WorkshopUCase } from "./application/use-cases/workshop/workshop.ucase";
+import { WorkshopCategoryUCase } from "./application/use-cases/workshop-category/workshop-category.ucase";
+import { PublicationUCase } from "./application/use-cases/publication/publication.ucase";
+
+// Persistence
+import WorkshopPersistence from "./infrastructure/persistence/workshop/persistence";
+import WorkshopCategoryPersistence from "./infrastructure/persistence/workshop-category/persistence";
+import PublicationPersistence from "./infrastructure/persistence/publication/persistence";
+
+@Module({
+    imports: [],
+    controllers: [
+        WorkshopCrudController,
+        MyWorkshopController,
+        WorkshopCategoryCrudController,
+        PublicationCrudController,
+    ],
+    providers: [
+        PrismaService,
+
+        // Workshop
+        WorkshopUCase,
+        WorkshopPersistence,
+
+        // Category
+        WorkshopCategoryUCase,
+        WorkshopCategoryPersistence,
+
+        // Publication
+        PublicationUCase,
+        PublicationPersistence,
+    ],
+    exports: [
+        WorkshopPersistence,
+        WorkshopCategoryPersistence,
+        PublicationPersistence,
+    ]
+})
+export class WorkshopModule { }

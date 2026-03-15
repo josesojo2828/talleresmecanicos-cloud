@@ -1,0 +1,390 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  firstName    String    @map("first_name")
+  lastName     String    @map("last_name")
+  phone        String?   @unique
+  role         UserRole  @default(CLIENT)
+  enabled      Boolean   @default(true)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime? @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  countryId    String?   @map("country_id")
+  country      Country?  @relation(name: "UserCountryPreference", fields: [countryId], references: [id])
+
+  profile            Profile?
+  workshop           Workshop? // If user is a TALLER
+  forumPosts         ForumPost[]
+  forumComments      ForumComment[]
+  forumLikes         ForumLike[]
+  forumFavorites     ForumFavorite[]
+  supportAssignments SupportAssignment[]
+  publications       Publication[]
+  auditLogs          AuditLog[]
+  notifications      Notification[]
+  sessions           Session[]
+  devices            Device[]
+  vehicles           Vehicle[]
+  serviceRequests    ServiceRequest[]
+
+  @@map("users")
+}
+
+model AuditLog {
+  id        String    @id @default(uuid())
+  action    String
+  details   Json?
+  userId    String    @map("user_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("audit_logs")
+}
+
+model Profile {
+  id        String    @id @default(uuid())
+  avatarUrl String?   @map("avatar_url")
+  userId    String    @unique @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("profiles")
+}
+
+model Session {
+  id        String    @id @default(uuid())
+  token     String    @unique
+  ipAddress String?   @map("ip_address")
+  userAgent String?   @map("user_agent")
+  expiresAt DateTime  @map("expires_at")
+  userId    String    @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now()) @map("created_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("sessions")
+}
+
+model Device {
+  id        String    @id @default(uuid())
+  deviceId  String    @unique @map("device_id")
+  fcmToken  String?   @map("fcm_token")
+  userId    String    @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("devices")
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  title     String
+  content   String
+  isRead    Boolean   @default(false) @map("is_read")
+  userId    String    @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now()) @map("created_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("notifications")
+}
+
+model Country {
+  id         String    @id @default(uuid())
+  name       String    @unique
+  language   String?
+  timezone   String?
+  currencyId String?   @map("currency_id")
+  flag       String?
+  slug       String?   @unique
+  latitude   Float?
+  longitude  Float?
+  enabled    Boolean   @default(false)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  cities             City[]
+  workshops          Workshop[]
+  users              User[]              @relation(name: "UserCountryPreference")
+  supportAssignments SupportAssignment[]
+
+  @@map("countries")
+}
+
+model City {
+  id        String    @id @default(uuid())
+  name      String
+  slug      String?
+  enabled   Boolean   @default(true)
+  countryId String    @map("country_id")
+  country   Country   @relation(fields: [countryId], references: [id])
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  workshops          Workshop[]
+  supportAssignments SupportAssignment[]
+
+  @@unique([name, countryId])
+  @@unique([slug, countryId])
+  @@map("cities")
+}
+
+model SupportAssignment {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  countryId String?   @map("country_id")
+  cityId    String?   @map("city_id")
+  deletedAt DateTime? @map("deleted_at")
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  country Country? @relation(fields: [countryId], references: [id])
+  city    City?    @relation(fields: [cityId], references: [id])
+
+  @@map("support_assignments")
+}
+
+model WorkshopCategory {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  enabled     Boolean   @default(true)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  workshops    Workshop[]    @relation("WorkshopToCategory")
+  forumPosts   ForumPost[]   @relation("ForumToCategory")
+  publications Publication[] @relation("PublicationToCategory")
+
+  @@map("workshop_categories")
+}
+
+model Workshop {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String?  @unique
+  description String?
+  address     String
+  phone       String?
+  whatsapp    String?
+  website     String?
+  latitude    Float?
+  longitude   Float?
+  logoUrl     String?  @map("logo_url")
+  images      String[]
+  enabled     Boolean  @default(true)
+
+  openingHours String? @map("opening_hours")
+  socialMedia  Json?   @map("social_media")
+
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  countryId String  @map("country_id")
+  country   Country @relation(fields: [countryId], references: [id])
+
+  cityId String @map("city_id")
+  city   City   @relation(fields: [cityId], references: [id])
+
+  categories   WorkshopCategory[] @relation("WorkshopToCategory")
+  publications Publication[]
+  forumPosts   ForumPost[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  bids Bid[]
+
+  @@map("workshops")
+}
+
+model Publication {
+  id         String    @id @default(uuid())
+  
+  userId     String    @map("user_id")
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  workshopId String?   @map("workshop_id")
+  workshop   Workshop? @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  
+  title      String
+  content    String
+  images     String[]
+  enabled    Boolean            @default(true)
+  categories WorkshopCategory[] @relation("PublicationToCategory")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  @@map("publications")
+}
+
+model ForumPost {
+  id      String   @id @default(uuid())
+  title   String
+  content String
+  images     String[]
+  enabled    Boolean            @default(false)
+  categories WorkshopCategory[] @relation("ForumToCategory")
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  workshopId String?   @map("workshop_id")
+  workshop   Workshop? @relation(fields: [workshopId], references: [id])
+
+  likes     ForumLike[]
+  favorites ForumFavorite[]
+  comments  ForumComment[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("forum_posts")
+}
+
+model ForumComment {
+  id      String  @id @default(uuid())
+  content String
+  rating  Int     @default(0) // 1 a 5 estrellas
+  enabled Boolean @default(true)
+
+  postId String    @map("post_id")
+  post   ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("forum_comments")
+}
+
+model ForumLike {
+  userId    String    @map("user_id")
+  postId    String    @map("post_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  deletedAt DateTime? @map("deleted_at")
+
+  @@id([userId, postId])
+  @@map("forum_likes")
+}
+
+model ForumFavorite {
+  userId    String    @map("user_id")
+  postId    String    @map("post_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  deletedAt DateTime? @map("deleted_at")
+
+  @@id([userId, postId])
+  @@map("forum_favorites")
+}
+
+model Vehicle {
+  id            String    @id @default(uuid())
+  brand         String
+  model         String
+  year          Int?
+  licensePlate  String?   @map("license_plate")
+  lastOilChange DateTime? @map("last_oil_change")
+  userId        String    @map("user_id")
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
+  deletedAt     DateTime? @map("deleted_at")
+
+  serviceRequests ServiceRequest[]
+
+  @@map("vehicles")
+}
+
+model ServiceRequest {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  images      String[]
+  status      ServiceRequestStatus @default(OPEN)
+  isSOS       Boolean  @default(false) @map("is_sos")
+  
+  latitude    Float?
+  longitude   Float?
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  vehicleId String? @map("vehicle_id")
+  vehicle   Vehicle? @relation(fields: [vehicleId], references: [id])
+
+  bids Bid[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("service_requests")
+}
+
+model Bid {
+  id            String    @id @default(uuid())
+  amount        Float?
+  message       String
+  estimatedTime String?   @map("estimated_time")
+  status        BidStatus @default(PENDING)
+
+  workshopId String   @map("workshop_id")
+  workshop   Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+
+  requestId String         @map("request_id")
+  request   ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@map("bids")
+}
+
+enum ServiceRequestStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+  CANCELLED
+}
+
+enum BidStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+enum UserRole {
+  ADMIN
+  SUPPORT
+  TALLER
+  CLIENT
+}

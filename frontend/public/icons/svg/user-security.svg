@@ -1,0 +1,14 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="user-sec-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4facfe" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+  </defs>
+  <!-- Shield Outline -->
+  <path d="M12 2L4 5V11C4 16.1 7.4 20.8 12 22C16.6 20.8 20 16.1 20 11V5L12 2Z" stroke="url(#user-sec-grad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Inner Glass Shield -->
+  <path d="M12 4.5L6 6.75V11C6 14.8 8.6 18.3 12 19.5C15.4 18.3 18 14.8 18 11V6.75L12 4.5Z" fill="url(#user-sec-grad)" fill-opacity="0.1" />
+  <!-- Checkmark/Fingerprint Accent -->
+  <path d="M9 12L11 14L15 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

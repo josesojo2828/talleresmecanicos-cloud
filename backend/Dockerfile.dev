@@ -1,0 +1,19 @@
+FROM node:22
+
+# Instalamos openssl para que Prisma pueda correr en Alpine
+# RUN apk add --no-available --update openssl
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY prisma ./prisma/
+
+RUN npm install
+
+# Generamos el cliente de Prisma para Linux/Alpine
+RUN npx prisma generate
+
+COPY . .
+
+# El comando se sobreescribe en el docker-compose para manejar la DB
+CMD ["npm", "run", "dev"]

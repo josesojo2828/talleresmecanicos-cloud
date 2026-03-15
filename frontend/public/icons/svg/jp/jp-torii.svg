@@ -1,0 +1,9 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g-torii" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF4B2B" />
+      <stop offset="100%" stop-color="#FF416C" />
+    </linearGradient>
+  </defs>
+  <path d="M2 5h20M4 5v14M20 5v14M6 9h12M4 2h2M18 2h2" stroke="url(#g-torii)" stroke-width="2" stroke-linecap="round"/><path d="M4 5h16" stroke="url(#g-torii)" stroke-width="3" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,13 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="srv-star-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+  </defs>
+  <!-- Multi-vertex Star -->
+  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="url(#srv-star-grad)" stroke-width="1.5" stroke-linejoin="round" />
+  <!-- Glass Facet -->
+  <path d="M12 2L15.09 8.26L12 12V2Z" fill="white" fill-opacity="0.1" />
+  <path d="M12 17.77L18.18 21.02L15.09 14.14L12 17.77Z" fill="url(#srv-star-grad)" fill-opacity="0.1" />
+</svg>

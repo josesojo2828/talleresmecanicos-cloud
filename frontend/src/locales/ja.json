@@ -1,0 +1,561 @@
+{
+    "success": {
+        "create": "作成に成功しました",
+        "update": "更新に成功しました",
+        "delete": "削除が完了しました",
+        "process": "操作が正常に処理されました",
+        "default": "リクエストは成功しました",
+        "login": "ログインに成功しました",
+        "logout": "ログアウトに成功しました"
+    },
+    "error": {
+        "default": "予期しないエラーが発生しました",
+        "generic": "サーバーで予期しないエラーが発生しました",
+        "bad_request": "リクエストに無効なデータが含まれています",
+        "unauthorized": "この操作を実行する権限がありません",
+        "forbidden": "アクセスが拒否されました",
+        "exists": "そのレコードは既にシステムに存在します",
+        "not_found": "要求されたリソースが見つかりませんでした",
+        "db": {
+            "relation_not_found": "関連するレコードの一つが見つかりませんでした",
+            "unique_constraint": "処理できませんでした：レコードは既に存在します（データ重複）",
+            "foreign_key_constraint": "関連データが存在するため、削除または変更できません",
+            "invalid_data": "無効なデータ形式です（間違ったIDの可能性があります）"
+        }
+    },
+    "application": {
+        "management": "アプリケーション管理",
+        "category": "カテゴリ",
+        "resource": "リソース",
+        "question": "質問",
+        "messages": "メッセージ",
+        "testimonial": "お客様の声",
+        "about": "私たちについて",
+        "objective": "戦略目標",
+        "social_media": "ソーシャルメディア",
+        "value": "企業価値"
+    },
+    "user": {
+        "management": "ユーザー管理",
+        "address": "住所",
+        "device": "デバイス",
+        "notification": "通知",
+        "profile": "プロフィール",
+        "session": "セッション",
+        "my_management": "マイ管理",
+        "title": "ユーザー",
+        "subtitle": "プラットフォームユーザーの管理"
+    },
+    "region": {
+        "region": "地域",
+        "country": "国",
+        "state": "都道府県/州",
+        "city": "市区町村",
+        "title": "地域",
+        "subtitle": "地理的設定"
+    },
+    "subscription": {
+        "subscription": "サブスクリプション",
+        "title": "サブスクリプション",
+        "subtitle": "プランとメンバーシップの管理",
+        "plan": {
+            "title": "サブスクリプションプラン",
+            "subtitle": "支払い方法の設定"
+        }
+    },
+    "transaction": {
+        "management": "財務管理",
+        "title": "財務",
+        "subtitle": "取引と口座の管理",
+        "transaction": {
+            "title": "取引履歴",
+            "subtitle": "財務の動き履歴"
+        },
+        "bank-account": {
+            "title": "銀行口座",
+            "subtitle": "入金用口座の管理"
+        },
+        "crypto-wallet": {
+            "title": "暗号通貨ウォレット",
+            "subtitle": "デジタル決済用アドレス"
+        }
+    },
+    "address": {
+        "title": "住所",
+        "subtitle": "あなたの連絡先"
+    },
+    "device": {
+        "title": "デバイス",
+        "subtitle": "アクセス管理"
+    },
+    "notification": {
+        "title": "通知",
+        "subtitle": "重要なお知らせ"
+    },
+    "profile": {
+        "title": "プロフィール",
+        "subtitle": "詳細情報"
+    },
+    "session": {
+        "title": "セッション",
+        "subtitle": "アクティビティ履歴"
+    },
+    "country": {
+        "title": "国",
+        "subtitle": "国家リスト"
+    },
+    "state": {
+        "title": "都道府県・州",
+        "subtitle": "都道府県または州"
+    },
+    "city": {
+        "title": "市区町村",
+        "subtitle": "都市部地域"
+    },
+    "category": {
+        "name": "名前",
+        "description": "説明",
+        "icon": "アイコン",
+        "color": "色"
+    },
+    "category-items": {
+        "title": "カテゴリ",
+        "subtitle": "アイテムとラベルの管理"
+    },
+    "resource": {
+        "title": "リソース",
+        "subtitle": "アセットとダウンロードの管理",
+        "name": "名前",
+        "description": "説明",
+        "category": "カテゴリ",
+        "enabled": "有効"
+    },
+    "question": {
+        "title": "よくある質問",
+        "subtitle": "ユーザーの一般的な疑問の管理",
+        "question": "質問",
+        "answer": "回答",
+        "enabled": "有効"
+    },
+    "messages-web": {
+        "title": "ウェブメッセージ",
+        "subtitle": "ウェブからのお問い合わせの受信トレイ",
+        "name": "名前",
+        "email": "メールアドレス",
+        "message": "メッセージ",
+        "read": "既読"
+    },
+    "messages": {
+        "title": "ウェブメッセージ",
+        "subtitle": "ウェブからのお問い合わせの受信トレイ",
+        "name": "名前",
+        "email": "メールアドレス",
+        "message": "メッセージ",
+        "read": "既読"
+    },
+    "testimonial": {
+        "title": "お客様の声",
+        "subtitle": "コミュニティのレビューとフィードバック",
+        "name": "名前",
+        "message": "メッセージ"
+    },
+    "about": {
+        "title": "私たちについて",
+        "subtitle": "ミッション、ビジョン、そして企業の軌跡",
+        "mision": "ミッション",
+        "vision": "ビジョン",
+        "values": "バリュー",
+        "mission": "私たちのミッション",
+        "vision_title": "私たちのビジョン",
+        "values_title": "柱と価値観",
+        "objectives_title": "ロードマップ",
+        "pretitle": "コーポレートアイデンティティ",
+        "hero_title_part1": "ビジョンを繋ぎ、",
+        "hero_title_accent": "未来を創る。",
+        "hero_subtitle": "私たちは、日本でのラテン系の才能と機会の間の戦略的な架け橋です。すべての成功した繋がりが私たちの歴史を構成しています。"
+    },
+    "value": {
+        "title": "バリュー",
+        "subtitle": "コミュニティの基本原則",
+        "title_label": "タイトル",
+        "description": "説明",
+        "icon": "アイコン"
+    },
+    "objective": {
+        "title": "目標",
+        "subtitle": "戦略的目標とミッション",
+        "objective": "目標",
+        "description": "説明",
+        "icon": "アイコン"
+    },
+    "social-media": {
+        "title": "ソーシャルメディア",
+        "subtitle": "デジタルプレゼンスリンクの管理",
+        "name": "名前",
+        "url": "リンク (URL)",
+        "icon": "アイコン"
+    },
+    "social_media": {
+        "title": "ソーシャルメディア",
+        "subtitle": "デジタルプレゼンスリンクの管理",
+        "name": "名前",
+        "url": "リンク (URL)",
+        "icon": "アイコン"
+    },
+    "action": {
+        "discard": "破棄",
+        "update": "更新",
+        "add": "追加",
+        "edit": "編集",
+        "delete": "削除",
+        "view": "表示",
+        "createdAt": "作成日",
+        "processing": "処理中...",
+        "modify_record": "レコードを変更",
+        "create_entry": "新規作成",
+        "terminate_record": "レコードを削除",
+        "save": "保存",
+        "upload_file": "ファイルをアップロード"
+    },
+    "status": {
+        "active": "アクティブ",
+        "inactive": "非アクティブ"
+    },
+    "dashboard": {
+        "search": "データベースで検索...",
+        "detail": {
+            "module_prefix": "エンティティモジュール //",
+            "router_prefix": "エンティティルーター //",
+            "resolver_prefix": "UUID リゾルバ:",
+            "user": "ユーザー",
+            "city": "市区町村",
+            "region": "地域",
+            "country": "国",
+            "state": "都道府県",
+            "currency": "通貨",
+            "bank-account": "銀行口座",
+            "crypto-wallet": "暗号通貨ウォレット",
+            "transaction": "取引",
+            "subscription": "サブスクリプション",
+            "subscription-plan": "サブスクリプションプラン"
+        }
+    },
+    "dialog": {
+        "delete_confirm": "あなたは {slug} からこのエントリを完全に削除しようとしています。この操作は元に戻せません。"
+    },
+    "nav": {
+        "home": "ホーム",
+        "directory": "ディレクトリ",
+        "community": "コミュニティ",
+        "about": "私たちについて",
+        "brand": "Somos Nexo",
+        "login": "ログイン",
+        "login_mobile": "マイアカウントにログイン"
+    },
+    "hero": {
+        "badge": "日本のラテンコミュニティを繋ぐ",
+        "title": "一つの場所に すべてのサービスを。",
+        "description": "ラテン系起業家のための究極のプラットフォーム。日本全国で、信頼できるビジネス、専門的なサービス、活発なコミュニティを見つけましょう。",
+        "cta_primary": "始める",
+        "cta_secondary": "ビジネスを探す",
+        "trust": {
+            "verified": "検証済み",
+            "support": "24時間サポート",
+            "secure": "安心・安全"
+        }
+    },
+    "landing": {
+        "categories": {
+            "title": "ディレクトリを <span>探索する</span>",
+            "subtitle": "日本でのあなたのビジネスを後押しする主要なカテゴリ。",
+            "cta": "すべて見る",
+            "items": {
+                "gastronomy": {
+                    "title": "グルメ",
+                    "description": "レストラン、食材、そしてあなたが懐かしむ故郷の味。"
+                },
+                "professional": {
+                    "title": "専門サービス",
+                    "description": "弁護士、引越し、翻訳者など、信頼できる専門的なサポート。"
+                },
+                "products": {
+                    "title": "ショッピング",
+                    "description": "工芸品、ファッション、最大のラテンコミュニティのマーケットプレイス。"
+                }
+            }
+        },
+        "logo_cloud": {
+            "text": "日本のコミュニティと協力しています"
+        },
+        "value_proposition": {
+            "steps": {
+                "explore": {
+                    "title": "探索",
+                    "desc": "カテゴリで閲覧するか、スマート検索を活用してください。"
+                },
+                "connect": {
+                    "title": "繋がる",
+                    "desc": "信頼できるサービスと直接コンタクトを取ります。"
+                },
+                "participate": {
+                    "title": "参加",
+                    "desc": "イベント、ワークショップ、コミュニティのリソースに参加しましょう。"
+                }
+            }
+        },
+        "bento": {
+            "title": "日本でのプレゼンスを高める",
+            "subtitle": "ラテン系起業家の可視性を高めるために設計されたツール。",
+            "network": {
+                "badge": "Global_Network_v2.0",
+                "title": "全国への <span>リーチ</span>",
+                "description": "大都市から地方の町まで、あなたのビジョンを日本中の本物の顧客と繋ぎます。",
+                "status_label": "ステータス",
+                "status_value": "全域でアクティブ"
+            },
+            "verified": {
+                "title": "検証済み",
+                "description": "絶対的な真正性を保証する信頼の証。"
+            },
+            "performance": {
+                "label": "パフォーマンス",
+                "value": "超高速"
+            },
+            "interface": {
+                "label": "インターフェース",
+                "value": "モバイルファースト"
+            }
+        },
+        "faq": {
+            "badge": "よくある質問",
+            "title": "あなたが知るべきすべて",
+            "subtitle": "質問はありますか？ここではコミュニティで最もよくある質問に答えます。",
+            "footer": "答えが見つかりませんでしたか？ <link>お問い合わせ</link>",
+            "contact": "お問い合わせ",
+            "questions": [
+                {
+                    "question": "自分のビジネスを掲載するのは無料ですか？",
+                    "answer": "はい、Somos Nexoにビジネスを掲載するのは完全に無料です。プロフィールを作成し、サービスを追加して、無料で顧客を受け入れることができます。"
+                },
+                {
+                    "question": "Somos Nexoは誰が利用できますか？",
+                    "answer": "Somos Nexoは日本のラテンコミュニティ向けに設計されています。起業家、独立した専門家、または単にコミュニティのサービスや製品を探している方、どなたでも歓迎します。"
+                },
+                {
+                    "question": "ビジネスが本物であることをどのように検証していますか？",
+                    "answer": "登録された各ビジネスは、承認する前に私たちのチームが審査します。さらに、コミュニティメンバーからのレビューがディレクトリの信頼を維持するのに役立っています。"
+                },
+                {
+                    "question": "日本語で利用できますか？",
+                    "answer": "現在はスペイン語での提供となりますが、日本語および英語を含む多言語対応を進めています。"
+                },
+                {
+                    "question": "ビジネスに連絡するにはどうすればよいですか？",
+                    "answer": "各ビジネスプロフィールには、事業主の好みに応じて、WhatsApp、メール、SNSなどの直接連絡先情報が含まれています。"
+                },
+                {
+                    "question": "後でビジネスプロフィールを変更することはできますか？",
+                    "answer": "はい、もちろんです！ダッシュボードからいつでもビジネス情報を更新できます。"
+                }
+            ]
+        },
+        "cta": {
+            "badge": "あなたのビジネスを掲載",
+            "title": "ビジネスをお持ちですか？",
+            "description": "日本の何千人ものラテン系の人々にリーチしましょう。数分でプロフィールを作成できます。",
+            "button": "ここで公開する"
+        },
+        "stats": {
+            "items": [
+                {
+                    "label": "アクティブなビジネス",
+                    "detail": "日本全国"
+                },
+                {
+                    "label": "Nexoユーザー",
+                    "detail": "成長するコミュニティ"
+                },
+                {
+                    "label": "カテゴリ",
+                    "detail": "多彩なサービス"
+                },
+                {
+                    "label": "対応地域",
+                    "detail": "全47都道府県"
+                }
+            ]
+        },
+        "testimonials": {
+            "badge": "お客様の声",
+            "title": "コミュニティの声",
+            "items": [
+                {
+                    "name": "カルロス・メンデス",
+                    "role": "「El Sabor Gitano」オーナー",
+                    "text": "Nexoのおかげで、東京の顧客が私たちを見つける方法が変わりました。最初の月で予約が40％増加しました。"
+                },
+                {
+                    "name": "アナ・ガルシア",
+                    "role": "法務コンサルタント",
+                    "text": "私たちの言語でサービスを集中化するために必要なプラットフォームです。"
+                },
+                {
+                    "name": "ロベルト・スズキ",
+                    "role": "テック起業家",
+                    "text": "デザインが信じられないほど素晴らしく、日本のパートナーに自信を持って推薦できます。"
+                },
+                {
+                    "name": "エレナ・ソト",
+                    "role": "フリーランス翻訳者",
+                    "text": "このディレクトリのおかげで、多くの新しいクライアントと繋がることができました。"
+                },
+                {
+                    "name": "フアン・ペレス",
+                    "role": "輸出業者",
+                    "text": "日本にいるラテン系のための最高のツールです。"
+                }
+            ]
+        },
+        "newsletter": {
+            "badge": "ニュースレター",
+            "title": "コミュニティの最新情報を入手",
+            "description": "ニュース、新しいビジネス、イベント、特別なオファーをあなたの受信トレイに直接お届けします。 <span>スパムはありません。</span>",
+            "no_spam": "スパムはありません。",
+            "success": {
+                "title": "登録が完了しました！",
+                "desc": "新しいお知らせがあるときにご連絡します。"
+            },
+            "button": "登録する",
+            "placeholder": "your@email.com",
+            "footer": "登録することにより、プライバシーポリシーに同意したことになります。ワンクリックで解除できます。"
+        }
+    },
+    "footer": {
+        "description": "日本中のラテン系の人材と信頼できるサービスを結ぶ決定版プラットフォーム。",
+        "brand": "Nexo",
+        "sections": {
+            "platform": "プラットフォーム",
+            "resources": "リソース",
+            "contact": "お問い合わせ"
+        },
+        "links": {
+            "directory": "ディレクトリ",
+            "services": "サービス",
+            "community": "コミュニティ",
+            "events": "イベント",
+            "blog": "Nexoブログ",
+            "support": "ヘルプ＆サポート",
+            "terms": "利用規約",
+            "privacy": "プライバシーポリシー"
+        },
+        "location": "日本、東京",
+        "copy": "ラテンコミュニティのために構築しています。",
+        "status": "システム正常",
+        "stack": "最新技術で構築"
+    },
+    "auth": {
+        "layout": {
+            "back_to_home": "ホームに戻る",
+            "platform_access": "プラットフォームへのアクセス",
+            "community_rebirth_title": "あなたのコミュニティが",
+            "community_rebirth_span": "生まれ変わる。",
+            "community_rebirth_description": "日本でのビジネス、サービス、そしてラテンコミュニティの中心と繋がりましょう。すべてが一つの場所に。",
+            "social_proof": "5000人以上のラテン系と参加する"
+        },
+        "login": {
+            "title": "Nexo を探索する",
+            "email": "メールアドレス",
+            "password": "パスワード",
+            "remember": "ログイン状態を保持する",
+            "forgot": "パスワードをお忘れですか？",
+            "button": "ログインする",
+            "loading": "ログイン中...",
+            "no_account": "アカウントをお持ちではありませんか？",
+            "register": "無料で登録"
+        },
+        "register": {
+            "title": "アカウント作成",
+            "name": "フルネーム",
+            "email": "メールアドレス",
+            "password": "パスワード",
+            "confirm": "パスワード確認",
+            "terms": "{terms} と {privacy} に同意します",
+            "terms_link": "利用規約",
+            "privacy_link": "プライバシーポリシー",
+            "button": "アカウントを作成",
+            "loading": "処理中...",
+            "has_account": "すでにアカウントをお持ちですか？",
+            "login": "ログイン",
+            "strength": {
+                "label": "セキュリティ:",
+                "low": "低",
+                "medium": "中",
+                "high": "高"
+            }
+        }
+    },
+    "community": {
+        "hero": {
+            "badge": "Community Hub v1.0",
+            "title": "私たちの <span>コミュニティ。</span>",
+            "description": "ただのディレクトリではなく、私たちは重要な結びつきです。才能、経験、リソースを繋ぎ、日出ずる国にいるラテン系の人々を支援します。"
+        },
+        "social": {
+            "instagram": {
+                "title": "Instagram ライブ",
+                "description": "日本でのラテンビジネスの最新情報、ライブイベント、日常のストーリーをフォローしてください。",
+                "button": "今すぐフォローする"
+            },
+            "whatsapp": {
+                "title": "WhatsApp",
+                "description": "サポートとダイレクトネットワーキングのグループに参加してください。",
+                "button": "グループに参加"
+            }
+        },
+        "resources": {
+            "title": "重要なリソース",
+            "subtitle": "日本での成功と安定のための重要な情報。",
+            "items": {
+                "embassy": {
+                    "title": "ベネズエラ大使館",
+                    "description": "日本にいるベネズエラ人のための領事手続き、パスポート、公式の法的支援。",
+                    "category": "公式"
+                },
+                "guide": {
+                    "title": "日本での生活ガイド",
+                    "description": "ビザ、税金、健康、教育に関する多言語の公式情報ポータル。",
+                    "category": "政府"
+                },
+                "social": {
+                    "title": "ラテンコミュニティ",
+                    "description": "日本社会に溶け込むスペイン語話者のためのサポートグループや連絡網。",
+                    "category": "ソーシャル"
+                },
+                "legal": {
+                    "title": "法的アドバイス",
+                    "description": "移民およびビジネス法に関する専門的な法的アドバイスのリソースと連絡先。",
+                    "category": "サービス"
+                }
+            }
+        },
+        "team": {
+            "title": "Nexoの背後にいるチーム",
+            "description": "日本文化に情熱を持ち、コミュニティの成長に貢献しています。",
+            "members": {
+                "jose": {
+                    "role": "創設者 & 主席アーキテクト",
+                    "bio": "日本でラテンコミュニティと技術を結びつけることに焦点を当てたビジョナリー。"
+                },
+                "support": {
+                    "role": "コミュニティサポート",
+                    "bio": "すべての起業家にサポートとリソースを提供する私たちの専任チーム。"
+                }
+            }
+        },
+        "cta": {
+            "title": "協力してみませんか？",
+            "description": "私たちのコミュニティはあなたのような人々の貢献によって成長しています。共有するリソースがある、またはチームの一員になりたい場合は、お問い合わせください。",
+            "button": "チームに連絡する"
+        }
+    }
+}

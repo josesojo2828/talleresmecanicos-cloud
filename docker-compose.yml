@@ -1,0 +1,78 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_tm
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-talleres_mecanicos}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tm_network
+
+  redis:
+    image: redis:alpine
+    container_name: redis_tm
+    ports:
+      - "6379:6379"
+    networks:
+      - tm_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: backend_tm
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-talleres_mecanicos}?schema=public
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET:-super_secret_jwt_key}
+    ports:
+      - "3001:9999"
+    networks:
+      - tm_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: frontend_tm
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-your_nextauth_secret}
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    networks:
+      - tm_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - tm_network
+
+networks:
+  tm_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

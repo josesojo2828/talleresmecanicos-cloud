@@ -1,0 +1,17 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="msg-broad-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4facfe" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+  </defs>
+  <!-- Central Node -->
+  <circle cx="12" cy="12" r="2" fill="url(#msg-broad-grad)" />
+  <!-- Signal Waves -->
+  <path d="M15 9C16.5 10.5 16.5 13.5 15 15" stroke="url(#msg-broad-grad)" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M18 6C21 9 21 15 18 18" stroke="url(#msg-broad-grad)" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.4" />
+  <path d="M9 9C7.5 10.5 7.5 13.5 9 15" stroke="url(#msg-broad-grad)" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M6 6C3 9 3 15 6 18" stroke="url(#msg-broad-grad)" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.4" />
+  <!-- Glass Center -->
+  <circle cx="12" cy="12" r="5" stroke="white" stroke-opacity="0.1" stroke-width="1" />
+</svg>

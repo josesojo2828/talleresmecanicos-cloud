@@ -1,0 +1,17 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cat-trans-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4facfe" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+  </defs>
+  <!-- Vehicle Silhouette -->
+  <path d="M3 15C3 15 4 10 12 10C20 10 21 15 21 15H3Z" stroke="url(#cat-trans-grad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M5 15V17C5 18.1046 5.89543 19 7 19H17C18.1046 19 19 18.1046 19 17V15" stroke="url(#cat-trans-grad)" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Speed Vectors -->
+  <path d="M2 13H6" stroke="white" stroke-opacity="0.2" stroke-width="1" />
+  <path d="M1 11H4" stroke="white" stroke-opacity="0.1" stroke-width="1" />
+  <!-- Wheels (Glass) -->
+  <circle cx="7" cy="19" r="2" fill="url(#cat-trans-grad)" fill-opacity="0.2" />
+  <circle cx="17" cy="19" r="2" fill="url(#cat-trans-grad)" fill-opacity="0.2" />
+</svg>

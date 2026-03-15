@@ -1,0 +1,14 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="msg-bell-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4facfe" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+  </defs>
+  <!-- Bell Body -->
+  <path d="M18 8C18 4.68629 15.3137 2 12 2C8.68629 2 6 4.68629 6 8V13.5858L4.29289 15.2929C3.90237 15.6834 3.90237 16.3166 4.29289 16.7071C4.48043 16.8946 4.73478 17 5 17H19C19.5523 17 20 16.5523 20 16C20 15.7348 19.8946 15.4804 19.7071 15.2929L18 13.5858V8Z" stroke="url(#msg-bell-grad)" stroke-width="1.5" stroke-linejoin="round" />
+  <!-- Clapper -->
+  <path d="M10 20C10 21.1046 10.8954 22 12 22C13.1046 22 14 21.1046 14 20" stroke="url(#msg-bell-grad)" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Glass vibration ring -->
+  <path d="M12 2C14 2 16 3 17 5" stroke="white" stroke-opacity="0.2" stroke-width="1.5" stroke-linecap="round" />
+</svg>

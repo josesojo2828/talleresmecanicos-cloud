@@ -1,0 +1,15 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="msg-urg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff4b2b" />
+      <stop offset="100%" stop-color="#ff416c" />
+    </linearGradient>
+  </defs>
+  <!-- Hexagon Warning -->
+  <path d="M12 2L20.6603 7V17L12 22L3.33975 17V7L12 2Z" stroke="url(#msg-urg-grad)" stroke-width="1.5" stroke-linejoin="round" />
+  <!-- Exclamation -->
+  <path d="M12 8V13" stroke="url(#msg-urg-grad)" stroke-width="2" stroke-linecap="round" />
+  <circle cx="12" cy="16" r="1" fill="url(#msg-urg-grad)" />
+  <!-- Internal Pulse (Glass) -->
+  <path d="M12 5L18 8.5V15.5L12 19L6 15.5V8.5L12 5Z" fill="url(#msg-urg-grad)" fill-opacity="0.1" />
+</svg>

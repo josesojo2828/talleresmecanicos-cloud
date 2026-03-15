@@ -1,0 +1,15 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="prod-qual-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+  </defs>
+  <!-- Medal Star/Circle -->
+  <circle cx="12" cy="10" r="7" stroke="url(#prod-qual-grad)" stroke-width="1.5" />
+  <circle cx="12" cy="10" r="5" fill="url(#prod-qual-grad)" fill-opacity="0.1" />
+  <!-- Ribbon -->
+  <path d="M9 16L7 22L12 20L17 22L15 16" stroke="url(#prod-qual-grad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Center Check/Spark -->
+  <path d="M10 10L11.5 11.5L14 8.5" stroke="url(#prod-qual-grad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

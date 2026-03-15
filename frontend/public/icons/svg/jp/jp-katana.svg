@@ -1,0 +1,9 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g-katana" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#bdc3c7" />
+      <stop offset="100%" stop-color="#2c3e50" />
+    </linearGradient>
+  </defs>
+  <path d="M20 4L4 20M17 3l4 4M5 19l-2 2" stroke="url(#g-katana)" stroke-width="2" stroke-linecap="round"/><path d="M6 18c.5-.5 2-2 4-2s3.5 1.5 4 2" stroke="url(#g-katana)" stroke-width="1"/>
+</svg>

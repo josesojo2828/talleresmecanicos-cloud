@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+/* Carga TODOS los componentes DaisyUI */
+@plugin "daisyui";
+
+/* Tema "talleres-light" inspirado en una estética limpia de taller moderno */
+@plugin "daisyui/theme" {
+  name: "mexico-light"; /* Manteniendo el nombre por consistencia con otros archivos pero limpio */
+  default: true;
+  color-scheme: "light";
+  
+  --color-base-100: oklch(100% 0 0); /* White */
+  --color-base-200: oklch(98% 0.005 200); /* Very Light Gray */
+  --color-base-300: oklch(95% 0.01 200); /* Light Gray */
+  --color-base-content: oklch(25% 0.01 200); /* Dark Gray text */
+  
+  /* Verde taller: Un verde más profesional */
+  --color-primary: oklch(70% 0.15 145); /* Professional Green */
+  --color-primary-content: oklch(100% 0 0);
+  
+  --color-secondary: oklch(75% 0.02 200); /* Professional Gray */
+  --color-secondary-content: oklch(20% 0.01 200);
+  
+  /* Ajustes de bordes y sombras para look premium */
+  --radius-selector: 0.75rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --padding-card: 1.5rem;
+}
+
+@theme {
+  --font-plus-jakarta-sans: var(--font-plus-jakarta-sans);
+  --font-sans: var(--font-plus-jakarta-sans);
+  
+  --color-glass-white: rgba(255, 255, 255, 0.85);
+  --color-glass-border: rgba(226, 232, 240, 0.5);
+  --color-brand-green: #22c55e;
+  --color-brand-gray: #64748b;
+  
+  --color-primary-600: #16a34a;
+}
+
+/* Base global */
+body {
+  font-family: var(--font-plus-jakarta-sans), sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Utilities - Premium Light */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.03);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  @apply rounded-2xl transition-all duration-300;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+/* Reducción de tamaños globales para mayor precisión */
+.btn {
+  @apply rounded-xl font-bold transition-all active:scale-95 px-5 py-2.5 h-auto min-h-0;
+}
+
+.card-body { @apply p-6; }
+
+.input, .select, .textarea {
+  @apply bg-slate-50 border-slate-200 focus:border-brand-green focus:ring-1 focus:ring-brand-green/20 transition-all;
+}
+
+h1 { @apply text-4xl font-extrabold tracking-tight text-slate-900; }
+h2 { @apply text-3xl font-bold tracking-tight text-slate-800; }
+h3 { @apply text-2xl font-bold text-slate-800; }
+p { @apply leading-relaxed text-slate-600; }
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}

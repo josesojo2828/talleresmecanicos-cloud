@@ -1,0 +1,9 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g-fuji" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4facfe" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+  </defs>
+  <path d="M2 20l7-13 3 4 3-4 7 13H2z" fill="url(#g-fuji)" fill-opacity="0.1" stroke="url(#g-fuji)" stroke-width="1.5"/><path d="M9 7l3 4 3-4-1.5-2L12 3.5 10.5 5 9 7z" fill="white" stroke="white" stroke-width="0.5"/>
+</svg>

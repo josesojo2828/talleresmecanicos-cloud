@@ -1,0 +1,9 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g-origami" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0c3fc" />
+      <stop offset="100%" stop-color="#8ec5fc" />
+    </linearGradient>
+  </defs>
+  <path d="M3 12l9-7 9 7-9 7-9-7z" fill="url(#g-origami)" fill-opacity="0.1" stroke="url(#g-origami)" stroke-width="1.5"/><path d="M12 5v14M3 12h18M7.5 8.5l9 7M16.5 8.5l-9 7" stroke="url(#g-origami)" stroke-width="1" stroke-opacity="0.5"/>
+</svg>

@@ -1,0 +1,9 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g-sakura" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff9a9e" />
+      <stop offset="100%" stop-color="#fecfef" />
+    </linearGradient>
+  </defs>
+  <path d="M12 12c2.5-3 5-1 4 2s-4 2-4 2-3 1-4-2 1.5-5 4-2z" fill="url(#g-sakura)" fill-opacity="0.2" stroke="url(#g-sakura)" stroke-width="1.5"/><path d="M12 12c-2.5-3-5-1-4 2s4 2 4 2 3 1 4-2-1.5-5-4-2z" fill="url(#g-sakura)" fill-opacity="0.2" stroke="url(#g-sakura)" stroke-width="1.5"/><circle cx="12" cy="12" r="1.5" fill="white"/>
+</svg>

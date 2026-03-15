@@ -1,0 +1,33 @@
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY prisma ./prisma/
+
+RUN npm install
+
+COPY . .
+
+RUN DATABASE_URL=postgresql://postgres:postgres@postgres:5432/nestjs?schema=public npx prisma generate
+RUN npm run build
+
+# Stage 2: Production
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Only copy production dependencies
+COPY package*.json ./
+RUN npm install --only=production
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./
+COPY --from=builder /app/tsconfig.json ./
+
+# Install netcat for wait-for-db
+RUN apk add --no-cache netcat-openbsd
+
+EXPOSE 9999
+CMD until nc -z postgres 5432; do echo "Waiting for postgres..."; sleep 2; done && npx prisma migrate deploy && npm run start:prod

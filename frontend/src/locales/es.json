@@ -1,0 +1,542 @@
+{
+    "success": {
+        "create": "Creación exitosa",
+        "update": "Actualización exitosa",
+        "delete": "Eliminación completada",
+        "process": "Operación procesada correctamente",
+        "default": "Solicitud exitosa",
+        "login": "Inicio de sesión exitoso",
+        "logout": "Cerrar sesión"
+    },
+
+    "error": {
+        "default": "Ocurrió un error inesperado",
+        "generic": "Ocurrió un error inesperado en el servidor",
+        "bad_request": "El valor ingresado no es válido",
+        "select_option": "Seleccionar opción",
+        "unauthorized": "No tienes permisos para realizar esta acción",
+        "forbidden": "Acceso denegado",
+        "exists": "El registro ya existe en el sistema",
+        "not_found": "No se encontró el recurso solicitado",
+        "db": {
+            "relation_not_found": "No se encontró uno de los registros relacionados (Ej: El Usuario o Plan no existen)",
+            "unique_constraint": "No se pudo procesar: El registro ya existe (Dato duplicado)",
+            "foreign_key_constraint": "No se puede eliminar o modificar porque tiene datos asociados",
+            "invalid_data": "El formato de los datos es inválido (Posiblemente un ID incorrecto)"
+        }
+    },
+    "application": {
+        "management": "Gestión de Aplicación",
+        "category": { "title": "Gestión de Categorías", "name": "Categoría" },
+        "resource": { "title": "Gestión de Recursos", "name": "Recurso" },
+        "question": { "title": "Preguntas Frecuentes", "name": "Pregunta" },
+        "messages": { "title": "Mensajes Web", "name": "Mensaje" },
+        "testimonial": { "title": "Testimonios", "name": "Testimonio" },
+        "about": { "title": "Sobre Nosotros", "name": "Sobre Nosotros" },
+        "objective": { "title": "Objetivos", "name": "Objetivo" },
+        "social_media": { "title": "Redes Sociales", "name": "Red Social" }
+    },
+    "user": {
+        "management": "Gestión de Usuarios",
+        "title": "Usuarios",
+        "subtitle": "Administra los usuarios de la plataforma",
+        "my_management": "Mi Cuenta"
+    },
+    "workshop": {
+        "title": "Talleres",
+        "subtitle": "Administración de talleres mecánicos",
+        "name": "Nombre de taller",
+        "description": "Descripción",
+        "address": "Dirección Física",
+        "phone": "Teléfono fijo",
+        "whatsapp": "WhatsApp",
+        "website": "Sitio Web",
+        "latitude": "Latitud",
+        "longitude": "Longitud",
+        "openingHours": "Horario de Atención",
+        "country": "País",
+        "city": "Ciudad",
+        "categories": "Categorías de Servicio",
+        "enabled": "Habilitado / Visible",
+        "category": {
+            "title": "Categorías de Talleres",
+            "name": "Nombre de Categoría",
+            "description": "Descripción de la categoría"
+        }
+    },
+    "forum": {
+        "post": {
+            "title": "Foro de Comunidad",
+            "title_label": "Título del Tema",
+            "content": "Contenido del mensaje"
+        },
+        "enabled": "Habilitado / Moderado"
+    },
+    "publication": {
+        "title": "Publicaciones y Ofertas",
+        "title_label": "Título del Anuncio",
+        "content": "Detalle de la publicación",
+        "enabled": "Activo"
+    },
+    "regions": {
+        "country": { "title": "Gestión de Países" },
+        "city": { "title": "Gestión de Ciudades" }
+    },
+    "country": {
+        "name": "Nombre del País",
+        "enabled": "Habilitado"
+    },
+    "city": {
+        "name": "Nombre de la Ciudad",
+        "country": "País Perteneciente",
+        "enabled": "Habilitado"
+    },
+    "category": { "name": "Nombre", "description": "Descripción", "icon": "Icono", "color": "Color" },
+    "resource": { "name": "Nombre", "description": "Descripción", "category": "Categoría", "enabled": "Habilitado" },
+    "question": { "question": "Pregunta", "answer": "Respuesta", "enabled": "Habilitado" },
+    "messages": { "name": "Nombre", "email": "Correo Electrónico", "message": "Mensaje", "read": "Leído" },
+    "testimonial": { "name": "Nombre", "message": "Mensaje" },
+
+    "about": {
+        "title": "Sobre Nosotros",
+        "subtitle": "Misión, visión y trayectoria corporativa",
+        "mision": "Misión",
+        "vision": "Visión",
+        "values": "Valores",
+        "mission": "Nuestra Misión",
+        "vision_title": "Nuestra Visión",
+        "values_title": "Pilares y Valores",
+        "objectives_title": "Ruta de Objetivos",
+        "pretitle": "Identidad Corporativa",
+        "hero_title_part1": "Conectando Visión,",
+        "hero_title_accent": "Creando Futuro.",
+        "hero_subtitle": "Somos el puente estratégico entre el talento latino y las oportunidades en Japón. Nuestra historia se escribe con cada conexión exitosa."
+    },
+    "value": {
+        "title": "Valores",
+        "subtitle": "Principios fundamentales de nuestra comunidad",
+        "title_label": "Título",
+        "description": "Descripción",
+        "icon": "Icono"
+    },
+    "objective": {
+        "title": "Objetivos",
+        "subtitle": "Metas estratégicas de la plataforma",
+        "objective": "Objetivo",
+        "description": "Descripción",
+        "icon": "Icono"
+    },
+    "social-media": {
+        "title": "Redes Sociales",
+        "subtitle": "Gestión de enlaces y presencia digital",
+        "name": "Nombre",
+        "url": "Enlace (URL)",
+        "icon": "Icono"
+    },
+    "social_media": {
+        "title": "Redes Sociales",
+        "subtitle": "Gestión de enlaces y presencia digital",
+        "name": "Nombre",
+        "url": "Enlace (URL)",
+        "icon": "Icono"
+    },
+    "action": {
+        "discard": "Descartar",
+        "update": "Actualizar",
+        "add": "Agregar",
+        "edit": "Editar",
+        "delete": "Borrar",
+        "view": "Ver",
+        "back": "Volver atrás",
+        "createdAt": "Creado el",
+        "updatedAt": "Actualizado el",
+        "processing": "Procesando...",
+        "modify_record": "Modificar Registro",
+        "create_entry": "Crear Entrada",
+        "terminate_record": "Eliminar Registro",
+        "save": "Guardar",
+        "upload_file": "Subir Archivo"
+    },
+    "headers": {
+        "name": "Nombre",
+        "description": "Descripción",
+        "status": "Estado",
+        "email": "Email",
+        "role": "Rol",
+        "date": "Fecha",
+        "actions": "Acciones",
+        "created_at": "Creado el"
+    },
+    "status": {
+        "all": "Todos",
+        "active": "Activo",
+        "enabled": "Habilitado",
+        "disabled": "Inactivo",
+        "inactive": "Inactivo"
+    },
+    "dashboard": {
+        "search": "Buscar en base de datos...",
+        "management": "Gestión de Base de Datos",
+        "actions": "Acciones",
+        "no_data": "Sin datos",
+        "detail": {
+            "module_prefix": "Módulo de Entidad //",
+            "router_prefix": "Enrutador de Entidad //",
+            "resolver_prefix": "RESOLVEDOR_UUID:",
+            "user": "Usuario",
+            "city": "Ciudad",
+            "country": "País",
+            "workshop": "Taller",
+            "workshop-category": "Categoría de Taller",
+            "forum-post": "Tema del Foro",
+            "forum-comment": "Comentario",
+            "publication": "Anuncio/Oferta",
+            "support-assignment": "Asignación de Soporte"
+        }
+    },
+    "ficha": {
+        "loading": "Cargando Ficha Técnica...",
+        "subtitle": "Información detallada de la entidad",
+        "entity_type": "Entidad: {slug}",
+        "no_records": "No hay registros internos configurados",
+        "no_form": "Protocolo de edición no disponible",
+        "tabs": {
+            "stats": "Estadísticas",
+            "records": "Registros Internos",
+            "data": "Actualizar Datos"
+        },
+        "error": {
+            "restricted_title": "Acceso Restringido",
+            "restricted_desc": "No se permiten fichas técnicas para este tipo de entidad o no tienes permisos."
+        },
+        "stats": {
+            "new": "Nuevos",
+            "appearances": "Apariciones",
+            "views": "Vistas",
+            "engagement": "Engagement"
+        }
+    },
+    "language": {
+        "es": "🇪🇸 Español",
+        "en": "🇺🇸 Inglés",
+        "ja": "🇯🇵 Japonés"
+    },
+    "dialog": {
+        "delete_confirm": "Estás a punto de eliminar permanentemente esta entrada de {slug}. Esta acción es irreversible."
+    },
+    "nav": {
+        "home": "Dashboard",
+        "user_management": "Gestión de Usuarios",
+        "profile": "Mi Perfil",
+        "exit": "Volver al Inicio",
+        "regions": "Regiones",
+        "countries": "Países",
+        "cities": "Ciudades",
+        "workshops": "Talleres",
+        "workshop_list": "Listado Talleres",
+        "categories": "Categorías",
+        "my_workshop": "Mi Taller",
+        "my_publications": "Mis Publicaciones",
+        "public_forum": "Foro Público",
+        "directory": "Directorio",
+        "community": "Comunidad",
+        "about": "Nosotros",
+        "brand": "TalleresMecanicos",
+        "login": "Ingresar",
+        "login_mobile": "Ingresar a mi cuenta"
+    },
+    "hero": {
+        "badge": "La red más grande de talleres en Latinoamérica",
+        "title": "Encuentra el taller ideal en segundos.",
+        "description": "Conectamos dueños de vehículos con los mejores talleres mecánicos. Calidad, confianza y rapidez en un solo lugar.",
+        "cta_primary": "Soy Dueño de Taller",
+        "cta_secondary": "Busco un Taller",
+        "trust": {
+            "verified": "Verificado",
+            "support": "Soporte 24/7",
+            "secure": "Seguro"
+        }
+    },
+    "landing": {
+        "categories": {
+            "title": "Explora el <span>Directorio.</span>",
+            "subtitle": "Las categorías principales para potenciar tu negocio en Japón.",
+            "cta": "Explorar todo",
+            "items": {
+                "gastronomy": {
+                  "title": "Gastronomía",
+                  "description": "Restaurantes, insumos y esos antojos que extrañas de nuestra tierra."
+                },
+                "professional": {
+                  "title": "Servicios",
+                  "description": "Abogados, mudanzas, traductores y soporte profesional garantizado."
+                },
+                "products": {
+                  "title": "Productos",
+                  "description": "Artesanías, moda y el mercadito más grande de la comunidad latina."
+                }
+            }
+        },
+        "logo_cloud": {
+            "text": "Colaborando con la comunidad en Japón"
+        },
+        "value_proposition": {
+            "steps": {
+                "explore": {
+                    "title": "Explora",
+                    "desc": "Navega por categorías o usa la búsqueda inteligente."
+                },
+                "connect": {
+                    "title": "Conecta",
+                    "desc": "Contacta directamente con servicios de total confianza."
+                },
+                "participate": {
+                    "title": "Participa",
+                    "desc": "Únete a eventos, talleres y recursos de la comunidad."
+                }
+            }
+        },
+        "bento": {
+            "title": "Potencia tu presencia en Japón",
+            "subtitle": "Herramientas diseñadas para elevar la visibilidad de los emprendedores latinos.",
+            "network": {
+                "badge": "Global_Network_v2.0",
+                "title": "Alcanced <span>Nacional.</span>",
+                "description": "Conectamos tu visión con clientes reales en cada rincón de Japón, desde las megaciudades hasta los pueblos más remotos.",
+                "status_label": "Estado",
+                "status_value": "Mapa_Activo"
+            },
+            "verified": {
+                "title": "Verificado",
+                "description": "Sello de confianza que garantiza autenticidad absoluta."
+            },
+            "performance": {
+                "label": "Performance",
+                "value": "Ultra_Rápido"
+            },
+            "interface": {
+                "label": "Interface",
+                "value": "Mobile_First"
+            }
+        },
+        "faq": {
+            "badge": "Preguntas Frecuentes",
+            "title": "Todo lo que necesitas saber",
+            "subtitle": "¿Tienes dudas? Aquí respondemos las consultas más comunes de la comunidad.",
+            "footer": "¿No encontraste tu respuesta? <link>Contáctanos</link>",
+            "contact": "Contáctanos",
+            "questions": [
+                {
+                    "question": "¿Es gratis publicar mi negocio?",
+                    "answer": "Sí, publicar tu negocio en Somos Nexo es completamente gratuito. Puedes crear tu perfil, agregar tus servicios y empezar a recibir clientes sin ningún costo."
+                },
+                {
+                    "question": "¿Quién puede usar Somos Nexo?",
+                    "answer": "Somos Nexo está diseñado para la comunidad latina en Japón. Ya seas emprendedor, profesional independiente, o simplemente busques servicios y productos de la comunidad, eres bienvenido."
+                },
+                {
+                    "question": "¿Cómo validan que los negocios son reales?",
+                    "answer": "Nuestro equipo revisa cada negocio registrado antes de aprobarlo. Además, las reseñas de otros usuarios de la comunidad ayudan a mantener la confianza en el directorio."
+                },
+                {
+                    "question": "¿Está disponible en japonés?",
+                    "answer": "Actualmente la plataforma está en español, pero estamos trabajando en agregar soporte multilingüe incluyendo japonés e inglés."
+                },
+                {
+                    "question": "¿Cómo contacto a un negocio?",
+                    "answer": "Cada perfil de negocio incluye información de contacto directa como WhatsApp, email o redes sociales según lo que el negocio prefiera compartir."
+                },
+                {
+                    "question": "¿Puedo modificar mi perfil de negocio después?",
+                    "answer": "¡Claro que sí! Puedes actualizar la información de tu negocio en cualquier momento desde tu panel de control."
+                }
+            ]
+        },
+        "cta": {
+            "badge": "Publica tu negocio",
+            "title": "¿Tienes un emprendimiento?",
+            "description": "Llega a miles de latinos en Japón hoy mismo. Crea tu perfil en minutos.",
+            "button": "Publicar aquí"
+        },
+        "stats": {
+            "items": [
+                { "label": "Negocios Activos", "detail": "En todo Japón" },
+                { "label": "Usuarios Nexo", "detail": "Comunidad creciente" },
+                { "label": "Categorías", "detail": "Servicios variados" },
+                { "label": "Regiones", "detail": "Todas las prefecturas" }
+            ]
+        },
+        "testimonials": {
+            "badge": "Testimonios",
+            "title": "Lo que dice la comunidad",
+            "items": [
+                {
+                    "name": "Carlos Méndez",
+                    "role": "Dueño de 'El Sabor Gitano'",
+                    "text": "Nexo cambió la forma en que los clientes nos encuentran en Tokio. Las reservas aumentaron un 40% en el primer mes."
+                },
+                {
+                    "name": "Ana García",
+                    "role": "Consultora Legal",
+                    "text": "Una plataforma necesaria para centralizar servicios en nuestro idioma."
+                },
+                {
+                    "name": "Roberto Suzuki",
+                    "role": "Emprendedor Tech",
+                    "text": "El diseño es increíble, me da confianza recomendarlos a mis socios japoneses."
+                },
+                {
+                    "name": "Elena Soto",
+                    "role": "Traductora Independiente",
+                    "text": "He conectado con muchísimos clientes nuevos gracias al directorio."
+                },
+                {
+                    "name": "Juan Pérez",
+                    "role": "Exportador",
+                    "text": "La mejor herramienta para latinos en Japón."
+                }
+            ]
+        },
+        "newsletter": {
+            "badge": "Newsletter",
+            "title": "Mantente al día con la comunidad",
+            "description": "Novedades, nuevos negocios, eventos y ofertas exclusivas directo a tu bandeja. <span>No spam.</span>d",
+            "no_spam": "Sin spam.",
+            "success": {
+                "title": "¡Suscripción confirmada!",
+                "desc": "Te avisaremos cuando haya novedades."
+            },
+            "button": "Suscribirme",
+            "placeholder": "tu@email.com",
+            "footer": "Al suscribirte aceptas nuestra política de privacidad. Desuscripción con un solo clic."
+        }
+    },
+    "footer": {
+        "description": "La plataforma definitiva para conectar dueños de vehículos con talleres mecánicos de confianza.",
+        "brand": "TalleresMecanicos",
+        "sections": {
+            "platform": "Plataforma",
+            "resources": "Recursos",
+            "contact": "Contacto"
+        },
+        "links": {
+            "directory": "Directorio",
+            "services": "Servicios",
+            "community": "Comunidad",
+            "events": "Eventos",
+            "blog": "Blog Nexo",
+            "support": "Ayuda y Soporte",
+            "terms": "Términos",
+            "privacy": "Privacidad"
+        },
+        "location": "Tokyo, Japón",
+        "copy": "Building for the latino community.",
+        "status": "Sistema Activo",
+        "stack": "Construido con Stack Premium"
+    },
+    "auth": {
+        "layout": {
+            "back_to_home": "Volver al inicio",
+            "platform_access": "Acceso a la Plataforma",
+            "community_rebirth_title": "Tu comunidad",
+            "community_rebirth_span": "vuelve a nacer.",
+            "community_rebirth_description": "Conecta con negocios, servicios y el corazón de la comunidad latina en Japón. Todo en un solo lugar.",
+            "social_proof": "Únete a +5,000 latinos"
+        },
+        "login": {
+            "title": "TalleresMecanicos Login",
+            "email": "Email",
+            "password": "Contraseña",
+            "remember": "Recordarme",
+            "forgot": "¿Olvidaste tu contraseña?",
+            "button": "Ingresar al Panel",
+            "loading": "Iniciando sesión...",
+            "no_account": "¿No tienes cuenta?",
+            "register": "Registrar Taller Gratis"
+        },
+        "register": {
+            "title": "Crear Cuenta",
+            "name": "Nombre Completo",
+            "email": "Email",
+            "password": "Contraseña",
+            "confirm": "Confirmar Contraseña",
+            "terms": "Acepto los {terms} y la {privacy}",
+            "terms_link": "términos y condiciones",
+            "privacy_link": "privacidad",
+            "button": "Crear Cuenta",
+            "loading": "Procesando...",
+            "has_account": "¿Ya tienes cuenta?",
+            "login": "Inicia sesión",
+            "strength": {
+                "label": "Seguridad:",
+                "low": "Baja",
+                "medium": "Media",
+                "high": "Alta"
+            }
+        }
+    },
+    "community": {
+        "hero": {
+            "badge": "Hub Comunitario v1.0",
+            "title": "Nuestrad <span>Comunidad.</span>",
+            "description": "Más que un directorio, somos un nexo vital. Conectamos talento, experiencias y recursos para empoderar a los latinos en la tierra del sol naciente."
+        },
+        "social": {
+            "instagram": {
+                "title": "Instagram Live",
+                "description": "Síguenos para historias diarias, eventos en vivo y lo último de los negocios latinos en Japón.",
+                "button": "Seguir ahora"
+            },
+            "whatsapp": {
+                "title": "WhatsApp",
+                "description": "Únete a nuestro grupo de apoyo y networking directo.",
+                "button": "Unirse al Grupo"
+            }
+        },
+        "resources": {
+            "title": "Recursos Vitales",
+            "subtitle": "Información crítica para tu éxito y estabilidad en Japón.",
+            "items": {
+                "embassy": {
+                    "title": "Embajada de Venezuela",
+                    "description": "Trámites consulares, pasaportes y asistencia legal oficial para venezolanos en Japón.",
+                    "category": "Oficial"
+                },
+                "guide": {
+                    "title": "Guía de Vida en Japón",
+                    "description": "Portal oficial con información sobre visados, impuestos, salud y educación en varios idiomas.",
+                    "category": "Gobierno"
+                },
+                "social": {
+                    "title": "Comunidad Latina",
+                    "description": "Grupos de apoyo y redes de contacto para hispanohablantes integrándose en la sociedad japonesa.",
+                    "category": "Social"
+                },
+                "legal": {
+                    "title": "Asesoría Legal",
+                    "description": "Recursos y contactos para asesoría legal especializada en leyes de inmigración y negocios.",
+                    "category": "Servicios"
+                }
+            }
+        },
+        "team": {
+            "title": "El Equipo detrás del Nexo",
+            "description": "Apasionados por la cultura japonesa y comprometidos con el crecimiento de nuestra comunidad.",
+            "members": {
+                "jose": {
+                    "role": "Founder & Lead Architect",
+                    "bio": "Visionario enfocado en conectar la comunidad latina con la tecnología en Japón."
+                },
+                "support": {
+                    "role": "Community Support",
+                    "bio": "Nuestro equipo dedicado a brindar soporte y recursos a cada emprendedor."
+                }
+            }
+        },
+        "cta": {
+            "title": "¿Quieres colaborar?",
+            "description": "Nuestra comunidad crece gracias al aporte de personas como tú. Si tienes recursos que compartir o quieres ser parte del equipo, contáctanos.",
+            "button": "Contactar con el Equipo"
+        }
+    }
+}

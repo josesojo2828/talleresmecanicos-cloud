@@ -1,0 +1,14 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="msg-chat-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4facfe" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+  </defs>
+  <!-- Main Bubble -->
+  <path d="M21 11.5C21 15.6421 17.1944 19 12.5 19C10.9472 19 9.50117 18.6256 8.24 17.968L4 19L5.33333 15.6667C4.48202 14.4965 4 13.0645 4 11.5C4 7.35786 7.80558 4 12.5 4C17.1944 4 21 7.35786 21 11.5Z" stroke="url(#msg-chat-grad)" stroke-width="1.5" stroke-linejoin="round" />
+  <!-- Duo-tone internal accent -->
+  <path d="M8 11.5H8.01M12 11.5H12.01M16 11.5H16.01" stroke="url(#msg-chat-grad)" stroke-width="2" stroke-linecap="round" />
+  <!-- Glass Reflection -->
+  <path d="M12 7C14.5 7 17 8 18 10" stroke="white" stroke-opacity="0.2" stroke-width="1" stroke-linecap="round" />
+</svg>

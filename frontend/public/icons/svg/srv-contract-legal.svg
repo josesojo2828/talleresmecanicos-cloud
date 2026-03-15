@@ -1,0 +1,16 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="srv-cont-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4facfe" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+  </defs>
+  <!-- Document Shape -->
+  <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" stroke="url(#srv-cont-grad)" stroke-width="1.5" stroke-linejoin="round" />
+  <path d="M14 2V8H20" stroke="url(#srv-cont-grad)" stroke-width="1.5" />
+  <!-- Info Lines -->
+  <path d="M8 13H16" stroke="white" stroke-opacity="0.2" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M8 17H12" stroke="white" stroke-opacity="0.2" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Signature Glow (Glass) -->
+  <path d="M14 17C14 17 15 15 17 15C19 15 20 17 20 17" stroke="url(#srv-cont-grad)" stroke-width="1" stroke-opacity="0.6" stroke-linecap="round" />
+</svg>

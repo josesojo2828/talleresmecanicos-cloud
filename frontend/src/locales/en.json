@@ -1,0 +1,571 @@
+{
+    "success": {
+        "create": "Creation successful",
+        "update": "Update successful",
+        "delete": "Deletion completed",
+        "process": "Operation processed successfully",
+        "default": "Request successful",
+        "login": "Login successful",
+        "logout": "Logout"
+    },
+
+    "error": {
+        "default": "An unexpected error occurred",
+        "generic": "An unexpected server error occurred",
+        "bad_request": "The entered value is invalid",
+        "unauthorized": "You are not authorized to perform this action",
+        "forbidden": "Access denied",
+        "exists": "The record already exists in the system",
+        "not_found": "The requested resource was not found",
+        "select_option": "Select option",
+        "db": {
+            "relation_not_found": "One of the related records was not found (e.g., User or Plan does not exist)",
+            "unique_constraint": "Could not process: The record already exists (Duplicate data)",
+            "foreign_key_constraint": "Cannot delete or modify because it has associated data",
+            "invalid_data": "Invalid data format (Possibly an incorrect ID)"
+        }
+    },
+    "application": {
+        "management": "Application Management",
+        "category": "Category",
+        "resource": "Resource",
+        "question": "Question",
+        "messages": "Message",
+        "testimonial": "Testimonial",
+        "about": "About Us",
+        "objective": "Objective",
+        "social_media": "Social Media",
+        "value": "Corporate Values"
+    },
+    "user": {
+        "management": "User Management",
+        "address": "Addresses",
+        "device": "Devices",
+        "notification": "Notifications",
+        "profile": "Profiles",
+        "session": "Sessions",
+        "my_management": "My Management",
+        "title": "Users",
+        "subtitle": "Manage platform users"
+    },
+    "region": {
+        "region": "Regions",
+        "country": "Countries",
+        "state": "States/Prefectures",
+        "city": "Cities",
+        "title": "Regions",
+        "subtitle": "Geographical configuration"
+    },
+    "subscription": {
+        "subscription": "Subscriptions",
+        "title": "Subscriptions",
+        "subtitle": "Plan and membership management",
+        "plan": {
+            "title": "Subscription Plans",
+            "subtitle": "Configuration of payment methods"
+        }
+    },
+    "transaction": {
+        "management": "Financial Management",
+        "title": "Finance",
+        "subtitle": "Control of transactions and accounts",
+        "transaction": {
+            "title": "Transactions",
+            "subtitle": "Financial movements history"
+        },
+        "bank-account": {
+            "title": "Bank Accounts",
+            "subtitle": "Management of accounts for deposits"
+        },
+        "crypto-wallet": {
+            "title": "Crypto Wallets",
+            "subtitle": "Addresses for digital payments"
+        }
+    },
+    "address": { "title": "Addresses", "subtitle": "Your contact points" },
+    "device": { "title": "Devices", "subtitle": "Access management" },
+    "notification": { "title": "Notifications", "subtitle": "Your important notices" },
+    "profile": { "title": "Profiles", "subtitle": "Detailed information" },
+    "session": { "title": "Sessions", "subtitle": "Activity history" },
+    "country": { "title": "Countries", "subtitle": "National list" },
+    "state": { "title": "States", "subtitle": "Prefectures and provinces" },
+    "city": { "title": "Cities", "subtitle": "Metropolitan areas" },
+    "category": { "name": "Name", "description": "Description", "icon": "Icon", "color": "Color" },
+    "category-items": { "title": "Categories", "subtitle": "Management of items and labels" },
+    "resource": {
+        "title": "Resources",
+        "subtitle": "Administration of assets and downloads",
+        "name": "Name",
+        "description": "Description",
+        "category": "Category",
+        "enabled": "Enabled"
+    },
+    "question": {
+        "title": "Frequently Asked Questions",
+        "subtitle": "Management of common user doubts",
+        "question": "Question",
+        "answer": "Answer",
+        "enabled": "Enabled"
+    },
+    "messages-web": {
+        "title": "Web Messages",
+        "subtitle": "Inbox for inquiries from the web",
+        "name": "Name",
+        "email": "Email Address",
+        "message": "Message",
+        "read": "Read"
+    },
+    "messages": {
+        "title": "Web Messages",
+        "subtitle": "Inbox for inquiries from the web",
+        "name": "Name",
+        "email": "Email Address",
+        "message": "Message",
+        "read": "Read"
+    },
+    "testimonial": {
+        "title": "Testimonials",
+        "subtitle": "Community reviews and feedback",
+        "name": "Name",
+        "message": "Message"
+    },
+    "about": {
+        "title": "About Us",
+        "subtitle": "Company mission, vision, and values",
+        "mision": "Mission",
+        "vision": "Vision",
+        "values": "Values",
+        "mission": "Our Mission",
+        "vision_title": "Our Vision",
+        "values_title": "Pillars & Values",
+        "objectives_title": "Strategic Roadmap",
+        "pretitle": "Corporate Identity",
+        "hero_title_part1": "Connecting Vision,",
+        "hero_title_accent": "Creating Future.",
+        "hero_subtitle": "We are the strategic bridge between Latino talent and opportunities in Japan. Our story is written with every successful connection."
+    },
+    "value": {
+        "title": "Values",
+        "subtitle": "Fundamental principles of our community",
+        "title_label": "Title",
+        "description": "Description",
+        "icon": "Icon"
+    },
+    "objective": {
+        "title": "Objectives",
+        "subtitle": "Strategic goals and mission",
+        "objective": "Objective",
+        "description": "Description",
+        "icon": "Icon"
+    },
+    "social-media": {
+        "title": "Social Media",
+        "subtitle": "Management of digital presence links",
+        "name": "Name",
+        "url": "Link (URL)",
+        "icon": "Icon"
+    },
+    "social_media": {
+        "title": "Social Media",
+        "subtitle": "Management of digital presence links",
+        "name": "Name",
+        "url": "Link (URL)",
+        "icon": "Icon"
+    },
+    "action": {
+        "discard": "Discard",
+        "update": "Update",
+        "add": "Add",
+        "edit": "Edit",
+        "delete": "Delete",
+        "view": "View",
+        "back": "Go back",
+        "createdAt": "Created at",
+        "updatedAt": "Updated at",
+        "processing": "Processing...",
+        "modify_record": "Modify Record",
+        "create_entry": "Create Entry",
+        "terminate_record": "Delete Record",
+        "save": "Save",
+        "upload_file": "Upload File"
+    },
+    "status": {
+        "all": "All",
+        "active": "Active",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "inactive": "Inactive"
+    },
+    "dashboard": {
+        "search": "Search in database...",
+        "management": "Database Management",
+        "actions": "Actions",
+        "no_data": "No data",
+        "detail": {
+            "module_prefix": "Entity Module //",
+            "router_prefix": "Entity Router //",
+            "resolver_prefix": "UUID_RESOLVER:",
+            "user": "User",
+            "city": "City",
+            "region": "Region",
+            "country": "Country",
+            "state": "State",
+            "currency": "Currency",
+            "bank-account": "Bank Account",
+            "crypto-wallet": "Crypto Wallet",
+            "transaction": "Transaction",
+            "subscription": "Subscription",
+            "subscription-plan": "Subscription Plan",
+            "forum-post": "Forum Post",
+            "forum-comment": "Comment",
+            "workshop": "Workshop",
+            "workshop-category": "Workshop Category",
+            "publication": "Publication/Offer"
+        }
+    },
+    "ficha": {
+        "loading": "Loading Technical Sheet...",
+        "subtitle": "Detailed entity information",
+        "entity_type": "Entity: {slug}",
+        "no_records": "No internal records configured",
+        "no_form": "Editing protocol not available",
+        "tabs": {
+            "stats": "Statistics",
+            "records": "Internal Records",
+            "data": "Update Data"
+        },
+        "error": {
+            "restricted_title": "Restricted Access",
+            "restricted_desc": "Technical sheets are not allowed for this type of entity or you lack permissions."
+        },
+        "stats": {
+            "new": "New",
+            "appearances": "Appearances",
+            "views": "Views",
+            "engagement": "Engagement"
+        }
+    },
+    "language": {
+        "es": "🇪🇸 Spanish",
+        "en": "🇺🇸 English",
+        "ja": "🇯🇵 Japanese"
+    },
+    "dialog": {
+        "delete_confirm": "You are about to permanently delete this entry from {slug}. This action is irreversible."
+    },
+    "nav": {
+        "home": "Dashboard",
+        "user_management": "User Management",
+        "profile": "My Profile",
+        "exit": "Back to Home",
+        "regions": "Regions",
+        "countries": "Countries",
+        "cities": "Cities",
+        "workshops": "Workshops",
+        "workshop_list": "Workshop List",
+        "categories": "Categories",
+        "my_workshop": "My Workshop",
+        "my_publications": "My Publications",
+        "public_forum": "Public Forum",
+        "directory": "Directory",
+        "community": "Community",
+        "about": "About Us",
+        "brand": "Somos Nexo",
+        "login": "Login",
+        "login_mobile": "Login to my account"
+    },
+    "hero": {
+        "badge": "Connecting Latino talent in Japan",
+        "title": "Services in one place.",
+        "description": "The ultimate platform for Latino entrepreneurs. Discover verified businesses, professional services, and a vibrant community throughout Japan.",
+        "cta_primary": "Get Started",
+        "cta_secondary": "Explore Businesses",
+        "trust": {
+            "verified": "Verified",
+            "support": "24/7 Support",
+            "secure": "Secure"
+        }
+    },
+    "landing": {
+        "categories": {
+            "title": "Explore the <span>Directory.</span>",
+            "subtitle": "The main categories to boost your business in Japan.",
+            "cta": "Explore all",
+            "items": {
+                "gastronomy": {
+                  "title": "Gastronomy",
+                  "description": "Restaurants, supplies, and those cravings you miss from home."
+                },
+                "professional": {
+                  "title": "Services",
+                  "description": "Lawyers, moving, translators, and guaranteed professional support."
+                },
+                "products": {
+                  "title": "Products",
+                  "description": "Crafts, fashion, and the largest Latino community marketplace."
+                }
+            }
+        },
+        "logo_cloud": {
+            "text": "Collaborating with the community in Japan"
+        },
+        "value_proposition": {
+            "steps": {
+                "explore": {
+                    "title": "Explore",
+                    "desc": "Browse by categories or use smart search."
+                },
+                "connect": {
+                    "title": "Connect",
+                    "desc": "Contact directly with trusted services."
+                },
+                "participate": {
+                    "title": "Participate",
+                    "desc": "Join events, workshops, and community resources."
+                }
+            }
+        },
+        "bento": {
+            "title": "Boost your presence in Japan",
+            "subtitle": "Tools designed to elevate the visibility of latino entrepreneurs.",
+            "network": {
+                "badge": "Global_Network_v2.0",
+                "title": "National <span>Reach.</span>",
+                "description": "We connect your vision with real customers in every corner of Japan, from megacities to remote towns.",
+                "status_label": "Status",
+                "status_value": "Active_Map"
+            },
+            "verified": {
+                "title": "Verified",
+                "description": "Trust seal that guarantees absolute authenticity."
+            },
+            "performance": {
+                "label": "Performance",
+                "value": "Ultra_Fast"
+            },
+            "interface": {
+                "label": "Interface",
+                "value": "Mobile_First"
+            }
+        },
+        "faq": {
+            "badge": "Frequently Asked Questions",
+            "title": "Everything you need to know",
+            "subtitle": "Have questions? Here we answer the most common community inquiries.",
+            "footer": "Didn't find your answer? <link>Contact us</link>",
+            "contact": "Contact us",
+            "questions": [
+                {
+                    "question": "Is it free to publish my business?",
+                    "answer": "Yes, publishing your business on Somos Nexo is completely free. You can create your profile, add your services, and start receiving customers at no cost."
+                },
+                {
+                    "question": "Who can use Somos Nexo?",
+                    "answer": "Somos Nexo is designed for the latino community in Japan. Whether you are an entrepreneur, an independent professional, or simply looking for community services and products, you are welcome."
+                },
+                {
+                    "question": "How do you validate that businesses are real?",
+                    "answer": "Our team reviews each registered business before approving it. Additionally, reviews from other community members help maintain trust in the directory."
+                },
+                {
+                    "question": "Is it available in Japanese?",
+                    "answer": "Currently the platform is in Spanish, but we are working on adding multilingual support including Japanese and English."
+                },
+                {
+                    "question": "How do I contact a business?",
+                    "answer": "Each business profile includes direct contact information such as WhatsApp, email, or social networks depending on what the business prefers to share."
+                },
+                {
+                    "question": "Can I modify my business profile later?",
+                    "answer": "Of course! You can update your business information at any time from your dashboard."
+                }
+            ]
+        },
+        "cta": {
+            "badge": "Publish your business",
+            "title": "Do you have a venture?",
+            "description": "Reach thousands of Latinos in Japan today. Create your profile in minutes.",
+            "button": "Publish here"
+        },
+        "stats": {
+            "items": [
+                { "label": "Active Businesses", "detail": "All over Japan" },
+                { "label": "Nexo Users", "detail": "Growing community" },
+                { "label": "Categories", "detail": "Varied services" },
+                { "label": "Regions", "detail": "All prefectures" }
+            ]
+        },
+        "testimonials": {
+            "badge": "Testimonials",
+            "title": "What the community says",
+            "items": [
+                {
+                    "name": "Carlos Méndez",
+                    "role": "Owner of 'El Sabor Gitano'",
+                    "text": "Nexo changed the way customers find us in Tokyo. Bookings increased by 40% in the first month."
+                },
+                {
+                    "name": "Ana García",
+                    "role": "Legal Consultant",
+                    "text": "A necessary platform to centralize services in our language."
+                },
+                {
+                    "name": "Roberto Suzuki",
+                    "role": "Tech Entrepreneur",
+                    "text": "The design is incredible, it gives me confidence to recommend them to my Japanese partners."
+                },
+                {
+                    "name": "Elena Soto",
+                    "role": "Independent Translator",
+                    "text": "I have connected with many new clients thanks to the directory."
+                },
+                {
+                    "name": "Juan Pérez",
+                    "role": "Exporter",
+                    "text": "The best tool for Latinos in Japan."
+                }
+            ]
+        },
+        "newsletter": {
+            "badge": "Newsletter",
+            "title": "Stay up to date with the community",
+            "description": "News, new businesses, events, and exclusive offers straight to your inbox. <span>No spam.</span>",
+            "no_spam": "No spam.",
+            "success": {
+                "title": "Subscription confirmed!",
+                "desc": "We will let you know when there are news."
+            },
+            "button": "Subscribe",
+            "placeholder": "your@email.com",
+            "footer": "By subscribing you accept our privacy policy. One-click unsubscribe."
+        }
+    },
+    "footer": {
+        "description": "The definitive platform to connect Latino talent and trusted services across Japan.",
+        "brand": "Nexo",
+        "sections": {
+            "platform": "Platform",
+            "resources": "Resources",
+            "contact": "Contact"
+        },
+        "links": {
+            "directory": "Directory",
+            "services": "Services",
+            "community": "Community",
+            "events": "Events",
+            "blog": "Nexo Blog",
+            "support": "Help & Support",
+            "terms": "Terms",
+            "privacy": "Privacy"
+        },
+        "location": "Tokyo, Japan",
+        "copy": "Building for the latino community.",
+        "status": "System Active",
+        "stack": "Built with Premium Stack"
+    },
+    "auth": {
+        "layout": {
+            "back_to_home": "Back to Home",
+            "platform_access": "Platform Access",
+            "community_rebirth_title": "Your community",
+            "community_rebirth_span": "is reborn.",
+            "community_rebirth_description": "Connect with businesses, services, and the heart of the Latino community in Japan. All in one place.",
+            "social_proof": "Join +5,000 Latinos"
+        },
+        "login": {
+            "title": "Explore the Nexo",
+            "email": "Email",
+            "password": "Password",
+            "remember": "Remember me",
+            "forgot": "Forgot your password?",
+            "button": "Explore the Nexo",
+            "loading": "Logging in...",
+            "no_account": "Don't have an account?",
+            "register": "Register for free"
+        },
+        "register": {
+            "title": "Create Account",
+            "name": "Full Name",
+            "email": "Email",
+            "password": "Password",
+            "confirm": "Confirm Password",
+            "terms": "I accept the {terms} and the {privacy}",
+            "terms_link": "terms and conditions",
+            "privacy_link": "privacy",
+            "button": "Create Account",
+            "loading": "Processing...",
+            "has_account": "Already have an account?",
+            "login": "Login",
+            "strength": {
+                "label": "Security:",
+                "low": "Low",
+                "medium": "Medium",
+                "high": "High"
+            }
+        }
+    },
+    "community": {
+        "hero": {
+            "badge": "Community Hub v1.0",
+            "title": "Our <span>Community.</span>",
+            "description": "More than a directory, we are a vital nexus. We connect talent, experiences, and resources to empower Latinos in the land of the rising sun."
+        },
+        "social": {
+            "instagram": {
+                "title": "Instagram Live",
+                "description": "Follow us for daily stories, live events, and the latest from Latino businesses in Japan.",
+                "button": "Follow now"
+            },
+            "whatsapp": {
+                "title": "WhatsApp",
+                "description": "Join our support and direct networking group.",
+                "button": "Join Group"
+            }
+        },
+        "resources": {
+            "title": "Vital Resources",
+            "subtitle": "Critical information for your success and stability in Japan.",
+            "items": {
+                "embassy": {
+                    "title": "Embassy of Venezuela",
+                    "description": "Consular procedures, passports, and official legal assistance for Venezuelans in Japan.",
+                    "category": "Official"
+                },
+                "guide": {
+                    "title": "Life Guide in Japan",
+                    "description": "Official portal with information on visas, taxes, health, and education in several languages.",
+                    "category": "Government"
+                },
+                "social": {
+                    "title": "Latino Community",
+                    "description": "Support groups and contact networks for Spanish speakers integrating into Japanese society.",
+                    "category": "Social"
+                },
+                "legal": {
+                    "title": "Legal Advice",
+                    "description": "Resources and contacts for specialized legal advice on immigration and business laws.",
+                    "category": "Services"
+                }
+            }
+        },
+        "team": {
+            "title": "The Team behind the Nexo",
+            "description": "Passionate about Japanese culture and committed to the growth of our community.",
+            "members": {
+                "jose": {
+                    "role": "Founder & Lead Architect",
+                    "bio": "Visionary focused on connecting the Latino community with technology in Japan."
+                },
+                "support": {
+                    "role": "Community Support",
+                    "bio": "Our dedicated team providing support and resources to every entrepreneur."
+                }
+            }
+        },
+        "cta": {
+            "title": "Want to collaborate?",
+            "description": "Our community grows thanks to the contribution of people like you. If you have resources to share or want to be part of the team, contact us.",
+            "button": "Contact the Team"
+        }
+    }
+}

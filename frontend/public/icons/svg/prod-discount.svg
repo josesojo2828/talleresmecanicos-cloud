@@ -1,0 +1,15 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="prod-disc-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="100%" stop-color="#f43f5e" />
+    </linearGradient>
+  </defs>
+  <!-- Percent Symbol -->
+  <circle cx="7" cy="7" r="3" stroke="url(#prod-disc-grad)" stroke-width="1.5" />
+  <circle cx="17" cy="17" r="3" stroke="url(#prod-disc-grad)" stroke-width="1.5" />
+  <path d="M19 5L5 19" stroke="url(#prod-disc-grad)" stroke-width="2" stroke-linecap="round" />
+  <!-- Abstract Cut/Flare (Glass) -->
+  <path d="M5 8H8V5" stroke="white" stroke-opacity="0.2" stroke-width="1" />
+  <path d="M16 19H19V16" stroke="white" stroke-opacity="0.2" stroke-width="1" />
+</svg>

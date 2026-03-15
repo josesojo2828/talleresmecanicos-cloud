@@ -1,0 +1,15 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="user-logout-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff4b2b" />
+      <stop offset="100%" stop-color="#ff416c" />
+    </linearGradient>
+  </defs>
+  <!-- Exit Portal -->
+  <path d="M10 3H6C4.89543 3 4 3.89543 4 5V19C4 20.1046 4.89543 21 6 21H10" stroke="url(#user-logout-grad)" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Arrow Out -->
+  <path d="M14 8L18 12L14 16" stroke="url(#user-logout-grad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M8 12H18" stroke="url(#user-logout-grad)" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Glass Effect -->
+  <rect x="15" y="10" width="4" height="4" fill="url(#user-logout-grad)" fill-opacity="0.1" />
+</svg>

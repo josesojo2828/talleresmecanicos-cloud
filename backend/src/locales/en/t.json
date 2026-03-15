@@ -1,0 +1,49 @@
+{
+    "success": {
+        "create": "Creation successful",
+        "update": "Update successful",
+        "delete": "Deletion completed",
+        "process": "Operation processed successfully",
+        "default": "Request successful"
+    },
+    "error": {
+        "generic": "An unexpected server error occurred",
+        "bad_request": "The request contains invalid data",
+        "unauthorized": "You are not authorized to perform this action",
+        "forbidden": "Access denied",
+        "exists": "The record already exists in the system",
+        "not_found": "The requested resource was not found",
+        "db": {
+            "relation_not_found": "One of the related records was not found (e.g., User or Plan does not exist)",
+            "unique_constraint": "Could not process: The record already exists (Duplicate data)",
+            "foreign_key_constraint": "Cannot delete or modify because it has associated data",
+            "invalid_data": "Invalid data format (Possibly an incorrect ID)"
+        }
+    },
+    "application": {
+        "management": "Application Management",
+        "category": { "title": "Category Management", "name": "Category" },
+        "resource": { "title": "Resource Management", "name": "Resource" },
+        "question": { "title": "Frequently Asked Questions", "name": "Question" },
+        "messages": { "title": "Web Messages", "name": "Message" },
+        "testimonial": { "title": "Testimonials", "name": "Testimonial" },
+        "about": { "title": "About Us", "name": "About Us" },
+        "objective": { "title": "Objectives", "name": "Objective" },
+        "social_media": { "title": "Social Media", "name": "Social Media" }
+    },
+    "category": { "name": "Name", "description": "Description", "icon": "Icon", "color": "Color" },
+    "resource": { "name": "Name", "description": "Description", "category": "Category", "enabled": "Enabled" },
+    "question": { "question": "Question", "answer": "Answer", "enabled": "Enabled" },
+    "messages": { "name": "Name", "email": "Email Address", "message": "Message", "read": "Read" },
+    "testimonial": { "name": "Name", "message": "Message" },
+    "about": { "mision": "Mission", "vision": "Vision", "values": "Values" },
+    "objective": { "objective": "Objective", "description": "Description", "icon": "Icon" },
+    "social_media": { "name": "Name", "url": "Link (URL)", "icon": "Icon" },
+    "action": {
+        "add": "Add",
+        "edit": "Edit",
+        "delete": "Delete",
+        "view": "View",
+        "createdAt": "Created At"
+    }
+}

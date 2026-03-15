@@ -1,0 +1,15 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="prod-tag-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4facfe" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+  </defs>
+  <!-- Tag Shape -->
+  <path d="M20.59 13.41L13.41 20.59C13.05 20.95 12.55 21 12 21C11.45 21 10.95 20.79 10.59 20.41L3 13V3H13L20.41 10.59C20.78 10.95 21 11.45 21 12C21 12.55 20.79 13.05 20.59 13.41Z" stroke="url(#prod-tag-grad)" stroke-width="1.5" stroke-linejoin="round" />
+  <!-- Hole with Glow -->
+  <circle cx="7.5" cy="7.5" r="1.5" fill="white" fill-opacity="0.8" />
+  <circle cx="7.5" cy="7.5" r="2.5" stroke="url(#prod-tag-grad)" stroke-width="1" opacity="0.3" />
+  <!-- Glass Accents -->
+  <path d="M10 10L16 16" stroke="white" stroke-opacity="0.1" stroke-width="2" stroke-linecap="round" />
+</svg>

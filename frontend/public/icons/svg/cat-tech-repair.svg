@@ -1,0 +1,17 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cat-tech-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4facfe" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+  </defs>
+  <!-- Tool Handle -->
+  <rect x="10" y="14" width="4" height="7" rx="1" fill="url(#cat-tech-grad)" fill-opacity="0.1" stroke="url(#cat-tech-grad)" stroke-width="1.5" />
+  <!-- Circuit Screwdriver Head -->
+  <path d="M12 2V14" stroke="url(#cat-tech-grad)" stroke-width="2" stroke-linecap="round" />
+  <path d="M9 10L12 14L15 10" stroke="url(#cat-tech-grad)" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Circuit Nodes -->
+  <circle cx="9" cy="5" r="1" fill="url(#cat-tech-grad)" />
+  <circle cx="15" cy="5" r="1" fill="url(#cat-tech-grad)" />
+  <path d="M9 5H15" stroke="url(#cat-tech-grad)" stroke-width="0.5" stroke-opacity="0.5" />
+</svg>
