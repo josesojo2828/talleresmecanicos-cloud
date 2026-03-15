@@ -69,7 +69,6 @@ export default function ProfilePage() {
                 <div className="animate-in fade-in slide-in-from-left-4">
                     <InternalRecords 
                         title="Publicaciones que me gustan" 
-                        slug="forum-post"
                         records={(data?.forumLikes || []).map((l: any) => ({
                             id: l.forumPost?.id,
                             title: l.forumPost?.title || "Publicación",
@@ -85,7 +84,6 @@ export default function ProfilePage() {
                 <div className="animate-in fade-in slide-in-from-right-4">
                     <InternalRecords 
                         title="Mis Comentarios" 
-                        slug="forum-post"
                         records={(data?.forumComments || []).map((c: any) => ({
                             id: c.forumPost?.id || c.id,
                             title: c.content?.substring(0, 60),

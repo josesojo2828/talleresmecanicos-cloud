@@ -8,7 +8,7 @@ import {
   LayoutGrid, Heart, Plus, Minus,
   MessageCircle, Phone, Share2, MapPin, 
   ChevronRight, Globe, LogIn,
-  LogOut, Filter, X, Zap
+  LogOut, Filter, X, Zap, Settings
 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import apiClient from "@/utils/api/api.client";

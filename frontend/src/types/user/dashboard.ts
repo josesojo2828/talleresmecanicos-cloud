@@ -39,11 +39,24 @@ export interface TableColumn {
     sortable?: boolean;
 }
 
+export interface FilterOption {
+    label: string;
+    value: string;
+}
+
+export interface FilterConfig {
+    key: string;
+    label: string;
+    type: 'select' | 'text';
+    options?: FilterOption[];
+}
+
 export interface ObjectPage {
     slug: string; // slug to identify the page (LINK TO OBJECTSIDEBAR)
     title: string;
     subtitle: string;
     columns: TableColumn[];
+    filters?: FilterConfig[];
     actions: ObjectActionsScreens[];
     actionsRows: ObjectActionsRows[];
     form?: FormStructure;

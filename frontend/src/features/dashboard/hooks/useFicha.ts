@@ -19,11 +19,7 @@ export function useFicha(slug: string, id: string) {
             setData(res.data?.body || res.data);
         } catch (error) {
             console.error("Error fetching record:", error);
-            addAlert({
-                type: 'error',
-                title: 'Error de carga',
-                message: 'No pudimos recuperar la información del registro.'
-            });
+            addAlert('No pudimos recuperar la información del registro.', 'error');
         } finally {
             setLoading(false);
         }
@@ -35,18 +31,10 @@ export function useFicha(slug: string, id: string) {
             const res = await apiClient.patch(`/${slug}/${id}`, formData);
             const updated = res.data?.body || res.data;
             setData(updated);
-            addAlert({
-                type: 'success',
-                title: 'Registro actualizado',
-                message: 'Los cambios se han guardado correctamente.'
-            });
+            addAlert('Los cambios se han guardado correctamente.', 'success');
             return { success: true };
         } catch (error) {
-            addAlert({
-                type: 'error',
-                title: 'Error al actualizar',
-                message: 'No se pudieron guardar los cambios.'
-            });
+            addAlert('No se pudieron guardar los cambios.', 'error');
             return { success: false };
         } finally {
             setIsMutating(false);

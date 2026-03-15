@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Patch, Query, UseGuards } from "@nestjs/common";
-import { BidUCase } from "../../application/use-cases/bid/bid.ucase";
-import { CreateBidDto, UpdateBidStatusDto, BidQueryFilter } from "../../application/dtos/bid.dto";
+import { BidUCase } from "../../../application/use-cases/bid/bid.ucase";
+import { CreateBidDto, UpdateBidStatusDto, BidQueryFilter } from "../../../application/dtos/bid.dto";
 import { QueryOptions } from "src/shared/query/input";
 import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/modules/auth/guards/roles.guard";

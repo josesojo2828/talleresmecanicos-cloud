@@ -9,6 +9,7 @@ export interface IUser {
   phone?: string | null;
   role: IUserRole;
   enabled: boolean;
+  countryId?: string;
   profile?: IProfile | null;
   workshop?: any;
   supportAssignments?: any[];

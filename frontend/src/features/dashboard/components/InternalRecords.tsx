@@ -52,7 +52,7 @@ export const InternalRecords: React.FC<InternalRecordsProps> = ({
         <div className="space-y-4">
             <header className="flex items-center gap-2.5 mb-6">
                 <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
-                    {icon ? React.cloneElement(icon as React.ReactElement, { size: 14 }) : <Database size={14} />}
+                    {icon ? React.cloneElement(icon as React.ReactElement<any>, { size: 14 }) : <Database size={14} />}
                 </div>
                 <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest">{title}</h3>
                 <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[9px] font-black tabular-nums">{records.length}</span>

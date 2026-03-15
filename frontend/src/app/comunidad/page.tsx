@@ -26,6 +26,7 @@ import {
 import { useAuthStore } from '@/store/useAuthStore';
 import apiClient from '@/utils/api/api.client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { cn } from '@/utils/cn';
 import { CreatePostModal } from '@/features/community/components/CreatePostModal';
 import { useAlertStore } from '@/store/useAlertStore';
@@ -77,6 +78,7 @@ export default function ComunidadPage() {
     const [categories, setCategories] = useState<{id: string, name: string}[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const router = useRouter();
     const { addAlert } = useAlertStore();
 
     const fetchPosts = async () => {

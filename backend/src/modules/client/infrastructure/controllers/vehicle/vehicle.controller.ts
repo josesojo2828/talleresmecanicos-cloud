@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
-import { VehicleUCase } from "../../application/use-cases/vehicle/vehicle.ucase";
-import { CreateVehicleDto, UpdateVehicleDto, VehicleQueryFilter } from "../../application/dtos/vehicle.dto";
+import { VehicleUCase } from "../../../application/use-cases/vehicle/vehicle.ucase";
+import { CreateVehicleDto, UpdateVehicleDto, VehicleQueryFilter } from "../../../application/dtos/vehicle.dto";
 import { QueryOptions } from "src/shared/query/input";
 import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/modules/auth/guards/roles.guard";

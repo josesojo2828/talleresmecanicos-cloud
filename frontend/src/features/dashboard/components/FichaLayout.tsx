@@ -98,7 +98,7 @@ export const FichaLayout: React.FC<FichaLayoutProps> = ({
                                 : "text-slate-500 hover:text-slate-800 hover:bg-white/30"
                         )}
                     >
-                        {React.cloneElement(tab.icon as React.ReactElement, { size: 14 })}
+                        {React.cloneElement(tab.icon as React.ReactElement<any>, { size: 14 })}
                         {tab.label}
                     </button>
                 ))}

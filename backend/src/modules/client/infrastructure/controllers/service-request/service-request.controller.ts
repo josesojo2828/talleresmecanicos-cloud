@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Patch, Query, UseGuards } from "@nestjs/common";
-import { ServiceRequestUCase } from "../../application/use-cases/service-request/service-request.ucase";
-import { CreateServiceRequestDto, UpdateServiceRequestStatusDto, ServiceRequestQueryFilter } from "../../application/dtos/service-request.dto";
+import { ServiceRequestUCase } from "../../../application/use-cases/service-request/service-request.ucase";
+import { CreateServiceRequestDto, UpdateServiceRequestStatusDto, ServiceRequestQueryFilter } from "../../../application/dtos/service-request.dto";
 import { QueryOptions } from "src/shared/query/input";
 import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/modules/auth/guards/roles.guard";

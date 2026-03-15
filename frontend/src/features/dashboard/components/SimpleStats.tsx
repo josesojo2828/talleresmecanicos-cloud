@@ -26,7 +26,7 @@ const StatBox: React.FC<StatBoxProps> = ({ label, value, icon, color = 'emerald'
         <div className={cn("p-5 rounded-[2rem] border bg-white shadow-md transition-all hover:scale-[1.01] flex flex-col justify-between group", colors[color])}>
             <div className="flex justify-between items-start mb-4">
                 <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center transition-transform group-hover:rotate-6", colors[color])}>
-                    {React.cloneElement(icon as React.ReactElement, { size: 18 })}
+                    {React.cloneElement(icon as React.ReactElement<any>, { size: 18 })}
                 </div>
                 {trend && (
                     <div className="flex items-center gap-1 text-emerald-600 font-black text-[8px] uppercase bg-emerald-50 px-2 py-0.5 rounded-full">
