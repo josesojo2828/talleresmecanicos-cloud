@@ -6,6 +6,7 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY prisma ./prisma/
+COPY prisma.config.js ./
 
 RUN npm install
 
@@ -27,6 +28,7 @@ RUN npm install --only=production
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.js ./
 COPY --from=builder /app/tsconfig.json ./
 
 # Regenerate prisma client in the final environment
