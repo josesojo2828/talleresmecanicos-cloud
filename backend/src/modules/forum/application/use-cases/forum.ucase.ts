@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { QueryOptions } from "src/shared/query/input";
-import { ForumPost, ForumComment } from "prisma/generated/client";
+import { ForumPost, ForumComment } from "@prisma/client";
 import ForumPostModel from "../../domain/models/forum-post.model";
 import ForumPostPersistence from "../../infrastructure/persistence/post/persistence";
 import ForumCommentPersistence from "../../infrastructure/persistence/forum-comment/persistence";

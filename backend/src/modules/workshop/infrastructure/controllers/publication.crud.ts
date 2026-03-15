@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { PublicationUCase } from "../../application/use-cases/publication/publication.ucase";
 import { ICreatePublicationDto, IUpdatePublicationDto } from "../../application/dtos/workshop.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { Publication, UserRole } from "prisma/generated/client";
+import { Publication, UserRole } from "@prisma/client";
 import { IPublicationQueryFilter } from "../../application/dtos/workshop.schema";
 import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/modules/auth/guards/roles.guard";

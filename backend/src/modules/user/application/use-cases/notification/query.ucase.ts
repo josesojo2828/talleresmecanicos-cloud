@@ -3,7 +3,7 @@ import NotificationModel from "src/modules/user/domain/models/notification.model
 import { FindNotificationPersistence } from "src/modules/user/infrastructure/persistence/notification/notification.persistence";
 import { INotificationQueryFilter } from "src/modules/user/application/dtos/user.schema";
 import { QueryOptions } from "src/shared/query/input";
-import { Notification } from "prisma/generated/client";
+import { Notification } from "@prisma/client";
 
 @Injectable()
 export default class QueryNotificationUCase extends NotificationModel {

@@ -4,7 +4,7 @@ import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/modules/auth/guards/roles.guard";
 import { Roles } from "src/modules/auth/decorators/roles.decorator";
 import { CurrentUser } from "src/modules/auth/decorators/current-user.decorator";
-import { UserRole } from "prisma/generated/client";
+import { UserRole } from "@prisma/client";
 import { IUpdateWorkshopDto } from "../../application/dtos/workshop.dto";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { StorageService } from "src/modules/storage/storage.service";

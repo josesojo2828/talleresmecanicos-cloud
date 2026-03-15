@@ -3,7 +3,7 @@ import CityModel from "../../../domain/models/city.model";
 import FindCityPersistence from "../../../infrastructure/persistence/city/find.persistence";
 import { ICityQueryFilter } from "../../dtos/regions.schema";
 import { QueryOptions } from "src/shared/query/input";
-import { City, UserRole } from "prisma/generated/client";
+import { City, UserRole } from "@prisma/client";
 import { getScopeFilter } from "src/shared/utils/scope-filter";
 
 @Injectable()

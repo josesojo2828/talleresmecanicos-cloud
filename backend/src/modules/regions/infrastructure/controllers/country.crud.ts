@@ -5,7 +5,7 @@ import DeleteCountryUCase from "../../application/use-cases/country/delete.ucase
 import QueryCountryUCase from "../../application/use-cases/country/query.ucase";
 import { ICreateCountryDto, IUpdateCountryDto } from "../../application/dtos/regions.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { Country, UserRole } from "prisma/generated/client";
+import { Country, UserRole } from "@prisma/client";
 import { ICountryQueryFilter } from "../../application/dtos/regions.schema";
 import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/modules/auth/guards/roles.guard";

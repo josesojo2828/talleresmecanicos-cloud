@@ -5,7 +5,7 @@ import DeleteDeviceUCase from "../../application/use-cases/device/delete.ucase";
 import QueryDeviceUCase from "../../application/use-cases/device/query.ucase";
 import { ICreateDeviceDto, IUpdateDeviceDto } from "../../application/dtos/user.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { Device } from "prisma/generated/client";
+import { Device } from "@prisma/client";
 import { IDeviceQueryFilter } from "../../application/dtos/user.schema";
 
 @Controller('device')

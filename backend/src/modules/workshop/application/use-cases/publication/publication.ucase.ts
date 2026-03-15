@@ -3,7 +3,7 @@ import PublicationModel from "../../../domain/models/publication.model";
 import PublicationPersistence from "../../../infrastructure/persistence/publication/persistence";
 import { ICreatePublicationDto, IUpdatePublicationDto } from "../../dtos/workshop.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { Publication, UserRole } from "prisma/generated/client";
+import { Publication, UserRole } from "@prisma/client";
 import { IPublicationQueryFilter } from "../../dtos/workshop.schema";
 import { getScopeFilter } from "src/shared/utils/scope-filter";
 

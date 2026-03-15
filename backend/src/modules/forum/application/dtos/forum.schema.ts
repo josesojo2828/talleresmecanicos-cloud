@@ -1,4 +1,4 @@
-import { Prisma } from "prisma/generated/client";
+import { Prisma } from "@prisma/client";
 
 // Forum Post
 export type IForumPostCreateType = Prisma.ForumPostCreateInput;

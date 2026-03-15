@@ -3,7 +3,7 @@ import WorkshopModel from "../../../domain/models/workshop.model";
 import WorkshopPersistence from "../../../infrastructure/persistence/workshop/persistence";
 import { ICreateWorkshopDto, IUpdateWorkshopDto } from "../../dtos/workshop.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { Workshop, UserRole } from "prisma/generated/client";
+import { Workshop, UserRole } from "@prisma/client";
 import { IWorkshopQueryFilter } from "../../dtos/workshop.schema";
 import { getScopeFilter } from "src/shared/utils/scope-filter";
 

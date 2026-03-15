@@ -5,7 +5,7 @@ import DeleteUserUCase from "../../application/use-cases/user/delete.ucase";
 import QueryUserUCase from "../../application/use-cases/user/query.ucase";
 import { ICreateUserDto, IUpdateUserDto } from "../../application/dtos/user.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { User, UserRole } from "prisma/generated/client";
+import { User, UserRole } from "@prisma/client";
 import { IUserQueryFilter } from "../../application/dtos/user.schema";
 import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/modules/auth/guards/roles.guard";

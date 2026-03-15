@@ -1,4 +1,4 @@
-import { Prisma } from "prisma/generated/client";
+import { Prisma } from "@prisma/client";
 
 // Support Assignment
 export type ISupportAssignmentCreateType = Prisma.SupportAssignmentCreateInput;

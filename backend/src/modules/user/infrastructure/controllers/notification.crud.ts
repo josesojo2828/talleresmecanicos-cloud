@@ -5,7 +5,7 @@ import DeleteNotificationUCase from "../../application/use-cases/notification/de
 import QueryNotificationUCase from "../../application/use-cases/notification/query.ucase";
 import { ICreateNotificationDto, IUpdateNotificationDto } from "../../application/dtos/user.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { Notification } from "prisma/generated/client";
+import { Notification } from "@prisma/client";
 import { INotificationQueryFilter } from "../../application/dtos/user.schema";
 
 @Controller('notification')

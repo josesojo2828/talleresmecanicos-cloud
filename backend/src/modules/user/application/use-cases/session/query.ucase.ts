@@ -3,7 +3,7 @@ import SessionModel from "src/modules/user/domain/models/session.model";
 import { FindSessionPersistence } from "src/modules/user/infrastructure/persistence/session/session.persistence";
 import { ISessionQueryFilter } from "src/modules/user/application/dtos/user.schema";
 import { QueryOptions } from "src/shared/query/input";
-import { Session } from "prisma/generated/client";
+import { Session } from "@prisma/client";
 
 @Injectable()
 export default class QuerySessionUCase extends SessionModel {

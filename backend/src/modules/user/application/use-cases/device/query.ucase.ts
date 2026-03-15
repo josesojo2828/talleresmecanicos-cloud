@@ -3,7 +3,7 @@ import DeviceModel from "src/modules/user/domain/models/device.model";
 import { FindDevicePersistence } from "src/modules/user/infrastructure/persistence/device/device.persistence";
 import { IDeviceQueryFilter } from "src/modules/user/application/dtos/user.schema";
 import { QueryOptions } from "src/shared/query/input";
-import { Device } from "prisma/generated/client";
+import { Device } from "@prisma/client";
 
 @Injectable()
 export default class QueryDeviceUCase extends DeviceModel {

@@ -3,7 +3,7 @@ import ProfileModel from "src/modules/user/domain/models/profile.model";
 import { FindProfilePersistence } from "src/modules/user/infrastructure/persistence/profile/profile.persistence";
 import { IProfileQueryFilter } from "src/modules/user/application/dtos/user.schema";
 import { QueryOptions } from "src/shared/query/input";
-import { Profile } from "prisma/generated/client";
+import { Profile } from "@prisma/client";
 
 @Injectable()
 export default class QueryProfileUCase extends ProfileModel {

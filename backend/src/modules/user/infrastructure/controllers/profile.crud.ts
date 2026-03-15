@@ -5,7 +5,7 @@ import DeleteProfileUCase from "../../application/use-cases/profile/delete.ucase
 import QueryProfileUCase from "../../application/use-cases/profile/query.ucase";
 import { ICreateProfileDto, IUpdateProfileDto } from "../../application/dtos/user.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { Profile } from "prisma/generated/client";
+import { Profile } from "@prisma/client";
 import { IProfileQueryFilter } from "../../application/dtos/user.schema";
 
 @Controller('profile')

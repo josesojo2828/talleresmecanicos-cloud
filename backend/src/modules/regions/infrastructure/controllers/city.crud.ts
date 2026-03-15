@@ -5,7 +5,7 @@ import DeleteCityUCase from "../../application/use-cases/city/delete.ucase";
 import QueryCityUCase from "../../application/use-cases/city/query.ucase";
 import { ICreateCityDto, IUpdateCityDto } from "../../application/dtos/regions.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { City, UserRole } from "prisma/generated/client";
+import { City, UserRole } from "@prisma/client";
 import { ICityQueryFilter } from "../../application/dtos/regions.schema";
 import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/modules/auth/guards/roles.guard";

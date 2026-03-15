@@ -1,4 +1,4 @@
-import { UserRole } from 'prisma/generated/client';
+import { UserRole } from '@prisma/client';
 
 export function getScopeFilter(user: any) {
     if (!user) return { enabled: true };

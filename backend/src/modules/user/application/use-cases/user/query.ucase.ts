@@ -3,7 +3,7 @@ import UserModel from "src/modules/user/domain/models/user.model";
 import FindUserPersistence from "src/modules/user/infrastructure/persistence/user/find.persistence";
 import { IUserQueryFilter } from "src/modules/user/application/dtos/user.schema";
 import { QueryOptions } from "src/shared/query/input";
-import { User } from "prisma/generated/client";
+import { User } from "@prisma/client";
 
 @Injectable()
 export default class QueryUserUCase extends UserModel {

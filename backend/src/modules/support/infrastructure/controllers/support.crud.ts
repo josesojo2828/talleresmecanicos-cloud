@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/commo
 import { SupportUCase } from "../../application/use-cases/support.ucase";
 import { ICreateSupportAssignmentDto } from "../../application/dtos/support.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { SupportAssignment } from "prisma/generated/client";
+import { SupportAssignment } from "@prisma/client";
 import { ISupportAssignmentQueryFilter } from "../../application/dtos/support.schema";
 
 @Controller('support')

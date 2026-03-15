@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/
 import { ForumUCase } from "../../application/use-cases/forum.ucase";
 import { ICreateForumPostDto, IUpdateForumPostDto, ICreateForumCommentDto } from "../../application/dtos/forum.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { ForumPost, ForumComment } from "prisma/generated/client";
+import { ForumPost, ForumComment } from "@prisma/client";
 import { IForumPostQueryFilter, IForumCommentQueryFilter } from "../../application/dtos/forum.schema";
 
 @Controller('forum-post')

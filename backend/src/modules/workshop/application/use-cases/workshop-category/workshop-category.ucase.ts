@@ -3,7 +3,7 @@ import WorkshopCategoryModel from "../../../domain/models/workshop-category.mode
 import WorkshopCategoryPersistence from "../../../infrastructure/persistence/workshop-category/persistence";
 import { ICreateWorkshopCategoryDto, IUpdateWorkshopCategoryDto } from "../../dtos/workshop.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { WorkshopCategory } from "prisma/generated/client";
+import { WorkshopCategory } from "@prisma/client";
 import { IWorkshopCategoryQueryFilter } from "../../dtos/workshop.schema";
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { QueryOptions } from "src/shared/query/input";
-import { SupportAssignment } from "prisma/generated/client";
+import { SupportAssignment } from "@prisma/client";
 import SupportAssignmentModel from "../../domain/models/support-assignment.model";
 import SupportAssignmentPersistence from "../../infrastructure/persistence/assignment/persistence";
 import { ICreateSupportAssignmentDto } from "../dtos/support.dto";

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { WorkshopUCase } from "../../application/use-cases/workshop/workshop.ucase";
 import { ICreateWorkshopDto, IUpdateWorkshopDto } from "../../application/dtos/workshop.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { Workshop, UserRole } from "prisma/generated/client";
+import { Workshop, UserRole } from "@prisma/client";
 import { IWorkshopQueryFilter } from "../../application/dtos/workshop.schema";
 import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/modules/auth/guards/roles.guard";

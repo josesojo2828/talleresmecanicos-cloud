@@ -3,7 +3,7 @@ import CountryModel from "../../../domain/models/country.model";
 import FindCountryPersistence from "../../../infrastructure/persistence/country/find.persistence";
 import { ICountryQueryFilter } from "../../dtos/regions.schema";
 import { QueryOptions } from "src/shared/query/input";
-import { Country } from "prisma/generated/client";
+import { Country } from "@prisma/client";
 
 @Injectable()
 export default class QueryCountryUCase extends CountryModel {

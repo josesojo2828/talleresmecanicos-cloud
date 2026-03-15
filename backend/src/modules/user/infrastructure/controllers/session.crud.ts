@@ -5,7 +5,7 @@ import DeleteSessionUCase from "../../application/use-cases/session/delete.ucase
 import QuerySessionUCase from "../../application/use-cases/session/query.ucase";
 import { ICreateSessionDto, IUpdateSessionDto } from "../../application/dtos/user.dto";
 import { QueryOptions } from "src/shared/query/input";
-import { Session } from "prisma/generated/client";
+import { Session } from "@prisma/client";
 import { ISessionQueryFilter } from "../../application/dtos/user.schema";
 
 @Controller('session')
