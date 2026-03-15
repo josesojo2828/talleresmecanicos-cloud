@@ -12,6 +12,7 @@ RUN npm install
 COPY . .
 
 # Generamos el cliente para que el build de NestJS tenga los tipos disponibles
+ENV PRISMA_CLI_QUERY_ENGINE_TYPE=binary
 RUN npx prisma generate
 RUN npm run build
 
@@ -29,6 +30,7 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/tsconfig.json ./
 
 # Regenerate prisma client in the final environment
+ENV PRISMA_CLI_QUERY_ENGINE_TYPE=binary
 RUN npx prisma generate
 
 # Install netcat for wait-for-db
