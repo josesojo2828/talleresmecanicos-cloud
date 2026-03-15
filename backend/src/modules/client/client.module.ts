@@ -8,6 +8,7 @@ import { BidUCase } from './application/use-cases/bid/bid.ucase';
 import VehiclePersistence from './infrastructure/persistence/vehicle/persistence';
 import ServiceRequestPersistence from './infrastructure/persistence/service-request/persistence';
 import BidPersistence from './infrastructure/persistence/bid/persistence';
+import { PrismaService } from 'src/config/prisma.service';
 
 @Module({
     controllers: [
@@ -16,6 +17,7 @@ import BidPersistence from './infrastructure/persistence/bid/persistence';
         BidController
     ],
     providers: [
+        PrismaService,
         VehicleUCase,
         ServiceRequestUCase,
         BidUCase,
