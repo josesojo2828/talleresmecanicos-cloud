@@ -48,8 +48,8 @@ services:
     depends_on:
       - backend
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:3001
-      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      NEXT_PUBLIC_API_URL: https://talleresmecanicos.quanticarch.com/api
+      NEXTAUTH_URL: https://talleresmecanicos.quanticarch.com
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-your_nextauth_secret}
       NODE_ENV: production
     ports:
