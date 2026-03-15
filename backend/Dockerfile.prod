@@ -25,8 +25,11 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/tsconfig.json ./
 
+# Regenerate prisma client in the final environment
+RUN npx prisma generate
+
 # Install netcat for wait-for-db
 RUN apk add --no-cache netcat-openbsd
 
 EXPOSE 9999
-CMD until nc -z postgres 5432; do echo "Waiting for postgres..."; sleep 2; done && npx prisma migrate deploy && npm run start:prod
+CMD until nc -z postgres 5432; do echo "Waiting for postgres..."; sleep 5; done && npx prisma migrate deploy && npm run start:prod
