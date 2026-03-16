@@ -16,6 +16,8 @@ export class WorkshopUCase extends WorkshopModel {
     async create(data: ICreateWorkshopDto) {
         const { countryId, cityId, categoryIds, userId, ...rest } = data;
 
+        console.log(data);
+
         const body: any = {
             ...rest,
             enabled: false, // Default to false as per requirement
@@ -38,6 +40,8 @@ export class WorkshopUCase extends WorkshopModel {
 
     async update(id: string, data: IUpdateWorkshopDto, user: any) {
         await this.findOne(id, user); // Verification included in findOne
+        
+        console.log(data);
         
         const { 
             name, description, address, phone, whatsapp, website, 
@@ -63,11 +67,12 @@ export class WorkshopUCase extends WorkshopModel {
         if (countryId) body.country = { connect: { id: countryId } };
         if (cityId) body.city = { connect: { id: cityId } };
         
-        if (categoryIds) {
+        if (categoryIds && categoryIds.length > 0) {
             body.categories = {
                 set: categoryIds.map(id => ({ id }))
             };
         }
+
 
         return {
             message: 'success.update',

@@ -13,7 +13,7 @@ import { StorageModule } from './modules/storage/storage.module';
 import { WorkshopModule } from './modules/workshop/workshop.module';
 import { ForumModule } from './modules/forum/forum.module';
 import { SupportModule } from './modules/support/support.module';
-import { ClientModule } from './modules/client/client.module';
+// import { ClientModule } from './modules/client/client.module';
 
 @Module({
   imports: [
@@ -41,7 +41,7 @@ import { ClientModule } from './modules/client/client.module';
     WorkshopModule,
     ForumModule,
     SupportModule,
-    ClientModule,
+    // ClientModule,
 
     // SECURITY
     SecurityModule,

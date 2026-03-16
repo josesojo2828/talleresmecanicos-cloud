@@ -13,6 +13,7 @@ export type InputType =
     | 'radio'
     | 'file'
     | 'image'
+    | 'hidden'
     | 'icon_picker';
 
 export interface FormOption {

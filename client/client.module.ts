@@ -28,7 +28,10 @@ import { PrismaService } from 'src/config/prisma.service';
     exports: [
         VehicleUCase,
         ServiceRequestUCase,
-        BidUCase
+        BidUCase,
+        VehiclePersistence,
+        ServiceRequestPersistence,
+        BidPersistence
     ]
 })
 export class ClientModule {}

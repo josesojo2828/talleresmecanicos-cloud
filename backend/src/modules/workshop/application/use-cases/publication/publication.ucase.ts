@@ -37,7 +37,7 @@ export class PublicationUCase extends PublicationModel {
     }
 
     async update(id: string, data: IUpdatePublicationDto, user: any) {
-        await this.findOne(id, user); 
+        await this.findOne(id, user, true); 
 
         const { title, content, images, enabled, categoryIds } = data;
         const updateData: any = {};
@@ -65,11 +65,11 @@ export class PublicationUCase extends PublicationModel {
         };
     }
 
-    async findOne(id: string, user: any) {
+    async findOne(id: string, user: any, ignore?: boolean) {
         const scope = getScopeFilter(user);
         const where: any = { id };
         
-        if (user) {
+        if (user && !ignore) {
             if (user.role === UserRole.SUPPORT) {
                 where.workshop = scope;
             } else if (user.role === UserRole.TALLER || user.role === UserRole.CLIENT) {

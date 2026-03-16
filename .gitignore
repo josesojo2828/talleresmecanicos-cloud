@@ -25,6 +25,7 @@ backend/prisma/generated/
 
 # Docker & Databases
 docker/data/postgres/
+docker/data/postgres_prd/
 docker/data/minio/
 docker/pgadmin-data/
 *.db

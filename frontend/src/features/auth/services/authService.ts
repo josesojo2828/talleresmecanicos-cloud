@@ -29,9 +29,13 @@ export const register = async (data: RegisterData): Promise<AuthResponse> => {
     try {
         const response = await apiClient.post(`/auth/register`,
             {
-                name: data.name,
+                firstName: data.firstName,
+                lastName: data.lastName,
                 email: data.email,
                 password: data.password,
+                role: data.role,
+                country: data.country,
+                city: data.city,
             },
         );
 

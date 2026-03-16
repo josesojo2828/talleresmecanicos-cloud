@@ -107,35 +107,43 @@ export const useCrud = (slug: string) => {
         try {
             setIsMutating(true);
 
-            // Detect if we need to send as FormData (for file uploads)
-            const hasFile = Object.values(formData).some(val => val instanceof File || val instanceof Blob);
-            let payload: Record<string, unknown> | FormData = formData;
+            // 1. Clonamos la información para no mutar el estado del formulario directamente
+            const body = { ...formData };
 
-            if (hasFile) {
-                const formDataPayload = new FormData();
-                Object.entries(formData).forEach(([key, val]) => {
-                    if (val instanceof File || val instanceof Blob) {
-                        formDataPayload.append(key, val);
-                    } else if (val !== null && val !== undefined) {
-                        // For nested objects or arrays, we might need JSON.stringify, 
-                        // but for standard CRUD simple values are enough.
-                        formDataPayload.append(key, typeof val === 'object' ? JSON.stringify(val) : String(val));
-                    }
-                });
-                payload = formDataPayload;
+            // 2. Buscamos campos que tengan archivos (File o Blob)
+            const entries = Object.entries(body);
+            for (const [key, val] of entries) {
+                if (val instanceof File) {
+                    // Carga individual
+                    const fileData = new FormData();
+                    fileData.append('file', val);
+                    const res = await apiClient.post(`/storage/upload`, fileData, { params: { folder: slug } });
+                    body[key] = res.data.key;
+                } else if (Array.isArray(val) && val.some(v => v instanceof File)) {
+                    // Carga múltiple
+                    const filesData = new FormData();
+                    val.forEach(file => {
+                        if (file instanceof File) filesData.append('files', file);
+                    });
+                    const res = await apiClient.post(`/storage/upload-multiple`, filesData, { params: { folder: slug } });
+                    body[key] = res.data.map((r: any) => r.key);
+                }
             }
 
-            if (id) await apiClient.put(`/${slug}/${id}`, payload);
-            else await apiClient.post(`/${slug}`, payload);
+            // 3. Enviamos el JSON final al endpoint del CRUD
+            if (id) await apiClient.put(`/${slug}/${id}`, body);
+            else await apiClient.post(`/${slug}`, body);
 
             await reloadData();
             return { success: true };
         } catch (error) {
+            console.error(`[useCrud] Error saving ${slug}:`, error);
             return { success: false, error: error instanceof Error ? error : new Error(String(error)) };
         } finally {
             setIsMutating(false);
         }
     };
+
 
     const remove = async (id: string | number): Promise<{ success: boolean; error?: Error }> => {
         try {

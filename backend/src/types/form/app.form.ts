@@ -86,3 +86,36 @@ export const PublicationForm: FormStructure = {
         { name: 'enabled', label: 'publication.enabled', type: 'switch', defaultValue: false }
     ]
 };
+
+export const VehicleForm: FormStructure = {
+    slug: 'vehicle',
+    title: 'Mi Vehículo',
+    fields: [
+        { name: 'brand', label: 'Marca', type: 'text', validation: { required: true }, gridCols: 2 },
+        { name: 'model', label: 'Modelo', type: 'text', validation: { required: true }, gridCols: 2 },
+        { name: 'year', label: 'Año', type: 'number', gridCols: 2 },
+        { name: 'licensePlate', label: 'Placa', type: 'text', gridCols: 2 },
+        { name: 'lastOilChange', label: 'Último cambio de aceite', type: 'date' }
+    ]
+};
+
+export const ServiceRequestForm: FormStructure = {
+    slug: 'service-request',
+    title: 'Solicitud de Servicio',
+    fields: [
+        { name: 'title', label: 'Título', type: 'text', validation: { required: true } },
+        { name: 'description', label: 'Descripción del problema', type: 'textarea', validation: { required: true } },
+        { name: 'images', label: 'Fotos', type: 'image', multiple: true, validation: { max: 5 } },
+        {
+            name: 'vehicleId',
+            label: 'Vehículo',
+            type: 'autocomplete',
+            remote: { slug: 'VEHICLE' },
+            validation: { required: true }
+        },
+        { name: 'isSOS', label: 'Es emergencia (SOS)', type: 'switch', defaultValue: false },
+        { name: 'latitude', label: 'Latitud', type: 'hidden' },
+        { name: 'longitude', label: 'Longitud', type: 'hidden' }
+    ]
+};
+

@@ -28,4 +28,13 @@ export default class VehiclePersistence {
         ]);
         return { total, data };
     }
+
+    async select({ where }: { where: any }) {
+        const data = await this.prisma.vehicle.findMany({
+            where,
+            select: { id: true, brand: true, model: true }
+        });
+        return data.map(v => ({ id: v.id, label: `${v.brand} ${v.model}` }));
+    }
 }
+

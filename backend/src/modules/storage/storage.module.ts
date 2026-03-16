@@ -1,10 +1,10 @@
 import { Module, Global } from '@nestjs/common';
 import { StorageService } from './storage.service';
-import { StorageTestController } from './storage-test.controller';
+import { StorageController } from './storage.controller';
 
 @Global()
 @Module({
-    controllers: [StorageTestController],
+    controllers: [StorageController],
     providers: [StorageService],
     exports: [StorageService],
 })

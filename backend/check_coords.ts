@@ -1,4 +1,4 @@
-import { PrismaClient } from "./prisma/generated/client";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient({} as any);
 async function main() {
     const list = await prisma.workshop.findMany({ select: { name: true, latitude: true, longitude: true, enabled: true } });

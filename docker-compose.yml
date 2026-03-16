@@ -9,7 +9,7 @@ services:
     ports:
       - "5401:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./docker/data/postgres_prd:/var/lib/postgresql/data
     networks:
       - tm_network
 

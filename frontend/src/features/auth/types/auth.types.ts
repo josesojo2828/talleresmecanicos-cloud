@@ -19,11 +19,15 @@ export interface LoginCredentials {
 
 // Register types
 export interface RegisterData {
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     confirmPassword: string;
+    role: 'CLIENT' | 'TALLER';
     acceptTerms: boolean;
+    country: string;
+    city: string;
 }
 
 // API Response types

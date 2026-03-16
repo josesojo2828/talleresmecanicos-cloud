@@ -91,19 +91,19 @@ export default class DashboardService {
 
             pages.push({
                 slug: 'user',
-                title: 'Usuarios',
-                subtitle: 'Administración de usuarios y roles',
-                actions: [{ icon: 'add', label: 'Agregar', action: 'add', type: 'page' }],
+                title: 'user.title',
+                subtitle: 'user.subtitle',
+                actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
                 actionsRows: [
-                    { icon: 'edit', label: 'Editar', action: 'edit', type: 'modal' },
-                    { icon: 'delete', label: 'Eliminar', action: 'delete', type: 'modal' }
+                    { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
+                    { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' }
                 ],
                 columns: [
-                    { key: 'firstName', label: 'Nombre', type: 'text' },
-                    { key: 'lastName', label: 'Apellido', type: 'text' },
-                    { key: 'email', label: 'Email', type: 'text' },
-                    { key: 'role', label: 'Rol', type: 'badge' },
-                    { key: 'enabled', label: 'Estado', type: 'boolean' }
+                    { key: 'firstName', label: 'headers.firstName', type: 'text' },
+                    { key: 'lastName', label: 'headers.lastName', type: 'text' },
+                    { key: 'email', label: 'headers.email', type: 'text' },
+                    { key: 'role', label: 'headers.role', type: 'badge' },
+                    { key: 'enabled', label: 'headers.status', type: 'boolean' }
                 ],
                 form: UserForms.UserCreateForm
             });
@@ -150,13 +150,13 @@ export default class DashboardService {
 
             pages.push({
                 slug: 'country',
-                title: 'Países',
-                subtitle: 'Países habilitados',
-                actions: [{ icon: 'add', label: 'Agregar', action: 'add', type: 'page' }],
-                actionsRows: [{ icon: 'edit', label: 'Editar', action: 'edit', type: 'modal' }],
+                title: 'nav.countries',
+                subtitle: 'regions.country.subtitle',
+                actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
+                actionsRows: [{ icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' }],
                 columns: [
-                    { key: 'name', label: 'Nombre', type: 'text' },
-                    { key: 'enabled', label: 'Habilitado', type: 'boolean' }
+                    { key: 'name', label: 'headers.name', type: 'text' },
+                    { key: 'enabled', label: 'headers.status', type: 'boolean' }
                 ],
                 form: RegionForms.CountryForm
             });
@@ -165,18 +165,18 @@ export default class DashboardService {
 
             pages.push({
                 slug: 'city',
-                title: 'Ciudades',
-                subtitle: 'Ciudades por país',
-                actions: [{ icon: 'add', label: 'Agregar', action: 'add', type: 'page' }],
-                actionsRows: [{ icon: 'edit', label: 'Editar', action: 'edit', type: 'modal' }],
+                title: 'nav.cities',
+                subtitle: 'regions.city.subtitle',
+                actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
+                actionsRows: [{ icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' }],
                 columns: [
-                    { key: 'name', label: 'Nombre', type: 'text' },
-                    { key: 'country.name', label: 'País', type: 'text' },
-                    { key: 'enabled', label: 'Habilitado', type: 'boolean' }
+                    { key: 'name', label: 'headers.name', type: 'text' },
+                    { key: 'country.name', label: 'headers.country', type: 'text' },
+                    { key: 'enabled', label: 'headers.status', type: 'boolean' }
                 ],
                 form: RegionForms.CityForm,
                 filters: [
-                    { key: 'countryId', label: 'Filtrar por País', type: 'select', options: countries.map(c => ({ label: c.name, value: c.id })) }
+                    { key: 'countryId', label: 'regions.filter_country', type: 'select', options: countries.map(c => ({ label: c.name, value: c.id })) }
                 ]
             });
         }
@@ -204,14 +204,14 @@ export default class DashboardService {
 
         pages.push({
             slug: 'workshop',
-            title: isAdmin ? 'Gestión de Talleres' : 'Talleres',
-            subtitle: 'Administración de talleres mecánicos',
-            actions: (isAdmin || isSupport) ? [{ icon: 'add', label: 'Agregar', action: 'add', type: 'page' }] : [],
-            actionsRows: [{ icon: 'edit', label: 'Editar', action: 'edit', type: 'modal' }],
+            title: isAdmin ? 'workshop.management' : 'nav.workshops',
+            subtitle: 'workshop.subtitle',
+            actions: (isAdmin || isSupport) ? [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }] : [],
+            actionsRows: [{ icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' }],
             columns: [
-                { key: 'name', label: 'Nombre', type: 'text' },
-                { key: 'city.name', label: 'Ciudad', type: 'text' },
-                { key: 'enabled', label: 'Habilitado', type: 'boolean' }
+                { key: 'name', label: 'headers.name', type: 'text' },
+                { key: 'city.name', label: 'headers.city', type: 'text' },
+                { key: 'enabled', label: 'headers.status', type: 'boolean' }
             ],
             form: AppForms.WorkshopForm
         });
@@ -219,14 +219,14 @@ export default class DashboardService {
         if (isTaller) {
             pages.push({
                 slug: 'my-workshop',
-                title: 'Mi Taller',
-                subtitle: 'Información de tu taller mecánico',
+                title: 'nav.my_workshop',
+                subtitle: 'workshop.subtitle',
                 actions: [], // No adding more workshops
-                actionsRows: [{ icon: 'edit', label: 'Editar Informacion', action: 'edit', type: 'modal' }],
+                actionsRows: [{ icon: 'edit', label: 'action.edit_info', action: 'edit', type: 'modal' }],
                 columns: [
-                    { key: 'name', label: 'Nombre', type: 'text' },
-                    { key: 'city.name', label: 'Ciudad', type: 'text' },
-                    { key: 'enabled', label: 'Habilitado', type: 'boolean' }
+                    { key: 'name', label: 'headers.name', type: 'text' },
+                    { key: 'city.name', label: 'headers.city', type: 'text' },
+                    { key: 'enabled', label: 'headers.status', type: 'boolean' }
                 ],
                 form: AppForms.WorkshopForm
             });
@@ -234,30 +234,30 @@ export default class DashboardService {
 
         pages.push({
             slug: 'workshop-category',
-            title: 'Categorías',
-            subtitle: 'Categorías de servicios',
-            actions: [{ icon: 'add', label: 'Agregar', action: 'add', type: 'page' }],
-            actionsRows: [{ icon: 'edit', label: 'Editar', action: 'edit', type: 'modal' }],
+            title: 'nav.categories',
+            subtitle: 'workshop.categories.subtitle',
+            actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
+            actionsRows: [{ icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' }],
             columns: [
-                { key: 'name', label: 'Nombre', type: 'text' },
-                { key: 'enabled', label: 'Habilitado', type: 'boolean' }
+                { key: 'name', label: 'headers.name', type: 'text' },
+                { key: 'enabled', label: 'headers.status', type: 'boolean' }
             ],
             form: AppForms.WorkshopCategoryForm
         });
 
         pages.push({
             slug: 'publication',
-            title: 'Publicaciones',
-            subtitle: 'Ofertas y anuncios del taller',
-            actions: [{ icon: 'add', label: 'Anunciar', action: 'add', type: 'page' }],
+            title: 'nav.my_publications',
+            subtitle: 'publication.subtitle',
+            actions: [{ icon: 'add', label: 'action.advertise', action: 'add', type: 'page' }],
             actionsRows: [
-                { icon: 'edit', label: 'Editar', action: 'edit', type: 'modal' },
-                { icon: 'delete', label: 'Borrar', action: 'delete', type: 'modal' }
+                { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
+                { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' }
             ],
             columns: [
-                { key: 'title', label: 'Título', type: 'text' },
-                { key: 'enabled', label: 'Visible', type: 'boolean' },
-                { key: 'createdAt', label: 'Fecha', type: 'date' }
+                { key: 'title', label: 'headers.title', type: 'text' },
+                { key: 'enabled', label: 'headers.visible', type: 'boolean' },
+                { key: 'createdAt', label: 'headers.date', type: 'date' }
             ],
             form: AppForms.PublicationForm
         });
@@ -282,16 +282,69 @@ export default class DashboardService {
             subtitle: 'forum.post.subtitle',
             actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
             actionsRows: [
-                { icon: 'edit', label: 'Editar', action: 'edit', type: 'modal' },
-                isAdmin ? { icon: 'delete', label: 'Eliminar', action: 'delete', type: 'modal' } : null
+                { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
+                isAdmin ? { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' } : null
             ].filter(Boolean) as any,
             columns: [
-                { key: 'title', label: 'Título', type: 'text' },
-                { key: 'user.firstName', label: 'Autor', type: 'text' },
-                { key: 'enabled', label: 'Moderado', type: 'boolean' }
+                { key: 'title', label: 'headers.title', type: 'text' },
+                { key: 'user.firstName', label: 'headers.author', type: 'text' },
+                { key: 'enabled', label: 'headers.moderated', type: 'boolean' }
             ],
             form: AppForms.ForumPostForm
         });
+
+        // 5. CLIENTE (MIS VEHÍCULOS Y SOLICITUDES)
+        const isClient = role === 'CLIENT';
+        if (isClient || isAdmin) {
+            const clientSidebar: ObjectSidebar = {
+                icon: 'activity',
+                label: 'nav.garage',
+                path: '/garage',
+                slug: 'garage',
+                childs: [
+                    { icon: 'user', label: 'nav.my_vehicles', path: '/dashboard/vehicle', slug: 'vehicle' },
+                    { icon: 'message', label: 'nav.my_requests', path: '/dashboard/service-request', slug: 'service-request' }
+                ]
+            };
+            sidebar.push(clientSidebar);
+
+            pages.push({
+                slug: 'vehicle',
+                title: 'nav.garage',
+                subtitle: 'vehicle.subtitle',
+                actions: [{ icon: 'add', label: 'action.register_vehicle', action: 'add', type: 'page' }],
+                actionsRows: [
+                    { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
+                    { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' }
+                ],
+                columns: [
+                    { key: 'brand', label: 'headers.brand', type: 'text' },
+                    { key: 'model', label: 'headers.model', type: 'text' },
+                    { key: 'licensePlate', label: 'headers.licensePlate', type: 'text' },
+                    { key: 'year', label: 'headers.year', type: 'text' }
+                ],
+                form: AppForms.VehicleForm
+            });
+
+            pages.push({
+                slug: 'service-request',
+                title: 'nav.my_requests',
+                subtitle: 'service_request.subtitle',
+                actions: [{ icon: 'add', label: 'action.new_request', action: 'add', type: 'page' }],
+                actionsRows: [
+                    { icon: 'view', label: 'action.view_details', action: 'edit', type: 'modal' },
+                    { icon: 'delete', label: 'action.cancel', action: 'delete', type: 'modal' }
+                ],
+                columns: [
+                    { key: 'title', label: 'headers.title', type: 'text' },
+                    { key: 'status', label: 'headers.status', type: 'badge' },
+                    { key: 'isSOS', label: 'headers.sos', type: 'boolean' },
+                    { key: 'createdAt', label: 'headers.date', type: 'date' }
+                ],
+                form: AppForms.ServiceRequestForm
+            });
+
+        }
 
         return {
             sidebar,

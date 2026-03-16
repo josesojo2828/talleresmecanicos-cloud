@@ -20,11 +20,14 @@ export const useRegister = () => {
 
         // Client-side validation
         const validationErrors = validateRegisterForm(
-            data.name,
+            data.firstName,
+            data.lastName,
             data.email,
             data.password,
             data.confirmPassword,
-            data.acceptTerms
+            data.acceptTerms,
+            data.country,
+            data.city
         );
 
         if (validationErrors.length > 0) {

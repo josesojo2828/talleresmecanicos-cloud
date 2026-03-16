@@ -21,7 +21,7 @@ export class PublicationCrudController {
     }
 
     @Put(':id')
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(JwtAuthGuard)
     @Roles(UserRole.ADMIN, UserRole.SUPPORT, UserRole.TALLER)
     async update(@Param('id') id: string, @Body() data: IUpdatePublicationDto, @CurrentUser() user: any) {
         return await this.useCase.update(id, data, user);

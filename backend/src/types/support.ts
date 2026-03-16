@@ -11,7 +11,8 @@ export type SUPPORT_SELECT =
     | 'SUBSCRIPTION'
     | 'SUBSCRIPTIONPLAN'
     | 'USER'
-    | 'CATEGORY_ITEMS';
+    | 'CATEGORY_ITEMS'
+    | 'VEHICLE';
 
 export interface ObjectSelect {
     id: string,

@@ -39,12 +39,13 @@
     "user": {
         "management": "Gestión de Usuarios",
         "title": "Usuarios",
-        "subtitle": "Administra los usuarios de la plataforma",
+        "subtitle": "Administración de usuarios y roles",
         "my_management": "Mi Cuenta"
     },
     "workshop": {
         "title": "Talleres",
         "subtitle": "Administración de talleres mecánicos",
+        "management": "Gestión de Talleres",
         "name": "Nombre de taller",
         "description": "Descripción",
         "address": "Dirección Física",
@@ -60,6 +61,7 @@
         "enabled": "Habilitado / Visible",
         "category": {
             "title": "Categorías de Talleres",
+            "subtitle": "Categorías de servicios",
             "name": "Nombre de Categoría",
             "description": "Descripción de la categoría"
         }
@@ -67,6 +69,7 @@
     "forum": {
         "post": {
             "title": "Foro de Comunidad",
+            "subtitle": "Discusiones y temas de la comunidad",
             "title_label": "Título del Tema",
             "content": "Contenido del mensaje"
         },
@@ -74,13 +77,15 @@
     },
     "publication": {
         "title": "Publicaciones y Ofertas",
+        "subtitle": "Ofertas y anuncios del taller",
         "title_label": "Título del Anuncio",
         "content": "Detalle de la publicación",
         "enabled": "Activo"
     },
     "regions": {
-        "country": { "title": "Gestión de Países" },
-        "city": { "title": "Gestión de Ciudades" }
+        "country": { "title": "Gestión de Países", "subtitle": "Países habilitados" },
+        "city": { "title": "Gestión de Ciudades", "subtitle": "Ciudades por país" },
+        "filter_country": "Filtrar por País"
     },
     "country": {
         "name": "Nombre del País",
@@ -140,6 +145,14 @@
         "url": "Enlace (URL)",
         "icon": "Icono"
     },
+    "vehicle": {
+        "title": "Mi Garage",
+        "subtitle": "Gestiona tus vehículos registrados"
+    },
+    "service_request": {
+        "title": "Mis Solicitudes",
+        "subtitle": "Solicitudes de servicio y SOS proyectados a talleres"
+    },
     "action": {
         "discard": "Descartar",
         "update": "Actualizar",
@@ -155,17 +168,34 @@
         "create_entry": "Crear Entrada",
         "terminate_record": "Eliminar Registro",
         "save": "Guardar",
-        "upload_file": "Subir Archivo"
+        "upload_file": "Subir Archivo",
+        "cancel": "Cancelar",
+        "view_details": "Ver Detalles",
+        "new_request": "Nueva Solicitud",
+        "register_vehicle": "Registrar Vehículo",
+        "advertise": "Anunciar"
     },
     "headers": {
         "name": "Nombre",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
         "description": "Descripción",
         "status": "Estado",
         "email": "Email",
         "role": "Rol",
         "date": "Fecha",
         "actions": "Acciones",
-        "created_at": "Creado el"
+        "created_at": "Creado el",
+        "author": "Autor",
+        "sos": "SOS",
+        "brand": "Marca",
+        "model": "Modelo",
+        "licensePlate": "Placa",
+        "year": "Año",
+        "city": "Ciudad",
+        "country": "País",
+        "moderated": "Moderado",
+        "visible": "Visible"
     },
     "status": {
         "all": "Todos",
@@ -243,7 +273,10 @@
         "about": "Nosotros",
         "brand": "TalleresMecanicos",
         "login": "Ingresar",
-        "login_mobile": "Ingresar a mi cuenta"
+        "login_mobile": "Ingresar a mi cuenta",
+        "garage": "Mi Garage",
+        "my_vehicles": "Mis Vehículos",
+        "my_requests": "Mis Solicitudes"
     },
     "hero": {
         "badge": "La red más grande de talleres en Latinoamérica",
@@ -456,14 +489,20 @@
         },
         "register": {
             "title": "Crear Cuenta",
-            "name": "Nombre Completo",
+            "role_selection": "Selecciona tu perfil",
+            "role_client": "Soy Cliente",
+            "role_client_desc": "Busco talleres de confianza para mi vehículo",
+            "role_workshop": "Soy Taller",
+            "role_workshop_desc": "Quiero registrar mi negocio y recibir clientes",
+            "firstName": "Nombre",
+            "lastName": "Apellido",
             "email": "Email",
             "password": "Contraseña",
             "confirm": "Confirmar Contraseña",
             "terms": "Acepto los {terms} y la {privacy}",
             "terms_link": "términos y condiciones",
             "privacy_link": "privacidad",
-            "button": "Crear Cuenta",
+            "button": "Finalizar Registro",
             "loading": "Procesando...",
             "has_account": "¿Ya tienes cuenta?",
             "login": "Inicia sesión",

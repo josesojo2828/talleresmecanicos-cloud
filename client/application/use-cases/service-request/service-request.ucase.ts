@@ -65,9 +65,9 @@ export class ServiceRequestUCase extends ServiceRequestModel {
         
         const wh = this.getWhere(parsedFilters, search);
         
-        // If client, usually they see their own, UNLESS it's an SOS overview?
-        // Let's keep it simple: if filtering by userId, use it.
-        // For workshops, they see all OPEN requests in their area?
+        if (user.role === 'CLIENT') {
+            wh.userId = user.id;
+        }
         
         return await this.persistence.getAll({
             where: wh,

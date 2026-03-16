@@ -13,7 +13,8 @@ export type InputType =
     | 'radio'
     | 'file'
     | 'image'
-    | 'icon_picker';
+    | 'icon_picker'
+    | 'hidden';
 
 export interface FormOption {
     label: string;
@@ -70,6 +71,7 @@ export interface FormField {
     validation?: FormValidation;
     disabled?: boolean;
     gridCols?: number;
+    multiple?: boolean;
 }
 
 export interface FormStructure {

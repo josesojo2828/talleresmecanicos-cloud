@@ -48,23 +48,23 @@ export const validatePassword = (password: string): string | null => {
 };
 
 /**
- * Validates name
+ * Validates a name field (firstName or lastName)
  */
-export const validateName = (name: string): string | null => {
+export const validateName = (name: string, fieldName: string = "El nombre"): string | null => {
     if (!name) {
-        return "El nombre es requerido";
+        return `${fieldName} es requerido`;
     }
 
     if (name.length < 2) {
-        return "El nombre debe tener al menos 2 caracteres";
+        return `${fieldName} debe tener al menos 2 caracteres`;
     }
 
     if (name.length > 100) {
-        return "El nombre es demasiado largo";
+        return `${fieldName} es demasiado largo`;
     }
 
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(name)) {
-        return "El nombre solo puede contener letras y espacios";
+        return `${fieldName} solo puede contener letras y espacios`;
     }
 
     return null;
@@ -135,17 +135,25 @@ export const validateLoginForm = (email: string, password: string): ValidationEr
  * Validate entire register form
  */
 export const validateRegisterForm = (
-    name: string,
+    firstName: string,
+    lastName: string,
     email: string,
     password: string,
     confirmPassword: string,
-    acceptTerms: boolean
+    acceptTerms: boolean,
+    country: string,
+    city: string
 ): ValidationError[] => {
     const errors: ValidationError[] = [];
 
-    const nameError = validateName(name);
-    if (nameError) {
-        errors.push({ field: "name", message: nameError });
+    const firstNameError = validateName(firstName, "El nombre");
+    if (firstNameError) {
+        errors.push({ field: "firstName", message: firstNameError });
+    }
+
+    const lastNameError = validateName(lastName, "El apellido");
+    if (lastNameError) {
+        errors.push({ field: "lastName", message: lastNameError });
     }
 
     const emailError = validateEmail(email);
@@ -165,6 +173,14 @@ export const validateRegisterForm = (
 
     if (!acceptTerms) {
         errors.push({ field: "acceptTerms", message: "Debes aceptar los términos y condiciones" });
+    }
+
+    if(!country) {
+        errors.push({ field: "country", message: "Selecciona tu país" });
+    }
+
+    if(!city) {
+        errors.push({ field: "city", message: "Selecciona tu ciudad" });
     }
 
     return errors;

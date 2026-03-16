@@ -28,7 +28,7 @@ export function useFicha(slug: string, id: string) {
     const updateRecord = async (formData: any) => {
         setIsMutating(true);
         try {
-            const res = await apiClient.patch(`/${slug}/${id}`, formData);
+            const res = await apiClient.put(`/${slug}/${id}`, formData);
             const updated = res.data?.body || res.data;
             setData(updated);
             addAlert('Los cambios se han guardado correctamente.', 'success');

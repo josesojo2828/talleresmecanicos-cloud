@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     return (
         <AuthGuard>
-            <div className="flex h-screen bg-slate-50 text-slate-900 overflow-hidden relative">
+            <div className="flex h-screen bg-slate-50 text-slate-900 overflow-hidden relative" suppressHydrationWarning>
 
                 {/* 1. Sistema de Fondo Técnico (Consistente con Auth y Hero) */}
                 <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-[0.03]">

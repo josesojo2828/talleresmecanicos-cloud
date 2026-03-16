@@ -18,4 +18,15 @@ export class RegisterDto {
     @IsNotEmpty({ message: 'El apellido es requerido' })
     lastName: string;
 
+    @IsString()
+    @IsNotEmpty({ message: 'El rol es requerido' })
+    role: 'CLIENT' | 'TALLER';
+
+    @IsString()
+    @IsNotEmpty({ message: 'El país es requerido' })
+    country: string;
+
+    @IsString()
+    @IsNotEmpty({ message: 'La ciudad es requerida' })
+    city: string;
 }

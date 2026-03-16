@@ -1,15 +1,15 @@
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: postgres
+    container_name: postgres_tm
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: nestjs
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-talleres_mecanicos}
     ports:
-      - "5432:5432"
+      - "5401:5432"
     volumes:
-      - ./docker/data/postgres:/var/lib/postgresql/data
+      - ./docker/data/postgres_prd:/var/lib/postgresql/data
     networks:
       - app_network
 
@@ -44,7 +44,8 @@ services:
       - postgres
       - redis
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/nestjs?schema=public
+#      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/talleres_mecanicos?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/talleres_mecanicos?schema=public
       REDIS_HOST: redis
       REDIS_PORT: 6379
       NODE_ENV: development
@@ -55,7 +56,7 @@ services:
       MINIO_SECRET_KEY: minioadmin
       MINIO_BUCKET: uploads
     ports:
-      - "3001:3000"
+      - "3001:9999"
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -85,10 +86,11 @@ services:
     depends_on:
       - backend
     environment:
-      NEXT_PUBLIC_API_URL: http://backend:3000
+      NEXT_PUBLIC_API_URL: /api/v1
       NODE_ENV: development
     ports:
       - "3000:3000"
+
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -114,5 +116,5 @@ networks:
     driver: bridge
 
 volumes:
-  #  postgres_data:
+  # postgres_data:
   pgadmin-data:

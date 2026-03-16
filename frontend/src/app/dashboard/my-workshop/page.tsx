@@ -8,7 +8,8 @@ import {
     Save, CheckCircle, AlertCircle, Trash2,
     Instagram, Facebook, Twitter, Plus,
     ChevronRight, Camera, Image as ImageIcon,
-    Layout, Smartphone, Info
+    Layout, Smartphone, Info,
+    Tag
 } from "lucide-react";
 import apiClient from "@/utils/api/api.client";
 import { cn } from "@/utils/cn";
@@ -46,6 +47,8 @@ interface WorkshopFormData {
     };
     openingHours: Record<string, ScheduleDay>;
     categoryIds: string[];
+    countryId: string;
+    cityId: string;
 }
 
 export default function MyWorkshopPage() {
@@ -54,12 +57,15 @@ export default function MyWorkshopPage() {
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [categories, setCategories] = useState<any[]>([]);
+    const [countries, setCountries] = useState<any[]>([]);
+    const [cities, setCities] = useState<any[]>([]);
 
     // Images state
     const [logo, setLogo] = useState<File | null>(null);
     const [showcaseImages, setShowcaseImages] = useState<(File | string)[]>([]);
 
     const { register, handleSubmit, control, setValue, watch, reset } = useForm<WorkshopFormData>();
+    const selectedCountryId = watch("countryId");
 
     const fetchWorkshop = async () => {
         try {
@@ -86,16 +92,18 @@ export default function MyWorkshopPage() {
 
                 reset({
                     name: data.name,
-                    description: data.description,
-                    address: data.address,
-                    phone: data.phone,
-                    whatsapp: data.whatsapp,
-                    website: data.website,
+                    description: data.description || "",
+                    address: data.address || "",
+                    phone: data.phone || "",
+                    whatsapp: data.whatsapp || "",
+                    website: data.website || "",
                     latitude: data.latitude,
                     longitude: data.longitude,
                     socialMedia: data.socialMedia || { instagram: "", facebook: "", twitter: "" },
                     openingHours: finalHours,
-                    categoryIds: data.categories?.map((c: any) => c.id) || []
+                    categoryIds: data.categories ? data.categories.map((c: any) => c.id) || [] : [],
+                    countryId: data.countryId || "",
+                    cityId: data.cityId || ""
                 });
 
                 if (data.images) setShowcaseImages(data.images);
@@ -114,17 +122,40 @@ export default function MyWorkshopPage() {
         } catch (e) { console.error(e); }
     }
 
+    const fetchCountries = async () => {
+        try {
+            const res = await apiClient.get('/app/select/COUNTRY');
+            setCountries(res.data?.body || res.data || []);
+        } catch (e) { console.error(e); }
+    }
+
+    const fetchCities = async (parentId?: string) => {
+        try {
+            const res = await apiClient.get('/app/select/CITY', { params: { parentId } });
+            setCities(res.data?.body || res.data || []);
+        } catch (e) { console.error(e); }
+    }
+
     useEffect(() => {
         fetchWorkshop();
         fetchCategories();
+        fetchCountries();
     }, []);
+
+    useEffect(() => {
+        if (selectedCountryId) {
+            fetchCities(selectedCountryId);
+        } else {
+            setCities([]);
+        }
+    }, [selectedCountryId]);
 
     const onSubmit = async (data: WorkshopFormData) => {
         try {
             setIsSaving(true);
 
-            let logoKey = workshop.logoKey; // Use the stored key from backend
-            let currentImageKeys = [...(workshop.imageKeys || [])];
+            let logoKey = workshop.logoUrl; // default to current
+            if (workshop.logoKey) logoKey = workshop.logoKey;
 
             // 1. Upload Logo if changed
             if (logo) {
@@ -133,20 +164,16 @@ export default function MyWorkshopPage() {
                 const res = await apiClient.post('/my-workshop/upload-logo', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
-                // Handle different response structures
                 logoKey = (res.data?.body?.key || res.data?.key);
             }
 
             // 2. Handle Showcase Images
-            // Separar archivos nuevos de URLs existentes
             const newFileImages = showcaseImages.filter(img => img instanceof File) as File[];
             const existingUrls = showcaseImages.filter(img => typeof img === 'string') as string[];
 
-            // Map existing URLs back to their original keys
-            // We find the index of the URL in workshop.images and get the key from workshop.imageKeys
             const retainedKeys = existingUrls.map(url => {
-                const idx = workshop.images.indexOf(url);
-                return idx !== -1 ? workshop.imageKeys[idx] : null;
+                const idx = (workshop.images || []).indexOf(url);
+                return idx !== -1 ? (workshop.imageKeys || [])[idx] : null;
             }).filter(k => k !== null);
 
             let newlyUploadedKeys: string[] = [];
@@ -178,7 +205,7 @@ export default function MyWorkshopPage() {
             alert("¡Cambios guardados con éxito!");
         } catch (error) {
             console.error("Error updating workshop:", error);
-            alert("Error al guardar los cambios. Revisa la consola para más detalles.");
+            alert("Error al guardar los cambios.");
         } finally {
             setIsSaving(false);
         }
@@ -275,6 +302,57 @@ export default function MyWorkshopPage() {
                                 <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1 italic leading-none">Dirección física</label>
                                 <input {...register("address")} className="input w-full bg-slate-50 border-transparent focus:bg-white" />
                             </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1 italic leading-none">País</label>
+                                <select {...register("countryId")} className="select w-full bg-slate-50 border-transparent focus:bg-white text-xs font-bold">
+                                    <option value="">Seleccionar País...</option>
+                                    {countries.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1 italic leading-none">Ciudad</label>
+                                <select {...register("cityId")} className="select w-full bg-slate-50 border-transparent focus:bg-white text-xs font-bold" disabled={!selectedCountryId}>
+                                    <option value="">Seleccionar Ciudad...</option>
+                                    {cities.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Sección: Especialidades */}
+                    <div className="bg-white rounded-[40px] p-8 md:p-10 border border-slate-100 shadow-sm">
+                        <header className="flex items-center gap-3 mb-8">
+                            <div className="w-10 h-10 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600">
+                                <Tag size={20} />
+                            </div>
+                            <h3 className="text-sm font-black uppercase tracking-tight text-slate-800 italic">Especialidades del Taller</h3>
+                        </header>
+
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {categories && categories.length > 0 && categories.map((cat) => (
+                                <label key={cat.id} className={cn(
+                                    "flex items-center gap-3 p-4 rounded-2xl border transition-all cursor-pointer hover:bg-slate-50",
+                                    (watch("categoryIds") || []).includes(cat.id)
+                                        ? "bg-purple-50 border-purple-200 text-purple-700 font-bold"
+                                        : "border-slate-100 text-slate-500"
+                                )}>
+                                    <input
+                                        type="checkbox"
+                                        value={cat.id}
+                                        checked={(watch("categoryIds") || []).includes(cat.id)}
+                                        className="checkbox checkbox-primary checkbox-sm border-slate-300"
+                                        onChange={(e) => {
+                                            const current = watch("categoryIds") || [];
+                                            if (e.target.checked) {
+                                                setValue("categoryIds", [...current, cat.id]);
+                                            } else {
+                                                setValue("categoryIds", current.filter(id => id !== cat.id));
+                                            }
+                                        }}
+                                    />
+                                    <span className="text-[10px] font-black uppercase tracking-widest leading-none">{cat.label}</span>
+                                </label>
+                            ))}
                         </div>
                     </div>
 

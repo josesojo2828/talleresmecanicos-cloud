@@ -94,20 +94,56 @@ export class AuthService {
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(registerDto.password, salt);
 
-        const user = await this.prisma.user.create({
-            data: {
-                email: emailLower,
-                passwordHash,
-                firstName: registerDto.firstName,
-                lastName: registerDto.lastName,
-                role: 'CLIENT', // Role por defecto
-                enabled: true
-            },
-        });
+        let userId = '';
+
+        console.log(registerDto);
+        console.log(emailLower);
+
+        // Automatización: Si es un taller, crear el taller en blanco
+        if (registerDto.role === 'TALLER') {
+            const user = await this.prisma.user.create({
+                data: {
+                    email: emailLower,
+                    passwordHash,
+                    firstName: registerDto.firstName,
+                    lastName: registerDto.lastName,
+                    role: registerDto.role as any,
+                    enabled: true,
+                    workshop: {
+                        create: {
+                            name: `Taller de ${registerDto.firstName}`,
+                            images: [],
+                            address: '',
+                            country: { connect: { id: registerDto.country } },
+                            city: { connect: { id: registerDto.city } },
+                            enabled: true,
+                            openingHours: '',
+                            socialMedia: {},
+                        }
+                    }
+                },
+            });
+
+            userId = user.id;
+        } else {
+
+            const user = await this.prisma.user.create({
+                data: {
+                    email: emailLower,
+                    passwordHash,
+                    firstName: registerDto.firstName,
+                    lastName: registerDto.lastName,
+                    role: registerDto.role as any,
+                    enabled: true,
+                },
+            });
+
+            userId = user.id;
+        }
 
         return {
             message: 'Usuario registrado exitosamente',
-            userId: user.id
+            userId: userId
         };
     }
 

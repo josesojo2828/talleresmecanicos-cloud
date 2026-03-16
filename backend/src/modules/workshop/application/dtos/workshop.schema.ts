@@ -29,7 +29,7 @@ export const IDefaultWorkshopInclude: IWorkshopIncludeType = {
     user: true,
     country: true,
     city: true,
-    categories: true,
+    // categories: true,
     publications: false,
 }
 
