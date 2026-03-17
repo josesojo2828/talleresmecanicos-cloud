@@ -245,7 +245,7 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
            {getInitials(user?.firstName)}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-0.5">Hola,</p>
+          <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-0.5"><strong className='text-lg'>{selectedCountry?.flag}</strong> Hola,</p>
           <h4 className="text-sm font-black text-slate-900 truncate uppercase mt-[-2px]">{user?.firstName}</h4>
           <Link href="/dashboard" className="text-[9px] font-bold text-slate-400 hover:text-emerald-500 flex items-center gap-1 transition-colors uppercase mt-1">
              Mi Dashboard <ChevronRight size={10} />
@@ -632,9 +632,9 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
                     onClick={() => handleCountrySelect(country)}
                     className="p-4 rounded-[2rem] border-2 border-slate-50 bg-slate-50/50 hover:bg-white hover:border-emerald-500 hover:shadow-xl transition-all group flex flex-col items-center gap-3 text-center"
                    >
-                     <div className="w-14 h-14 rounded-2xl bg-white shadow-lg overflow-hidden border-2 border-white group-hover:scale-110 transition-transform">
+                     <div className="w-14 h-14 mb-3">
                         {country.flag ? (
-                          <img src={country.flag} className="w-full h-full object-cover" />
+                          <p className='h-full text-4xl'>{country.flag}</p>
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-slate-100">
                              <Globe size={24} />
