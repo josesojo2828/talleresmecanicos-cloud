@@ -54,6 +54,7 @@
     "pg": "8.16.3",
     "reflect-metadata": "0.2.2",
     "rimraf": "6.0.1",
+    "dotenv": "^17.3.1",
     "rxjs": "7.8.2"
   },
   "devDependencies": {
@@ -71,7 +72,6 @@
     "@types/supertest": "6.0.3",
     "@typescript-eslint/eslint-plugin": "8.41.0",
     "@typescript-eslint/parser": "8.41.0",
-    "dotenv": "^17.3.1",
     "eslint": "8.57.1",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.4",
