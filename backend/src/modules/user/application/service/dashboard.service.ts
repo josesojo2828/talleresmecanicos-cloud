@@ -127,12 +127,12 @@ export default class DashboardService {
             form: UserForms.ProfileForm
         });
 
-        sidebar.push({
-            icon: 'home',
-            label: 'nav.exit',
-            path: '/',
-            slug: 'exit'
-        });
+        // sidebar.push({
+        //     icon: 'home',
+        //     label: 'nav.exit',
+        //     path: '/',
+        //     slug: 'exit'
+        // });
 
         // 2. REGIONES (ADMIN & SUPPORT)
         if (isAdmin || isSupport) {
