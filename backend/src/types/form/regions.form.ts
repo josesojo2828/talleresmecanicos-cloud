@@ -11,6 +11,9 @@ export const CountryForm: FormStructure = {
         { name: 'timezone', label: 'country.timezone', type: 'text' },
         { name: 'latitude', label: 'country.latitude', type: 'number' },
         { name: 'longitude', label: 'country.longitude', type: 'number' },
+        { name: 'primaryColor', label: 'country.primaryColor', type: 'text' },
+        { name: 'secondaryColor', label: 'country.secondaryColor', type: 'text' },
+        { name: 'tertiaryColor', label: 'country.tertiaryColor', type: 'text' },
         { name: 'enabled', label: 'country.enabled', type: 'switch', defaultValue: true }
     ]
 };

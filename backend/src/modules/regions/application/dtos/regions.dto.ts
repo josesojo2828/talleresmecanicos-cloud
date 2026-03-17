@@ -2,12 +2,18 @@ export interface ICreateCountryDto {
     name: string;
     enabled?: boolean;
     flag?: string;
+    primaryColor?: string;
+    secondaryColor?: string;
+    tertiaryColor?: string;
 }
 
 export interface IUpdateCountryDto {
     name?: string;
     enabled?: boolean;
     flag?: string;
+    primaryColor?: string;
+    secondaryColor?: string;
+    tertiaryColor?: string;
 }
 
 export interface ICreateCityDto {

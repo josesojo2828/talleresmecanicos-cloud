@@ -30,6 +30,7 @@ model User {
   publications       Publication[]
   sessions           Session[]
   supportAssignments SupportAssignment[]
+  chatMessages       ChatMessage[]
   country            Country?            @relation("UserCountryPreference", fields: [countryId], references: [id])
   workshop           Workshop?
 
@@ -114,6 +115,9 @@ model Country {
   longitude          Float?
   language           String?
   slug               String?             @unique
+  primaryColor       String?             @map("primary_color")
+  secondaryColor     String?             @map("secondary_color")
+  tertiaryColor      String?             @map("tertiary_color")
   cities             City[]
   supportAssignments SupportAssignment[]
   users              User[]              @relation("UserCountryPreference")
@@ -286,6 +290,17 @@ model WorkshopToCategory {
   @@id([A, B], map: "_WorkshopToCategory_AB_pkey")
   @@index([B], map: "_WorkshopToCategory_B_index")
   @@map("_WorkshopToCategory")
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  content   String
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@map("chat_messages")
 }
 
 enum UserRole {

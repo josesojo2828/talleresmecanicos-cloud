@@ -16,12 +16,15 @@ export default class CreateCountryUCase extends CountryModel {
     }
 
     public async execute({ data }: { data: ICreateCountryDto }) {
-        const { name, enabled, flag } = data;
+        const { name, enabled, flag, primaryColor, secondaryColor, tertiaryColor } = data;
 
         const body: ICountryCreateType = {
             name,
             enabled: enabled !== undefined ? enabled : false,
             flag,
+            primaryColor,
+            secondaryColor,
+            tertiaryColor
         };
 
         const entityCreated = await this.createPersistence.save({ data: body });

@@ -3,7 +3,10 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { AlertContainer } from "@/components/organisms/AlertContainer";
 import { ModalContainer } from "@/components/organisms/ModalContainer";
+import { CommunityChat } from "@/components/organisms/CommunityChat";
 import { AuthProvider } from "@/components/providers/AuthProvider";
+import { CountryProvider } from "@/components/providers/CountryProvider";
+import { ThemeWrapper } from "@/components/providers/ThemeWrapper";
 import { NextIntlClientProvider } from 'next-intl';
 import { Toaster } from 'sonner';
 import messages from '@/locales/es.json';
@@ -43,7 +46,12 @@ export default function RootLayout({
       >
         <NextIntlClientProvider locale="es" messages={messages}>
           <AuthProvider>
-            {children}
+            <CountryProvider>
+              <ThemeWrapper>
+                {children}
+                <CommunityChat />
+              </ThemeWrapper>
+            </CountryProvider>
             <Toaster position="bottom-right" richColors expand={true} />
             <ModalContainer />
           </AuthProvider>

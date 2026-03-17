@@ -1,69 +1,70 @@
 services:
   postgres:
-    image: postgres:15-alpine
-    container_name: postgres_tm
+    image: ${IMAGE_POSTGRES}
+    container_name: ${CONTAINER_NAME_POSTGRES}
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-talleres_mecanicos}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5401:5432"
+      - "${POSTGRES_PORT_EXTERNAL}:${POSTGRES_PORT_INTERNAL}"
     volumes:
-      - ./docker/data/postgres_prd:/var/lib/postgresql/data
+      - ${POSTGRES_VOLUME_PRD}:/var/lib/postgresql/data
     networks:
       - tm_network
 
   redis:
-    image: redis:alpine
-    container_name: redis_tm
+    image: ${IMAGE_REDIS}
+    container_name: ${CONTAINER_NAME_REDIS}
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT_EXTERNAL}:${REDIS_PORT_INTERNAL}"
     networks:
       - tm_network
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.prod
-    container_name: backend_tm
+      context: ${BACKEND_CONTEXT}
+      dockerfile: ${BACKEND_DOCKERFILE_PRD}
+    container_name: ${CONTAINER_NAME_BACKEND}
     depends_on:
       - postgres
       - redis
     environment:
-      DATABASE_URL: "postgresql://tm_user:tu_password_seguro@postgres:5432/talleres_mecanicos?schema=public"
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      NODE_ENV: production
-      JWT_SECRET: ${JWT_SECRET:-super_secret_jwt_key}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT_INTERNAL}
+      NODE_ENV: ${NODE_ENV}
+      JWT_SECRET: ${JWT_SECRET}
     ports:
-      - "3002:9999"
+      - "${BACKEND_PORT_EXTERNAL}:${BACKEND_PORT_INTERNAL}"
     networks:
       - tm_network
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
-    container_name: frontend_tm
+      context: ${FRONTEND_CONTEXT}
+      dockerfile: ${FRONTEND_DOCKERFILE_PRD}
+    container_name: ${CONTAINER_NAME_FRONTEND}
     depends_on:
       - backend
     environment:
-      NEXT_PUBLIC_API_URL: /api/v1
-      NEXTAUTH_URL: https://talleresmecanicos.quanticarch.com
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-your_nextauth_secret}
-      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NODE_ENV: ${NODE_ENV}
     ports:
-      - "3010:3000"
+      - "${FRONTEND_PORT_EXTERNAL}:${FRONTEND_PORT_INTERNAL}"
     networks:
       - tm_network
 
   nginx:
-    image: nginx:alpine
-    container_name: nginx
+    image: ${IMAGE_NGINX}
+    container_name: ${CONTAINER_NAME_NGINX}
     volumes:
-      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${NGINX_CONF_PATH}:/etc/nginx/nginx.conf:ro
     ports:
-      - "7700:80"
+      - "${NGINX_PORT_EXTERNAL}:80"
     depends_on:
       - frontend
       - backend
@@ -73,6 +74,3 @@ services:
 networks:
   tm_network:
     driver: bridge
-
-volumes:
-  postgres_data:

@@ -19,7 +19,9 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [images, setImages] = useState<File[]>([]);
     const [loading, setLoading] = useState(false);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     if (!isOpen) return null;
 
@@ -29,10 +31,21 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
 
         setLoading(true);
         try {
+            let imageKeys: string[] = [];
+            if (images.length > 0) {
+                const formData = new FormData();
+                images.forEach(img => formData.append('files', img));
+                const uploadRes = await apiClient.post("/forum-post/upload-images", formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                imageKeys = uploadRes.data.map((res: {key: string}) => res.key);
+            }
+
             await apiClient.post("/forum-post", {
                 title,
                 content,
                 categoryIds: selectedCategories,
+                images: imageKeys
             });
             onSuccess();
             onClose();
@@ -40,6 +53,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
             setTitle("");
             setContent("");
             setSelectedCategories([]);
+            setImages([]);
         } catch (error) {
             console.error("Error creating post", error);
         } finally {
@@ -96,6 +110,48 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                         />
+                    </div>
+
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Imágenes (Opcional, máx 5)</label>
+                            <button 
+                                type="button" 
+                                onClick={() => fileInputRef.current?.click()}
+                                className="text-emerald-600 hover:text-emerald-700 bg-emerald-50 hover:bg-emerald-100 p-2 rounded-full transition-colors flex items-center gap-2 text-xs font-bold px-4"
+                            >
+                                <ImageIcon size={16} /> Agregar Imágenes
+                            </button>
+                            <input 
+                                type="file" 
+                                ref={fileInputRef}
+                                className="hidden" 
+                                multiple 
+                                accept="image/*"
+                                onChange={(e) => {
+                                    if (e.target.files) {
+                                        const newFiles = Array.from(e.target.files);
+                                        setImages(prev => [...prev, ...newFiles].slice(0, 5));
+                                    }
+                                }}
+                            />
+                        </div>
+                        {images.length > 0 && (
+                            <div className="flex gap-2 flex-wrap mt-3">
+                                {images.map((img, idx) => (
+                                    <div key={idx} className="relative w-24 h-24 rounded-2xl overflow-hidden border border-slate-200 group">
+                                        <img src={URL.createObjectURL(img)} alt={`Upload ${idx}`} className="w-full h-full object-cover" />
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setImages(prev => prev.filter((_, i) => i !== idx))}
+                                            className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 shadow-md hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100"
+                                        >
+                                            <X size={14} />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="space-y-4">

@@ -19,12 +19,15 @@ export default class UpdateCountryUCase extends CountryModel {
         const entity = await this.findPersistence.find({ where: { id } });
         if (!entity) throw new BadRequestException("error.not_found");
 
-        const { name, enabled, flag } = data as any;
+        const { name, enabled, flag, primaryColor, secondaryColor, tertiaryColor } = data as any;
 
         const body: ICountryUpdateType = {
             name,
             enabled,
             flag,
+            primaryColor,
+            secondaryColor,
+            tertiaryColor
         };
         
         const entityUpdated = await this.updatePersistence.update({ id, data: body });

@@ -1,4 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseInterceptors, UploadedFiles } from "@nestjs/common";
+import { FilesInterceptor } from "@nestjs/platform-express";
+import { StorageService } from "src/modules/storage/storage.service";
 import { ForumUCase } from "../../application/use-cases/forum.ucase";
 import { ICreateForumPostDto, IUpdateForumPostDto, ICreateForumCommentDto } from "../../application/dtos/forum.dto";
 import { QueryOptions } from "src/shared/query/input";
@@ -7,7 +9,10 @@ import { IForumPostQueryFilter, IForumCommentQueryFilter } from "../../applicati
 
 @Controller('forum-post')
 export class ForumCrudController {
-    constructor(private readonly useCase: ForumUCase) {}
+    constructor(
+        private readonly useCase: ForumUCase,
+        private readonly storageService: StorageService
+    ) {}
 
     // --- POSTS ---
     @Post('')
@@ -38,6 +43,17 @@ export class ForumCrudController {
     @Get('')
     async getPosts(@Query() q: QueryOptions<ForumPost, IForumPostQueryFilter>, @Query('userId') userId?: string) {
         return await this.useCase.paginationPosts(q, userId);
+    }
+
+    @Post('upload-images')
+    @UseInterceptors(FilesInterceptor('files', 5))
+    async uploadImages(@UploadedFiles() files: Express.Multer.File[]) {
+        const results = await Promise.all(files.map(async file => {
+            const key = await this.storageService.uploadFile(file, 'forum/images');
+            const url = await this.storageService.getFileUrl(key);
+            return { key, url };
+        }));
+        return results;
     }
 
     // --- ACTIONS ---

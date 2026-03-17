@@ -49,6 +49,7 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token }) {
             if (token) {
+                (session as any).user.id = token.sub; // Ensure ID is present
                 (session as any).user.role = token.role;
                 (session as any).user.accessToken = token.accessToken;
                 (session as any).dashboard = token.dashboard;

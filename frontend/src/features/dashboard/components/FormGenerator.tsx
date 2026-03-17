@@ -301,6 +301,20 @@ export function FormGenerator({ structure, defaultValues, isUpdate, onSubmit, on
                                             />
                                         );
 
+                                    case 'color':
+                                        return (
+                                            <div className="flex items-center space-x-3">
+                                                <input
+                                                    type="color"
+                                                    {...register(fieldName, { required: field.validation?.required })}
+                                                    className={cn("w-10 h-10 p-0 cursor-pointer rounded-xl bg-transparent border-none appearance-none disabled:opacity-50", currentError && "input-error")}
+                                                />
+                                                <span className="text-xs font-mono font-bold text-slate-500 uppercase">
+                                                    {formValues[fieldName] as string || '#000000'}
+                                                </span>
+                                            </div>
+                                        );
+
                                     default:
                                         return (
                                             <input
