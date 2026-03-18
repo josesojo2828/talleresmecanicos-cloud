@@ -35,14 +35,16 @@ export const useChat = () => {
         return;
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:9999';
+    // Clean the URL from trailing slashes
+    const rawUrl = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:9999';
+    const apiUrl = rawUrl.replace(/\/$/, "");
     
     // Connect to the 'chat' namespace
     const socket = io(`${apiUrl}/chat`, {
       auth: {
         token: token,
       },
-      transports: ['websocket'],
+      // Remove transport restriction to allow polling fallback if websocket is blocked
     });
 
     socketRef.current = socket;
