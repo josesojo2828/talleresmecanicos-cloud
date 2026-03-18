@@ -76,6 +76,31 @@ export default class DashboardService {
         const isSupport = role === 'SUPPORT';
         const isTaller = role === 'TALLER';
 
+         // PERFIL (TODOS)
+        sidebar.push({
+            icon: 'user',
+            label: 'nav.profile',
+            path: '/dashboard/profile',
+            slug: 'profile'
+        });
+
+        pages.push({
+            slug: 'profile',
+            title: 'Mi Perfil',
+            subtitle: 'Actualiza tus datos de acceso',
+            actions: [],
+            actionsRows: [],
+            columns: [],
+            form: UserForms.ProfileForm
+        });
+
+        sidebar.push({
+            icon: 'home',
+            label: 'nav.exit',
+            path: '/',
+            slug: 'exit'
+        });
+
         // 1. GESTIÓN DE USUARIOS (ADMIN & SUPPORT)
         if (isAdmin) {
             const userSidebar: ObjectSidebar = {
@@ -108,31 +133,6 @@ export default class DashboardService {
                 form: UserForms.UserCreateForm
             });
         }
-
-        // PERFIL (TODOS)
-        sidebar.push({
-            icon: 'user',
-            label: 'nav.profile',
-            path: '/dashboard/profile',
-            slug: 'profile'
-        });
-
-        pages.push({
-            slug: 'profile',
-            title: 'Mi Perfil',
-            subtitle: 'Actualiza tus datos de acceso',
-            actions: [],
-            actionsRows: [],
-            columns: [],
-            form: UserForms.ProfileForm
-        });
-
-        // sidebar.push({
-        //     icon: 'home',
-        //     label: 'nav.exit',
-        //     path: '/',
-        //     slug: 'exit'
-        // });
 
         // 2. REGIONES (ADMIN & SUPPORT)
         if (isAdmin || isSupport) {
