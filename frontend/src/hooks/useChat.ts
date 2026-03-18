@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { useSession } from 'next-auth/react';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export interface ChatUser {
   id: string;
@@ -21,13 +21,13 @@ export interface ChatMessage {
 }
 
 export const useChat = () => {
-  const { data: session } = useSession();
+  const { user, token, isAuthenticated } = useAuthStore();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    if (!(session?.user as any)?.accessToken) {
+    if (!token || !isAuthenticated) {
         if (socketRef.current) {
             socketRef.current.disconnect();
             socketRef.current = null;
@@ -40,7 +40,7 @@ export const useChat = () => {
     // Connect to the 'chat' namespace
     const socket = io(`${apiUrl}/chat`, {
       auth: {
-        token: (session?.user as any)?.accessToken,
+        token: token,
       },
       transports: ['websocket'],
     });
@@ -66,7 +66,7 @@ export const useChat = () => {
     return () => {
       socket.disconnect();
     };
-  }, [session]);
+  }, [token, isAuthenticated]);
 
   const sendMessage = useCallback((content: string) => {
     if (socketRef.current && isConnected) {
@@ -78,6 +78,6 @@ export const useChat = () => {
     messages,
     sendMessage,
     isConnected,
-    user: session?.user,
+    user,
   };
 };

@@ -49,7 +49,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.emit('history', history.reverse());
       
     } catch (e) {
-      this.logger.error(`Connection authentication failed for client ${client.id}`);
+      this.logger.error(`Connection failed for client ${client.id}: ${e.message}`);
       client.disconnect();
     }
   }

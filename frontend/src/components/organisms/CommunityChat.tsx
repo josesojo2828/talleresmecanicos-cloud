@@ -7,7 +7,7 @@ import { Typography } from "@/components/atoms/Typography";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { useChat, ChatMessage } from "@/hooks/useChat";
-import { useSession } from "next-auth/react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const formatTime = (dateString: string) => {
     const d = new Date(dateString);
@@ -54,7 +54,7 @@ const MessageBubble = ({ msg, isMe }: { msg: ChatMessage, isMe: boolean }) => {
 };
 
 export const CommunityChat = () => {
-    const { data: session } = useSession();
+    const { user, isAuthenticated, _hasHydrated } = useAuthStore();
     const { messages, sendMessage, isConnected } = useChat();
     const [isOpen, setIsOpen] = useState(false);
     const [input, setInput] = useState("");
@@ -73,7 +73,7 @@ export const CommunityChat = () => {
         setInput("");
     };
 
-    if (!session) return null;
+    if (!_hasHydrated || !isAuthenticated || !user) return null;
 
     return (
         <>
@@ -121,7 +121,7 @@ export const CommunityChat = () => {
                              <MessageBubble 
                                 key={msg.id || i} 
                                 msg={msg} 
-                                isMe={msg.userId === (session.user as any)?.id} 
+                                isMe={msg.userId === user?.id} 
                              />
                         ))}
                         <div ref={messagesEndRef} />

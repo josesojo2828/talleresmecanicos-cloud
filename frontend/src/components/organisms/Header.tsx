@@ -12,7 +12,8 @@ import {
     Menu,
     X,
     Wrench,
-    LayoutDashboard
+    LayoutDashboard,
+    MessageSquare
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -36,6 +37,7 @@ export const Header = () => {
         { href: "/", label: t("home"), icon: Home },
         { href: "/directorio", label: t("directory"), icon: Search },
         { href: "/comunidad", label: t("community"), icon: Users2 },
+        { href: "/chat", label: "Chat General", icon: MessageSquare },
         { href: "/nosotros", label: t("about"), icon: Info },
     ];
 
