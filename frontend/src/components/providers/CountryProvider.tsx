@@ -36,7 +36,7 @@ export const CountryProvider = ({ children }: { children: React.ReactNode }) => 
     try {
       // Assuming GET /region/countries endpoint provides a list of enabled countries.
       // We will search for the specific country and get its colors.
-      const response = await apiClient.get(`/region/countries?search=${countryName}`);
+      const response = await apiClient.get(`/country?search=${countryName}`);
       if (response.data && response.data.data && response.data.data.length > 0) {
         const country = response.data.data[0];
         if (country.primaryColor) {
