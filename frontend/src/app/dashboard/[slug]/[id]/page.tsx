@@ -10,7 +10,7 @@ import { FormGenerator } from '@/features/dashboard/components/FormGenerator';
 import { useCrud } from '@/features/dashboard/hooks/useCrud';
 import {
     Activity, Database, Settings, Users,
-    Globe, Wrench, MessageSquare,
+    Globe, Wrench,
     Shield, Layers, Image as ImageIcon
 } from 'lucide-react';
 import { GalleryManager } from '@/features/dashboard/components/GalleryManager';
@@ -20,6 +20,9 @@ import CustomCrud from '@/features/dashboard/pages/CustomCrud';
 import { WorkDetail } from '@/features/dashboard/components/work/WorkDetail';
 import { PublicationDetail } from '@/features/dashboard/components/publication/PublicationDetail';
 import { PartDetail } from '@/features/dashboard/components/part/PartDetail';
+import { CountryDetail } from '@/features/dashboard/components/country/CountryDetail';
+import { ForumPostDetail } from '@/features/dashboard/components/forum-post/ForumPostDetail';
+import { CityDetail } from '@/features/dashboard/components/city/CityDetail';
 
 const EmbeddedCrud = ({ slug, initialFilters, title }: { slug: string, initialFilters?: Record<string, any>, title: string }) => {
     const crud = useCrud(slug);
@@ -49,7 +52,7 @@ export default function RecordDetailPage() {
     const slug = params.slug as string;
     const id = params.id as string;
 
-    const { data, loading, isMutating, updateRecord, refresh } = useFicha(slug, id);
+    const { data, loading, updateRecord, refresh } = useFicha(slug, id);
     const { config } = useCrud(slug);
     const t = useTranslations();
 
@@ -77,7 +80,7 @@ export default function RecordDetailPage() {
         );
     }
 
-    if (!data || (slug === 'user' && data.role === UserRole.ADMIN)) {
+    if (!data || !data.id || (slug === 'user' && data.role === UserRole.ADMIN)) {
         return (
             <div className="text-center py-40 flex flex-col items-center gap-6">
                 <div className="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center text-rose-500 border border-rose-100 shadow-xl shadow-rose-900/5">
@@ -163,6 +166,12 @@ export default function RecordDetailPage() {
                         <PublicationDetail data={data} updateRecord={updateRecord} refresh={refresh} />
                     ) : slug === 'part' ? (
                         <PartDetail data={data} updateRecord={updateRecord} refresh={refresh} />
+                    ) : slug === 'country' ? (
+                        <CountryDetail data={data} />
+                    ) : slug === 'city' ? (
+                        <CityDetail data={data} />
+                    ) : slug === 'forum-post' ? (
+                        <ForumPostDetail data={data} />
                     ) : (
                         <>
                             <SimpleStats slug={slug} data={data} />

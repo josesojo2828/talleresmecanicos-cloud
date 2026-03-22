@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { AuthGuard } from "@/components/templates/AuthGuard";
 import { Menu, Bell, Settings, Wrench, ChevronRight } from "lucide-react";
 import { Sidebar } from "@/components/organisms/dashboard/Sidebar";
@@ -9,7 +10,13 @@ import { cn } from "@/utils/cn";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+    const pathname = usePathname();
     const t = useTranslations();
+
+    // Cerrar el sidebar al cambiar de ruta en mobile
+    useEffect(() => {
+        setIsMobileSidebarOpen(false);
+    }, [pathname]);
 
     return (
         <AuthGuard>

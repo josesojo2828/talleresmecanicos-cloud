@@ -116,15 +116,15 @@ export default class DashboardService {
                 path: '/dashboard/user',
                 slug: 'user',
                 childs: [
-                    { icon: 'user', label: 'user.title', path: '/dashboard/user/user', slug: 'user' }
+                    { icon: 'user', label: 'user.management', path: '/dashboard/user', slug: 'user' }
                 ]
             };
             sidebar.push(userSidebar);
 
             pages.push({
                 slug: 'user',
-                title: 'user.title',
-                subtitle: 'user.subtitle',
+                title: 'user.management',
+                subtitle: 'user.subtitle.default',
                 actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
                 actionsRows: [
                     { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
@@ -342,7 +342,7 @@ export default class DashboardService {
                 path: '/dashboard/forum',
                 slug: 'forum',
                 childs: [
-                    { icon: 'post', label: 'forum.post.title', path: '/dashboard/forum/post', slug: 'forum-post' }
+                    { icon: 'post', label: 'forum.post.title', path: '/dashboard/forum-post', slug: 'forum-post' }
                 ]
             };
             sidebar.push(forumSidebar);

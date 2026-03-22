@@ -62,10 +62,10 @@ export default function Dashboard() {
 
         return (
             <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-10">
-                <header className="border-b border-gray-100 pb-6 flex justify-between items-end">
+                <header className="border-b border-gray-100 pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Consola de Administración</h1>
-                        <p className="text-gray-500 mt-1 font-medium">Resumen global de la red Talleres Mecanicos</p>
+                        <h1 className="text-2xl md:text-3xl font-black text-gray-900 uppercase tracking-tighter">Consola de Administración</h1>
+                        <p className="text-gray-500 mt-1 font-bold text-xs">Resumen global de la red Talleres Mecanicos</p>
                     </div>
                     <div className="bg-green-50 text-green-700 px-4 py-2 rounded-xl text-xs font-bold border border-green-100 flex items-center gap-2">
                         <ShieldCheck size={14} /> Sistema Online
@@ -186,10 +186,10 @@ export default function Dashboard() {
     return (
         <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-10">
             {/* Cabecera */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">{workshop?.name || "Cargando..."}</h1>
-                    <p className="text-gray-500 mt-1 font-medium italic">Resumen general de operaciones</p>
+                    <h1 className="text-2xl md:text-4xl font-black text-gray-900 uppercase tracking-tighter">{workshop?.name || "Cargando..."}</h1>
+                    <p className="text-gray-500 mt-1 font-bold text-xs italic">Resumen general de operaciones</p>
                 </div>
                 <div className="flex gap-3">
                     <Link href="/dashboard/work/new" className="btn btn-primary btn-md rounded-xl shadow-md gap-2">

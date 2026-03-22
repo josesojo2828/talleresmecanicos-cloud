@@ -245,9 +245,9 @@ export default function CustomCrud({
                         {(config?.actions?.some(a => a.action === 'add')) && (
                             <button
                                 onClick={() => { setActiveRecord(undefined); setShowModal(true); }}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-emerald-100 active:scale-95"
+                                className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-emerald-100 active:scale-95"
                             >
-                                <Plus size={16} /> {t('action.add')}
+                                <Plus size={16} /> <span className="hidden sm:inline">{t('action.add')}</span>
                             </button>
                         )}
                     </header>

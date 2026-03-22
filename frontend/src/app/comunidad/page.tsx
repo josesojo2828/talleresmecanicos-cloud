@@ -185,10 +185,11 @@ export default function ComunidadPage() {
         <div className="min-h-screen bg-slate-50 flex flex-col pt-24">
             <Header />
 
-            <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8 grid grid-cols-1 lg:grid-cols-[280px_1fr_320px] gap-8">
+            <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-4 md:py-8 grid grid-cols-1 lg:grid-cols-[280px_1fr_320px] gap-6 md:gap-8">
                 
-                {/* --- Left Sidebar: Navigation & Filters (Mobile: order-1) --- */}
-                <aside className="space-y-6 lg:order-1 order-1 lg:sticky lg:top-32 h-fit overflow-y-auto max-h-[calc(100vh-160px)] custom-scrollbar">
+                {/* --- Left Sidebar: Navigation & Filters --- */}
+                <aside className="hidden lg:block space-y-6 lg:order-1 lg:sticky lg:top-32 h-fit overflow-y-auto max-h-[calc(100vh-160px)] custom-scrollbar">
+                    {/* ... (existing sidebar content) ... */}
                     <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
                         <Typography variant="H4" className="text-slate-900 mb-6 font-black text-lg">
                             Navegación
@@ -397,8 +398,8 @@ export default function ComunidadPage() {
                     )}
                 </section>
 
-                {/* --- Right Sidebar: Stats & Activity (Mobile: order-3) --- */}
-                <aside className="space-y-6 lg:order-3 order-3 lg:sticky lg:top-32 h-fit overflow-y-auto max-h-[calc(100vh-160px)] custom-scrollbar">
+                {/* --- Right Sidebar: Stats & Activity --- */}
+                <aside className="hidden lg:block space-y-6 lg:order-3 lg:sticky lg:top-32 h-fit overflow-y-auto max-h-[calc(100vh-160px)] custom-scrollbar">
                     {isAuthenticated ? (
                         <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 text-center flex flex-col items-center">
                             <div className="w-20 h-20 rounded-3xl bg-emerald-50 border-4 border-white shadow-xl flex items-center justify-center font-black text-emerald-600 text-3xl mb-4">

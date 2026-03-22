@@ -77,6 +77,10 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
   const [isLocationFilterOpen, setIsLocationFilterOpen] = useState(true);
   const [isSpecialtyFilterOpen, setIsSpecialtyFilterOpen] = useState(true);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [mobileView, setMobileView] = useState<'list' | 'map'>('map'); // Default to map on mobile as requested
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [showMobileList, setShowMobileList] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   // -- Initial Load --
   useEffect(() => {
@@ -350,19 +354,29 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
         </div>
       </aside>
 
+      {/* --- MOBILE TOP LOGO/MENU --- */}
+      <div className="lg:hidden absolute top-10 left-8 z-[80]">
+        <button 
+          onClick={() => setShowMobileMenu(true)}
+          className="bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border border-white/10 active:scale-95 transition-all"
+        >
+          <Settings size={20} className="text-emerald-500" />
+        </button>
+      </div>
+
       {/* --- Contenedor Principal --- */}
-      <main className="flex-1 flex flex-col gap-6">
+      <main className="flex-1 flex flex-col gap-4 md:gap-6 min-w-0">
 
         {/* Navigation & Search Bar */}
-        <header className="flex items-center gap-6">
-          <div className="flex-1 bg-white/80 backdrop-blur-2xl border border-white shadow-xl rounded-[2.5rem] px-8 py-5 flex items-center group focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all">
+        <header className="hidden lg:flex flex-col md:flex-row items-stretch md:items-center gap-4 md:gap-6">
+          <div className="flex-1 bg-white/80 backdrop-blur-2xl border border-white shadow-xl rounded-[2.5rem] px-6 md:px-8 py-4 md:py-5 flex items-center group focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all">
             <Search className="text-slate-300 group-focus-within:text-emerald-500 transition-colors" size={20} />
             <input
               type="text"
-              placeholder="Buscar por nombre de taller, especialidad o marca..."
+              placeholder="Buscar taller o especialidad..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-none outline-none w-full ml-4 text-xs font-black uppercase tracking-widest text-slate-800 placeholder:text-slate-300 placeholder:normal-case placeholder:font-bold placeholder:tracking-normal"
+              className="bg-transparent border-none outline-none w-full ml-3 md:ml-4 text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-800 placeholder:text-slate-300 placeholder:normal-case placeholder:font-bold placeholder:tracking-normal"
             />
             {searchQuery && (
               <button onClick={() => setSearchQuery('')} className="p-2 hover:bg-slate-50 rounded-full transition-colors">
@@ -371,7 +385,7 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
             )}
           </div>
 
-          <div className="hidden md:flex bg-white/80 backdrop-blur-2xl border border-white shadow-xl rounded-[2.5rem] p-1.5 flex gap-1 items-center">
+          <div className="flex bg-white/80 backdrop-blur-2xl border border-white shadow-xl rounded-[2.5rem] p-1.5 gap-1 items-center">
             <button
               onClick={() => {
                 if (!userLocation && "geolocation" in navigator) {
@@ -386,20 +400,20 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
                 }
               }}
               className={cn(
-                "px-10 py-4 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-2",
+                "flex-1 md:flex-none px-6 md:px-10 py-3 md:py-4 rounded-[2rem] text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2",
                 sortByDistance ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-900"
               )}
             >
-              <Navigation size={14} className={cn(sortByDistance && "animate-pulse")} /> Cerca de mí
+              <Navigation size={14} className={cn(sortByDistance && "animate-pulse")} /> <span className="hidden sm:inline">Cerca de mí</span><span className="sm:hidden">Cerca</span>
             </button>
           </div>
         </header>
 
-        <div className="flex-1 flex gap-6 min-h-0">
+        <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
 
-          {/* LADO IZQUIERDO: Listado de Talleres */}
+          {/* LADO IZQUIERDO: Listado de Talleres (Escritorio) */}
           <section className={cn(
-            "bg-white/40 backdrop-blur-xl border border-white rounded-[3rem] flex flex-col shadow-2xl transition-all duration-500 overflow-hidden",
+            "hidden lg:flex bg-white/40 backdrop-blur-xl border border-white rounded-[3rem] shadow-2xl transition-all duration-500 overflow-hidden relative z-20",
             isSidebarOpen ? "w-[420px]" : "w-0 opacity-0 pointer-events-none"
           )}>
             <div className="p-8 flex flex-col h-full">
@@ -599,8 +613,8 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
             </div>
           </section>
 
-          {/* RIGHT SIDE: Map */}
-          <section className="flex-1 relative bg-slate-200 rounded-[3rem] overflow-hidden shadow-inner border border-white">
+          {/* Map Container - Full screen on Mobile */}
+          <section className="flex-1 relative bg-slate-200 lg:rounded-[3rem] overflow-hidden shadow-inner border border-white transition-all duration-500 -m-4 md:-m-0 z-10">
             <Map
               center={userLocation || [19.4326, -99.1332]}
               zoom={userLocation ? 12 : 5}
@@ -615,11 +629,11 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
               }))}
             />
 
-            {/* Toggle Sidebar Button */}
+            {/* Toggle Sidebar Button (Desktop) */}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className={cn(
-                "absolute top-1/2 -left-4 -translate-y-1/2 w-8 h-16 bg-white border border-slate-100 rounded-r-2xl shadow-xl z-[60] hover:pl-2 transition-all flex flex-col items-center justify-center text-slate-400 font-black text-[10px]",
+                "hidden lg:flex absolute top-1/2 -left-4 -translate-y-1/2 w-8 h-16 bg-white border border-slate-100 rounded-r-2xl shadow-xl z-[60] hover:pl-2 transition-all flex-col items-center justify-center text-slate-400 font-black text-[10px]",
                 !isSidebarOpen && "left-0"
               )}
               title={isSidebarOpen ? "Cerrar filtros" : "Abrir filtros"}
@@ -630,6 +644,167 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
 
         </div>
       </main>
+      
+      {/* --- MOBILE CONTROLS (Floating) --- */}
+      <div className="lg:hidden fixed bottom-6 left-0 right-0 z-[80] px-6 space-y-4 animate-in slide-in-from-bottom-5 duration-500">
+        
+        {/* Search floating bar */}
+        <div className="bg-slate-900/90 backdrop-blur-xl border border-white/20 rounded-full px-5 py-2 flex items-center shadow-2xl">
+          <Search className="text-emerald-500" size={16} />
+          <input 
+            type="text" 
+            placeholder="Buscar talleres..." 
+            className="bg-transparent border-none outline-none flex-1 ml-2 text-[9px] font-black uppercase text-white placeholder:text-slate-500"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button onClick={() => setShowMobileFilters(true)} className="p-1 px-2 border-l border-white/10 text-emerald-500">
+            <Filter size={16} />
+          </button>
+        </div>
+
+        {/* Buttons Toggle */}
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowMobileList(true)}
+            className="flex-1 bg-white text-slate-900 px-5 py-3 rounded-[1.2rem] shadow-2xl flex items-center justify-center gap-2 border border-white/20 font-black text-[9px] uppercase tracking-widest active:scale-95 transition-all"
+          >
+            <LayoutGrid size={16} className="text-emerald-500" /> Ver Lista
+          </button>
+          <button
+             onClick={() => {
+              if (!userLocation && "geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                  setUserLocation([pos.coords.latitude, pos.coords.longitude]);
+                  setSortByDistance(true);
+                });
+              } else {
+                setSortByDistance(!sortByDistance);
+              }
+            }}
+            className={cn(
+              "p-4 rounded-[1.5rem] shadow-2xl flex items-center justify-center border transition-all active:scale-95",
+              sortByDistance ? "bg-emerald-500 text-white border-emerald-400" : "bg-white text-slate-400 border-white/20"
+            )}
+          >
+            <Navigation size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* --- MODAL: Mobile Filters --- */}
+      {showMobileFilters && (
+        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300 lg:hidden" onClick={() => setShowMobileFilters(false)}>
+           <div className="bg-white rounded-t-[2.5rem] w-full p-8 pb-12 shadow-2xl animate-in slide-in-from-bottom-10 duration-500" onClick={(e) => e.stopPropagation()}>
+              <div className="w-10 h-1bg-slate-100 rounded-full mx-auto mb-8" />
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-black text-slate-900 uppercase">Filtros</h3>
+                <button onClick={() => setShowMobileFilters(false)} className="w-8 h-8 bg-slate-50 rounded-full flex items-center justify-center text-slate-400"><X size={18} /></button>
+              </div>
+
+              <div className="space-y-8">
+                 {/* Reusing existing filter logic here internally or simplified */}
+                 <div className="space-y-3">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Región</label>
+                    <div className="grid grid-cols-2 gap-3">
+                       <button onClick={() => { setShowMobileFilters(false); setShowCountryModal(true); }} className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-[9px] font-black uppercase text-slate-600 truncate flex items-center gap-2">
+                          <Globe size={12} className="text-emerald-500" /> {selectedCountry?.name || "País"}
+                       </button>
+                       <select 
+                        value={selectedCity?.id || ''}
+                        onChange={(e) => {
+                          const city = cities.find(c => c.id === e.target.value);
+                          setSelectedCity(city || null);
+                        }}
+                        className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-[9px] font-black uppercase text-slate-600 outline-none appearance-none"
+                       >
+                          <option value="">Todas las Ciudades</option>
+                          {cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                       </select>
+                    </div>
+                 </div>
+
+                 <div className="space-y-3">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Especialidad</label>
+                    <div className="flex flex-wrap gap-2">
+                        <button 
+                          onClick={() => setSelectedCategory(null)}
+                          className={cn("px-4 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all", !selectedCategory ? "bg-emerald-500 text-white" : "bg-slate-50 text-slate-400")}
+                        >Todas</button>
+                        {categories.map(cat => (
+                          <button 
+                             key={cat.id} 
+                             onClick={() => setSelectedCategory(cat.id)}
+                             className={cn("px-4 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all", selectedCategory === cat.id ? "bg-emerald-500 text-white" : "bg-slate-50 text-slate-400")}
+                          >{cat.name}</button>
+                        ))}
+                    </div>
+                 </div>
+
+                 <button onClick={() => setShowMobileFilters(false)} className="w-full bg-slate-900 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-slate-900/20 active:scale-95 transition-all">
+                    Aplicar
+                 </button>
+              </div>
+           </div>
+        </div>
+      )}
+
+      {/* --- MODAL: Mobile Workshop List --- */}
+      {showMobileList && (
+        <div className="fixed inset-0 z-[100] bg-slate-50 lg:hidden flex flex-col p-6 overflow-hidden animate-in slide-in-from-right-10 duration-500">
+           <header className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-black text-slate-900 tracking-tighter uppercase">Talleres Cercanos</h2>
+              <button 
+                onClick={() => setShowMobileList(false)}
+                className="w-12 h-12 bg-white rounded-2xl border border-slate-100 shadow-xl flex items-center justify-center text-slate-400 active:scale-90 transition-all"
+              >
+                <X size={24} />
+              </button>
+           </header>
+
+           <div className="bg-emerald-50 rounded-2xl p-4 mb-6 flex items-center gap-3 border border-emerald-100">
+              <Zap className="text-emerald-500" size={18} />
+              <p className="text-[10px] font-bold text-emerald-800 uppercase tracking-widest">
+                Mostrando {workshops.length} talleres en {selectedCity?.name || selectedCountry?.name || 'tu zona'}
+              </p>
+           </div>
+
+           <div className="flex-1 overflow-y-auto space-y-6 custom-scrollbar pb-10">
+              {sortedWorkshops.map(shop => (
+                <div key={shop.id} className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-white hover:shadow-xl transition-all">
+                   <div className="flex items-start gap-5">
+                      <div className="w-20 h-20 bg-slate-50 rounded-2xl overflow-hidden shadow-inner shrink-0 relative">
+                        {shop.logoUrl ? (
+                           <Image unoptimized src={shop.logoUrl.startsWith('http') || shop.logoUrl.startsWith('/') ? shop.logoUrl : `/talleres-mecanicos/${shop.logoUrl}`} alt={shop.name} fill className="object-cover" />
+                        ) : <div className="w-full h-full flex items-center justify-center text-slate-200"><Wrench size={24} /></div>}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                         <span className="text-[8px] font-black text-emerald-500 uppercase bg-emerald-50 px-2 py-1 rounded-lg">{(shop as any).specialty || 'General'}</span>
+                         <h4 className="text-sm font-black text-slate-900 mt-2 truncate uppercase">{shop.name}</h4>
+                         <p className="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-tight">{shop.city?.name}</p>
+                         
+                         <div className="flex gap-4 mt-6">
+                            <a href={`https://wa.me/${shop.whatsapp}`} target="_blank" className="flex-1 bg-emerald-500 text-white h-10 rounded-xl flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
+                               <Phone size={14} /> WhatsApp
+                            </a>
+                            <Link href={`/taller/${shop.id}`} className="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center hover:bg-emerald-500 transition-all">
+                               <ChevronRight size={18} />
+                            </Link>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+              ))}
+
+              {workshops.length === 0 && (
+                <div className="flex flex-col items-center justify-center h-64 text-center opacity-40">
+                  <Zap size={32} />
+                  <p className="text-[10px] font-black uppercase tracking-widest mt-4">No se encontraron talleres</p>
+                </div>
+              )}
+           </div>
+        </div>
+      )}
 
       {/* --- MODAL: Country Selection --- */}
       {showCountryModal && (
@@ -676,6 +851,55 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
               Usamos tu ubicación para mejorar los tiempos de respuesta y filtros rápidos.
             </p>
           </div>
+        </div>
+      )}
+
+      {/* --- MODAL: Mobile Menu (Sidebar links) --- */}
+      {showMobileMenu && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-start lg:hidden" onClick={() => setShowMobileMenu(false)}>
+           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-md animate-in fade-in duration-300" />
+           <div className="bg-white h-full w-[80%] max-w-[280px] rounded-r-[2.5rem] p-8 shadow-2xl relative animate-in slide-in-from-left-10 duration-500 flex flex-col" onClick={(e) => e.stopPropagation()}>
+              <button 
+                onClick={() => setShowMobileMenu(false)}
+                className="absolute top-8 right-6 w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center text-slate-400"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="mt-4 mb-10">
+                 <div className="bg-emerald-500 w-12 h-12 rounded-xl flex items-center justify-center text-white mb-4 shadow-xl shadow-emerald-500/20">
+                    <Wrench size={24} />
+                 </div>
+                 <h2 className="text-lg font-black text-slate-900 tracking-tighter uppercase leading-none">Talleres <br /> Mecánicos</h2>
+              </div>
+
+              <div className="flex-1 space-y-3">
+                 <Link href="/dashboard" className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl group active:scale-95 transition-all">
+                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm text-slate-400 group-hover:text-emerald-500">
+                       <LayoutGrid size={16} />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-800">Mi Dashboard</span>
+                 </Link>
+
+                 <div className="flex items-center gap-3 p-4 bg-emerald-50 rounded-xl group active:scale-95 transition-all outline outline-emerald-100">
+                    <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center shadow-md text-white">
+                       <Navigation size={16} />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Explorar Mapa</span>
+                 </div>
+
+                 <Link href="/comunidad" className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl group active:scale-95 transition-all">
+                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm text-slate-400 group-hover:text-emerald-500">
+                       <MessageCircle size={16} />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-800">Comunidad</span>
+                 </Link>
+              </div>
+
+              <div className="pt-8 border-t border-slate-100 scale-90 origin-left">
+                 <ProfileTile />
+              </div>
+           </div>
         </div>
       )}
     </div>
