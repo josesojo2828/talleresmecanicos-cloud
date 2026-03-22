@@ -9,6 +9,7 @@ import { DynamicIcon } from "@/components/atoms/DynamicIcon";
 import { IconPicker } from "./IconPicker";
 import { useTranslations } from "next-intl";
 
+import { Save } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { OnboardingBanner } from "./OnboardingBanner";
 
@@ -24,48 +25,99 @@ const AutocompleteInput = ({ field, control, parentId }: { field: FormField; con
     const t = useTranslations();
     const [options, setOptions] = useState<{ id: string; label: string }[]>([]);
     const [loading, setLoading] = useState(false);
+    const [search, setSearch] = useState("");
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         const load = async () => {
             if (!field.remote) return;
-            // Solo restringimos si hay una dependencia explícita que está vacía
             if (field.remote.dependsOn && !parentId) { setOptions([]); return; }
             
             setLoading(true);
             try {
-                const res = await apiClient.get(`/app/select/${field.remote.slug}`, { params: { parentId } });
+                const res = await apiClient.get(`/app/select/${field.remote.slug}`, { 
+                    params: { parentId, param: search } 
+                });
                 const data = res.data?.body || res.data;
                 setOptions(Array.isArray(data) ? data : []);
             } finally { setLoading(false); }
         };
-        load();
-    }, [parentId, field.remote]);
+
+        const timeout = setTimeout(load, 300); // Debounce
+        return () => clearTimeout(timeout);
+    }, [parentId, field.remote, search]);
 
     return (
         <Controller
             name={field.name}
             control={control}
             rules={{ required: field.validation?.required }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-                <div className="relative">
-                    <select
-                        value={(value as string) || ""}
-                        onChange={onChange}
-                        disabled={loading || (!!field.remote?.dependsOn && !parentId)}
-                        className={cn(
-                            "select w-full",
-                            error && "select-error",
-                            (loading || (!!field.remote?.dependsOn && !parentId)) && "opacity-60 cursor-not-allowed text-xs font-bold"
+            render={({ field: { onChange, value }, fieldState: { error } }) => {
+                const selectedLabel = options.find(opt => opt.id === value)?.label || "";
+                
+                return (
+                    <div className="relative dropdown w-full">
+                        <div className="relative group/search">
+                            <input
+                                type="text"
+                                className={cn(
+                                    "input input-sm w-full h-10 pr-10",
+                                    error && "input-error",
+                                    (loading || (!!field.remote?.dependsOn && !parentId)) && "opacity-60 cursor-not-allowed"
+                                )}
+                                placeholder={loading ? t('action.processing') : (selectedLabel || t(field.placeholder || 'error.select_option'))}
+                                value={isOpen ? search : (selectedLabel || "")}
+                                onFocus={() => setIsOpen(true)}
+                                onChange={(e) => {
+                                    setSearch(e.target.value);
+                                    if (!isOpen) setIsOpen(true);
+                                }}
+                                onBlur={() => setTimeout(() => setIsOpen(false), 200)}
+                                disabled={loading || (!!field.remote?.dependsOn && !parentId)}
+                            />
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-30 pointer-events-none group-hover/search:opacity-60 transition-opacity">
+                                {loading ? (
+                                    <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                                ) : (
+                                    <DynamicIcon name="Search" className="w-4 h-4" />
+                                )}
+                            </div>
+                        </div>
+
+                        {isOpen && options.length > 0 && (
+                            <ul className="dropdown-content z-[100] menu p-2 shadow-2xl bg-white border border-slate-100 rounded-2xl w-full mt-2 max-h-60 overflow-y-auto block animate-in fade-in slide-in-from-top-2 duration-300">
+                                {options.map(opt => (
+                                    <li key={opt.id} className="mb-0.5">
+                                        <button
+                                            type="button"
+                                            className={cn(
+                                                "flex flex-col items-start p-3 text-left rounded-xl hover:bg-slate-50 transition-all",
+                                                value === opt.id ? "bg-primary/5 text-primary border border-primary/10" : "text-slate-600"
+                                            )}
+                                            onClick={() => {
+                                                onChange(opt.id);
+                                                setSearch("");
+                                                setIsOpen(false);
+                                            }}
+                                        >
+                                            <span className="text-[10px] font-black uppercase tracking-tight leading-none mb-1">{opt.label.split(' - ')[0]}</span>
+                                            {opt.label.includes(' - ') && (
+                                                <span className="text-[9px] font-bold opacity-50 uppercase tracking-widest leading-none">{opt.label.split(' - ')[1]}</span>
+                                            )}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
                         )}
-                    >
-                        <option value="">{loading ? t('action.processing') : t(field.placeholder || 'error.select_option')}</option>
-                        {options.map(opt => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
-                    </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
-                        <DynamicIcon name="ChevronDown" className="w-4 h-4" />
+
+                        {isOpen && options.length === 0 && search && (
+                            <div className="dropdown-content z-[100] p-4 shadow-2xl bg-white border border-slate-100 rounded-2xl w-full mt-2 text-center">
+                                <p className="text-[10px] font-black opacity-30 uppercase tracking-widest">{t('error.no_results') || 'No se encontraron resultados'}</p>
+                            </div>
+                        )}
                     </div>
-                </div>
-            )}
+                );
+            }}
         />
     );
 };
@@ -151,7 +203,11 @@ export function FormGenerator({ structure, defaultValues, isUpdate, onSubmit, on
                                                 control={control}
                                                 parentId={field.remote?.dependsOn 
                                                     ? formValues[field.remote.dependsOn] 
-                                                    : (field.remote?.slug === 'VEHICLE' ? user?.id : undefined)
+                                                    : (field.remote?.slug === 'VEHICLE' 
+                                                        ? user?.id 
+                                                        : (['PART_CATEGORY', 'PART', 'WORKSHOP_CATEGORY'].includes(field.remote?.slug || "") 
+                                                            ? user?.workshop?.id 
+                                                            : undefined))
                                                 }
                                             />
                                         );
@@ -201,6 +257,30 @@ export function FormGenerator({ structure, defaultValues, isUpdate, onSubmit, on
                                                     </label>
                                                 ))}
                                             </div>
+                                        );
+
+                                    case 'select':
+                                        return (
+                                            <select
+                                                {...register(fieldName, { required: field.validation?.required })}
+                                                className={cn("select select-bordered select-sm w-full h-10", currentError && "select-error")}
+                                            >
+                                                {field.placeholder && <option value="">{t(field.placeholder)}</option>}
+                                                {(field.options || []).map((opt) => (
+                                                    <option key={String(opt.value)} value={String(opt.value)}>
+                                                        {t(opt.label)}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        );
+
+                                    case 'date':
+                                        return (
+                                            <input
+                                                type="date"
+                                                {...register(fieldName, { required: field.validation?.required })}
+                                                className={cn("input input-bordered input-sm w-full h-10", currentError && "input-error")}
+                                            />
                                         );
 
                                     case 'textarea':
@@ -338,21 +418,22 @@ export function FormGenerator({ structure, defaultValues, isUpdate, onSubmit, on
                 })}
             </div>
 
-            <footer className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-6 border-t border-base-200 mt-4">
+            <footer className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-8 border-t border-slate-100 mt-6">
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="btn btn-ghost text-[10px] font-black uppercase tracking-widest italic"
+                    className="btn btn-ghost text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900"
                 >
                     {t('action.discard')}
                 </button>
                 <button
                     type="submit"
-                    className="btn btn-neutral text-[10px] font-black uppercase tracking-widest"
+                    className="btn bg-slate-900 hover:bg-emerald-600 text-white border-none px-10 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-slate-900/10 transition-all duration-300"
                 >
+                    <Save size={14} className="mr-1" />
                     {structure.submitButtonText
                         ? t(structure.submitButtonText)
-                        : (isUpdate ? t('action.update') : t('action.create_entry') || 'Crear')}
+                        : (isUpdate ? t('action.update') : t('action.create_entry') || 'Guardar')}
                 </button>
             </footer>
         </form>

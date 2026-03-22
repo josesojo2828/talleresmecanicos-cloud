@@ -20,25 +20,7 @@ export class MyWorkshopController {
 
     @Get()
     async getMine(@CurrentUser() user: any) {
-        const result = await this.useCase.pagination({ skip: 0, take: 1, filters: { userId: user.id } }, user);
-        
-        // Resolve URLs but keep original keys
-        const data = result.data;
-        if (data && data.length > 0) {
-            const workshop = data[0];
-            // Add custom properties for frontend reference
-            (workshop as any).logoKey = workshop.logoUrl;
-            (workshop as any).imageKeys = workshop.images;
-
-            if (workshop.logoUrl) {
-                workshop.logoUrl = await this.storageService.getFileUrl(workshop.logoUrl);
-            }
-            if (workshop.images && workshop.images.length > 0) {
-                workshop.images = await Promise.all(workshop.images.map(key => this.storageService.getFileUrl(key)));
-            }
-        }
-        
-        return result;
+        return await this.useCase.pagination({ skip: 0, take: 1, filters: { userId: user.id } }, user);
     }
 
     @Put(':id')
@@ -50,7 +32,7 @@ export class MyWorkshopController {
     @UseInterceptors(FileInterceptor('file'))
     async uploadLogo(@UploadedFile() file: Express.Multer.File) {
         const key = await this.storageService.uploadFile(file, 'workshops/logos');
-        const url = await this.storageService.getFileUrl(key);
+        const url = `/talleres-mecanicos/${key}`;
         return { key, url };
     }
 
@@ -59,7 +41,7 @@ export class MyWorkshopController {
     async uploadImages(@UploadedFiles() files: Express.Multer.File[]) {
         const results = await Promise.all(files.map(async file => {
             const key = await this.storageService.uploadFile(file, 'workshops/images');
-            const url = await this.storageService.getFileUrl(key);
+            const url = `/talleres-mecanicos/${key}`;
             return { key, url };
         }));
         return results;

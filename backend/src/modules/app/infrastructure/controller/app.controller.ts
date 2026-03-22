@@ -4,6 +4,7 @@ import FindCityPersistence from "src/modules/regions/infrastructure/persistence/
 import FindCountryPersistence from "src/modules/regions/infrastructure/persistence/country/find.persistence";
 import { IUserWhereType } from "src/modules/user/application/dtos/user.schema";
 import FindUserPersistence from "src/modules/user/infrastructure/persistence/user/find.persistence";
+import PartPersistence from "src/modules/part/infrastructure/persistence/persistence";
 import { ObjectSelect, SUPPORT_SELECT } from "src/types/support";
 // import VehiclePersistence from "src/modules/client/infrastructure/persistence/vehicle/persistence";
 
@@ -14,7 +15,7 @@ export default class AppicationController {
         private readonly countryService: FindCountryPersistence,
         private readonly cityService: FindCityPersistence,
         private readonly userService: FindUserPersistence,
-        // private readonly vehicleService: VehiclePersistence,
+        private readonly partService: PartPersistence
     ) { }
 
     @Get('check')
@@ -42,15 +43,24 @@ export default class AppicationController {
             return await this.cityService.select({ where: {AND:wh} });
         }
         else if (slug === 'USER') {
-            const wh: IUserWhereType = {
+            const wh: any = {
                 AND: [
-                    { firstName: { contains: query.param } },
-                    { lastName: { contains: query.param } },
-                    { email: { contains: query.param } },
-                    { phone: { contains: query.param } },
-                    { enabled: true }
+                    { enabled: true },
+                    { role: 'CLIENT' },
                 ]
+            };
+
+            if (query.param) {
+                wh.AND.push({
+                    OR: [
+                        { firstName: { contains: query.param, mode: 'insensitive' } },
+                        { lastName: { contains: query.param, mode: 'insensitive' } },
+                        { email: { contains: query.param, mode: 'insensitive' } },
+                        { phone: { contains: query.param, mode: 'insensitive' } },
+                    ]
+                });
             }
+            
             return await this.userService.select({ where: wh });
         }
         else if (slug === 'VEHICLE') {
@@ -68,8 +78,39 @@ export default class AppicationController {
             }
             // return this.vehicleService.select({ where: wh });
         }
-
+        else if (slug === 'PART') {
+            const wh: any = {
+                AND: [
+                    { workshopId: query.parentId }
+                ]
+            }
+            if (query.param) {
+                wh.AND.push({
+                    OR: [
+                        { name: { contains: query.param, mode: 'insensitive' } },
+                        { sku: { contains: query.param, mode: 'insensitive' } }
+                    ]
+                });
+            }
+            return await this.partService.select({ where: wh });
+        }
+        else if (slug === 'PART_CATEGORY') {
+            const wh: any = {
+                AND: [
+                    { workshopId: query.parentId },
+                    { deletedAt: null }
+                ]
+            }
+            if (query.param) {
+                wh.AND.push({
+                    name: { contains: query.param, mode: 'insensitive' }
+                });
+            }
+            const data = await this.partService.getAllCategories({ 
+                where: wh,
+                take: 10
+            });
+            return data.data.map(i => ({ id: i.id, label: i.name }));
+        }
     }
-
-
 }

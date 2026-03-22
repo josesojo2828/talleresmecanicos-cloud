@@ -51,7 +51,7 @@ export class DataFixtures implements OnModuleInit {
                     flag: region.flag,
                     latitude: (region as any).latitude,
                     longitude: (region as any).longitude,
-                    enabled: false
+                    enabled: ["México", "Venezuela", "Colombia"].includes(region.name)
                 }
             });
 
@@ -67,7 +67,7 @@ export class DataFixtures implements OnModuleInit {
                     create: {
                         name: cityName,
                         countryId: country.id,
-                        enabled: false
+                        enabled: true
                     }
                 });
             }

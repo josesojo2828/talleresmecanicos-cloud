@@ -101,6 +101,9 @@ export class AuthService {
 
         // Automatización: Si es un taller, crear el taller en blanco
         if (registerDto.role === 'TALLER') {
+            const workshopName = `Taller de ${registerDto.firstName}`;
+            const slug = workshopName.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') + '-' + Math.random().toString(36).substring(2, 5);
+            
             const user = await this.prisma.user.create({
                 data: {
                     email: emailLower,
@@ -111,7 +114,8 @@ export class AuthService {
                     enabled: true,
                     workshop: {
                         create: {
-                            name: `Taller de ${registerDto.firstName}`,
+                            name: workshopName,
+                            slug,
                             images: [],
                             address: '',
                             country: { connect: { id: registerDto.country } },

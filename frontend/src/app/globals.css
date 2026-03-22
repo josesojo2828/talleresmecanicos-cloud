@@ -14,47 +14,62 @@
   --color-base-300: oklch(95% 0.01 200); /* Light Gray */
   --color-base-content: oklch(25% 0.01 200); /* Dark Gray text */
   
-  /* Verde taller: Un verde más profesional */
-  --color-primary: oklch(70% 0.15 145); /* Professional Green */
-  --color-primary-content: oklch(100% 0 0);
+  /* Colores Bandera de México */
+  --primary: #006341; 
+  --primary-content: #ffffff;
+  --p: #006341;
+  --pc: #ffffff;
   
-  --color-secondary: oklch(75% 0.02 200); /* Professional Gray */
-  --color-secondary-content: oklch(20% 0.01 200);
+  --secondary: #009a44; /* Verde más claro para acentos */
+  --secondary-content: #ffffff;
+  --s: #009a44;
+  --sc: #ffffff;
   
-  /* Ajustes de bordes y sombras para look premium */
-  --radius-selector: 0.75rem;
-  --radius-field: 0.5rem;
-  --radius-box: 1rem;
-  --padding-card: 1.5rem;
+  --accent: #C8102E; /* Rojo bandera para alertas/acentos */
+  --accent-content: #ffffff;
+  --a: #C8102E;
+  
+  --radius-selector: 1rem;
+  --radius-field: 0.75rem;
+  --radius-box: 2rem;
 }
 
 @theme {
   --font-plus-jakarta-sans: var(--font-plus-jakarta-sans);
   --font-sans: var(--font-plus-jakarta-sans);
   
-  --color-glass-white: rgba(255, 255, 255, 0.85);
-  --color-glass-border: rgba(226, 232, 240, 0.5);
-  --color-brand-green: var(--color-emerald-500);
-  --color-brand-gray: var(--theme-secondary, #64748b);
-  
-  --color-primary-600: var(--color-emerald-600);
-  --color-secondary-600: var(--theme-secondary, #16a34a);
-  --color-tertiary-600: var(--theme-tertiary, #16a34a);
+  --color-primary: #006341;
+  --color-secondary: #009a44;
+  --color-accent: #C8102E;
+  --color-brand-green: #009a44;
+  --color-brand-gray: #64748b;
+}
+
+.dashboard-theme {
+  --theme-primary: #006341;
+  --theme-secondary: #009a44;
+  --p: var(--theme-primary);
+  --s: var(--theme-secondary);
+  --pc: #ffffff;
 }
 
 .public-theme {
-  --color-emerald-50: color-mix(in srgb, var(--theme-primary, #10b981) 10%, white);
-  --color-emerald-100: color-mix(in srgb, var(--theme-primary, #10b981) 20%, white);
-  --color-emerald-200: color-mix(in srgb, var(--theme-primary, #10b981) 40%, white);
-  --color-emerald-300: color-mix(in srgb, var(--theme-primary, #10b981) 60%, white);
-  --color-emerald-400: color-mix(in srgb, var(--theme-primary, #10b981) 80%, white);
-  --color-emerald-500: var(--theme-primary, #10b981);
-  --color-emerald-600: color-mix(in srgb, var(--theme-primary, #10b981) 85%, black);
-  --color-emerald-700: color-mix(in srgb, var(--theme-primary, #10b981) 70%, black);
-  --color-emerald-800: color-mix(in srgb, var(--theme-primary, #10b981) 50%, black);
-  --color-emerald-900: color-mix(in srgb, var(--theme-primary, #10b981) 30%, black);
-  /* also override primary DaisyUI color if used */
+  --theme-primary: #006341;
+  --theme-secondary: #009a44;
   --p: var(--theme-primary);
+  --s: var(--theme-secondary);
+  --pc: #ffffff;
+  
+  --color-emerald-50: #f0fdf4;
+  --color-emerald-100: #dcfce7;
+  --color-emerald-200: #bbf7d0;
+  --color-emerald-300: #86efac;
+  --color-emerald-400: #4ade80;
+  --color-emerald-500: #22c55e;
+  --color-emerald-600: #16a34a;
+  --color-emerald-700: #15803d;
+  --color-emerald-800: #166534;
+  --color-emerald-900: #14532d;
 }
 
 /* Base global */

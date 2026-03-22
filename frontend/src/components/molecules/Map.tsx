@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@/utils/cn';
 
 interface MapProps {
     className?: string;
     center?: [number, number]; // [lat, lng]
     zoom?: number;
-    markers?: { lat: number; lng: number; title: string, address?: string, phone?: string }[];
+    markers?: { lat: number; lng: number; title: string, address?: string, phone?: string, logoUrl?: string }[];
     userLocation?: [number, number] | null;
 }
 
@@ -16,13 +16,13 @@ export const Map: React.FC<MapProps> = ({ className, center = [0, 0], zoom = 2, 
     const map = useRef<any>(null);
     const markersRef = useRef<any[]>([]);
     const userMarkerRef = useRef<any>(null);
+    const [mapReady, setMapReady] = useState(false);
 
     useEffect(() => {
-        if (!mapContainer.current) return;
+        let isMounted = true;
 
         const initMap = async () => {
             if (!(window as any).maplibregl) {
-                // ... same script loading as before
                 const scriptExists = document.querySelector('script[src*="maplibre-gl.js"]');
                 if (!scriptExists) {
                     const script = document.createElement('script');
@@ -36,11 +36,18 @@ export const Map: React.FC<MapProps> = ({ className, center = [0, 0], zoom = 2, 
                     document.head.appendChild(link);
 
                     await new Promise((resolve) => script.onload = resolve);
+                } else {
+                    // Esperar si ya se está cargando por otro componente
+                    let attempts = 0;
+                    while (!(window as any).maplibregl && isMounted && attempts < 50) {
+                        await new Promise(r => setTimeout(r, 100));
+                        attempts++;
+                    }
                 }
             }
 
             const maplibregl = (window as any).maplibregl;
-            if (map.current) return;
+            if (!isMounted || !mapContainer.current || !maplibregl || map.current) return;
 
             map.current = new maplibregl.Map({
                 container: mapContainer.current,
@@ -49,22 +56,30 @@ export const Map: React.FC<MapProps> = ({ className, center = [0, 0], zoom = 2, 
                 zoom: userLocation ? 12 : zoom
             });
 
+            map.current.on('error', (e: any) => console.warn('Mapbox/MapLibre error:', e));
+
             map.current.addControl(new maplibregl.NavigationControl());
+
+            map.current.on('load', () => {
+                if (isMounted) setMapReady(true);
+            });
         };
 
         initMap();
 
         return () => {
+            isMounted = false;
             if (map.current) {
                 map.current.remove();
                 map.current = null;
+                setMapReady(false);
             }
         };
     }, []);
 
     // Update user location marker
     useEffect(() => {
-        if (!map.current || !userLocation) return;
+        if (!map.current || !mapReady || !userLocation) return;
         const maplibregl = (window as any).maplibregl;
         if (!maplibregl) return;
 
@@ -84,11 +99,11 @@ export const Map: React.FC<MapProps> = ({ className, center = [0, 0], zoom = 2, 
             .addTo(map.current);
 
         map.current.flyTo({ center: [userLocation[1], userLocation[0]], zoom: 12 });
-    }, [userLocation]);
+    }, [userLocation, mapReady]);
 
     // Update workshop markers
     useEffect(() => {
-        if (!map.current) return;
+        if (!map.current || !mapReady) return;
         const maplibregl = (window as any).maplibregl;
         if (!maplibregl) return;
 
@@ -96,25 +111,28 @@ export const Map: React.FC<MapProps> = ({ className, center = [0, 0], zoom = 2, 
         markersRef.current = [];
 
         markers.forEach(marker => {
-            if (!marker.lat || !marker.lng) return;
+            if (typeof marker.lat !== 'number' || typeof marker.lng !== 'number') return;
 
             const popupHtml = `
-                <div style="padding: 10px; min-width: 150px;">
-                    <h4 style="margin: 0 0 4px 0; font-weight: 800; text-transform: uppercase; font-size: 11px;">${marker.title}</h4>
-                    <p style="margin: 0; font-size: 10px; color: #64748b;">${marker.address || ''}</p>
-                    ${marker.phone ? `<p style="margin: 4px 0 0 0; font-size: 10px; color: #10b981; font-weight: 700;">${marker.phone}</p>` : ''}
+                <div style="padding: 12px; min-width: 180px; display: flex; gap: 12px; align-items: start;">
+                    ${marker.logoUrl ? `<div style="width: 40px; height: 40px; border-radius: 8px; overflow: hidden; background: #f8fafc; border: 1px solid #e2e8f0; flex-shrink: 0;"><img src="${marker.logoUrl}" style="width: 100%; height: 100%; object-fit: cover;" /></div>` : ''}
+                    <div style="flex: 1;">
+                        <h4 style="margin: 0 0 4px 0; font-weight: 800; text-transform: uppercase; font-size: 11px; color: #0f172a;">${marker.title}</h4>
+                        <p style="margin: 0; font-size: 9px; color: #64748b; line-height: 1.3;">${marker.address || ''}</p>
+                        ${marker.phone ? `<p style="margin: 6px 0 0 0; font-size: 10px; color: #10b981; font-weight: 800; display: flex; gap: 4px; align-items: center;">${marker.phone}</p>` : ''}
+                    </div>
                 </div>
             `;
 
             const m = new maplibregl.Marker({ color: '#10b981' })
                 .setLngLat([marker.lng, marker.lat])
-                .setPopup(new maplibregl.Popup({ 
+                .setPopup(new maplibregl.Popup({
                     closeButton: false,
                     closeOnClick: false,
                     className: 'workshop-popup'
                 }).setHTML(popupHtml))
                 .addTo(map.current);
-            
+
             const markerDiv = m.getElement();
             markerDiv.addEventListener('mouseenter', () => m.togglePopup());
             markerDiv.addEventListener('mouseleave', () => m.togglePopup());
@@ -122,7 +140,7 @@ export const Map: React.FC<MapProps> = ({ className, center = [0, 0], zoom = 2, 
 
             markersRef.current.push(m);
         });
-    }, [markers]);
+    }, [markers, mapReady]);
 
     return (
         <div className={cn("relative w-full h-full overflow-hidden rounded-[2rem]", className)}>

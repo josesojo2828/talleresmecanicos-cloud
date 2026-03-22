@@ -119,3 +119,54 @@ export const ServiceRequestForm: FormStructure = {
         { name: 'longitude', label: 'Longitud', type: 'hidden' }
     ]
 };
+
+export const WorkForm: FormStructure = {
+    slug: 'work',
+    title: 'headers.work',
+    fields: [
+        { name: 'title', label: 'headers.title', type: 'text', validation: { required: true } },
+        { name: 'description', label: 'headers.description', type: 'textarea' },
+        { name: 'clientName', label: 'headers.name', type: 'text', gridCols: 2 },
+        { name: 'clientPhone', label: 'headers.phone', type: 'text', gridCols: 2 },
+        { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text' },
+        { 
+            name: 'status', 
+            label: 'headers.status', 
+            type: 'select', 
+            options: [
+                { label: 'status.open', value: 'OPEN' },
+                { label: 'status.in_progress', value: 'IN_PROGRESS' },
+                { label: 'status.completed', value: 'COMPLETED' },
+                { label: 'status.delivered', value: 'DELIVERED' }
+            ],
+            defaultValue: 'OPEN'
+        }
+    ]
+};
+
+export const PartForm: FormStructure = {
+    slug: 'part',
+    title: 'headers.part',
+    fields: [
+        { name: 'name', label: 'headers.name', type: 'text', validation: { required: true } },
+        { name: 'sku', label: 'headers.sku', type: 'text', gridCols: 2 },
+        { name: 'price', label: 'headers.price', type: 'number', gridCols: 2 },
+        { name: 'quantity', label: 'headers.quantity', type: 'number', validation: { required: true }, defaultValue: 0 },
+        { 
+            name: 'categoryId', 
+            label: 'headers.category', 
+            type: 'autocomplete', 
+            remote: { slug: 'PART_CATEGORY' } 
+        },
+        { name: 'description', label: 'headers.description', type: 'textarea' }
+    ]
+};
+
+export const PartCategoryForm: FormStructure = {
+    slug: 'part-category',
+    title: 'headers.category',
+    fields: [
+        { name: 'name', label: 'headers.name', type: 'text', validation: { required: true } },
+        { name: 'description', label: 'headers.description', type: 'textarea' }
+    ]
+};

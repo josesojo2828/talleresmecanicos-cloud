@@ -46,11 +46,11 @@ export const NavItem: React.FC<NavItemProps> = ({ item, isCollapsed, pathname, t
                         {item.childs.map(child => (
                             <Link
                                 key={child.slug}
-                                href={`/dashboard/${child.slug}`}
+                                href={child.path || `/dashboard/${child.slug}`}
                                 className={cn(
                                     "block p-2 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all duration-300",
-                                    pathname === `/dashboard/${child.slug}`
-                                        ? "text-primary bg-primary/5 font-black"
+                                    pathname === (child.path || `/dashboard/${child.slug}`)
+                                        ? "text-emerald-700 bg-emerald-500/5 font-black"
                                         : "text-slate-400 hover:text-slate-900 hover:translate-x-1"
                                 )}
                             >
@@ -65,11 +65,11 @@ export const NavItem: React.FC<NavItemProps> = ({ item, isCollapsed, pathname, t
 
     return (
         <Link
-            href={`/dashboard/${item.slug}`}
+            href={item.path || `/dashboard/${item.slug}`}
             className={cn(
                 "flex items-center gap-3 p-3 rounded-xl transition-all duration-300 group border border-transparent",
-                pathname === `/dashboard/${item.slug}`
-                    ? "bg-primary text-white shadow-lg shadow-primary/20"
+                pathname === (item.path || `/dashboard/${item.slug}`)
+                    ? "bg-emerald-700 text-white shadow-lg shadow-emerald-700/20"
                     : "text-slate-400 hover:bg-slate-50 hover:text-slate-900"
             )}
         >

@@ -1,0 +1,16 @@
+import { WorkStatus } from "@prisma/client";
+
+export interface ICreateWorkDto {
+    workshopId: string;
+    clientId?: string;
+    title: string;
+    description?: string;
+    images?: string[];
+}
+
+export interface IUpdateWorkDto {
+    title?: string;
+    description?: string;
+    status?: WorkStatus;
+    images?: string[];
+}

@@ -17,6 +17,8 @@ import ForumPostModel from "src/modules/forum/domain/models/forum-post.model";
 
 // Models - Support
 import SupportAssignmentModel from "src/modules/support/domain/models/support-assignment.model";
+import AppointmentModel from "src/modules/appointment/domain/models/appointment.model";
+import WorkModel from "src/modules/work/domain/models/work.model";
 
 // Forms
 import * as AppForms from "src/types/form/app.form";
@@ -41,6 +43,8 @@ export default class DashboardService {
     private PublicationModel: PublicationModel;
     private ForumPostModel: ForumPostModel;
     private SupportAssignmentModel: SupportAssignmentModel;
+    private AppointmentModel: AppointmentModel;
+    private WorkModel: WorkModel;
 
     constructor(
         private readonly prisma: PrismaService
@@ -60,6 +64,8 @@ export default class DashboardService {
         this.PublicationModel = new PublicationModel();
         this.ForumPostModel = new ForumPostModel();
         this.SupportAssignmentModel = new SupportAssignmentModel();
+        this.AppointmentModel = new AppointmentModel();
+        this.WorkModel = new WorkModel();
     }
 
     public async getPages(user: IUser) {
@@ -75,8 +81,9 @@ export default class DashboardService {
         const isAdmin = role === 'ADMIN';
         const isSupport = role === 'SUPPORT';
         const isTaller = role === 'TALLER';
+        const isClient = role === 'CLIENT';
 
-         // PERFIL (TODOS)
+        // PERFIL (TODOS)
         sidebar.push({
             icon: 'user',
             label: 'nav.profile',
@@ -106,10 +113,10 @@ export default class DashboardService {
             const userSidebar: ObjectSidebar = {
                 icon: 'user',
                 label: 'nav.user_management',
-                path: '/user',
+                path: '/dashboard/user',
                 slug: 'user',
                 childs: [
-                    { icon: 'user', label: 'user.title', path: '/user/user', slug: 'user' }
+                    { icon: 'user', label: 'user.title', path: '/dashboard/user/user', slug: 'user' }
                 ]
             };
             sidebar.push(userSidebar);
@@ -139,11 +146,11 @@ export default class DashboardService {
             const regionSidebar: ObjectSidebar = {
                 icon: 'globe',
                 label: 'nav.regions',
-                path: '/region',
+                path: '/dashboard/region',
                 slug: 'region',
                 childs: [
-                    { icon: 'flag', label: 'nav.countries', path: '/region/country', slug: 'country' },
-                    { icon: 'map', label: 'nav.cities', path: '/region/city', slug: 'city' }
+                    { icon: 'flag', label: 'nav.countries', path: '/dashboard/country', slug: 'country' },
+                    { icon: 'map', label: 'nav.cities', path: '/dashboard/city', slug: 'city' }
                 ]
             };
             sidebar.push(regionSidebar);
@@ -185,18 +192,26 @@ export default class DashboardService {
         const workshopSidebar: ObjectSidebar = {
             icon: 'tool',
             label: 'nav.workshops',
-            path: '/workshop',
+            path: '/dashboard/workshop',
             slug: 'workshop-management',
             childs: []
         };
 
         if (isAdmin || isSupport) {
-            workshopSidebar.childs.push({ icon: 'list', label: 'nav.workshop_list', path: '/workshop/workshop', slug: 'workshop' });
-            workshopSidebar.childs.push({ icon: 'category', label: 'nav.categories', path: '/workshop/category', slug: 'workshop-category' });
+            workshopSidebar.childs.push({ icon: 'list', label: 'nav.workshop_list', path: '/dashboard/workshop', slug: 'workshop' });
+            workshopSidebar.childs.push({ icon: 'category', label: 'nav.categories', path: '/dashboard/category', slug: 'workshop-category' });
+            
+            if (isAdmin) {
+                workshopSidebar.childs.push({ icon: 'tool', label: 'nav.all_works', path: '/dashboard/work', slug: 'work' });
+                workshopSidebar.childs.push({ icon: 'archive', label: 'nav.all_parts', path: '/dashboard/part', slug: 'part' });
+            }
         }
 
         if (isTaller) {
             workshopSidebar.childs.push({ icon: 'info', label: 'nav.my_workshop', path: '/dashboard/my-workshop', slug: 'my-workshop' });
+
+            workshopSidebar.childs.push({ icon: 'tool', label: 'work.title', path: '/dashboard/work', slug: 'work' });
+            workshopSidebar.childs.push({ icon: 'archive', label: 'nav.inventory', path: '/dashboard/part', slug: 'part' });
             workshopSidebar.childs.push({ icon: 'post', label: 'nav.my_publications', path: '/dashboard/publication', slug: 'publication' });
         }
 
@@ -262,15 +277,72 @@ export default class DashboardService {
             form: AppForms.PublicationForm
         });
 
+
+
+        // 3.2 TRABAJOS (WORKS)
+        pages.push({
+            slug: 'work',
+            title: 'work.title',
+            subtitle: 'work.description',
+            actions: isTaller ? [{ icon: 'add', label: 'Registrar Trabajo', action: 'add', type: 'page' }] : [],
+            actionsRows: [
+                { icon: 'view', label: 'action.view', action: 'edit', type: 'modal' },
+                isTaller ? { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' } : null
+            ].filter(Boolean) as any,
+            columns: [
+                { key: 'title', label: 'headers.title', type: 'text' },
+                { key: 'publicId', label: 'work.publicId', type: 'text' },
+                { key: 'clientName', label: 'headers.name', type: 'text' },
+                { key: 'status', label: 'work.status', type: 'badge' },
+                { key: 'createdAt', label: 'headers.date', type: 'date' }
+            ],
+            form: AppForms.WorkForm
+        });
+
+        // 3.3 INVENTARIO (PARTS)
+        pages.push({
+            slug: 'part',
+            title: 'nav.inventory',
+            subtitle: 'inventory.description',
+            actions: isTaller ? [{ icon: 'add', label: 'inventory.add_part', action: 'add', type: 'page' }] : [],
+            actionsRows: [
+                { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
+                { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' }
+            ],
+            columns: [
+                { key: 'name', label: 'headers.name', type: 'text' },
+                { key: 'sku', label: 'headers.sku', type: 'text' },
+                { key: 'quantity', label: 'headers.quantity', type: 'text' },
+                { key: 'price', label: 'headers.price', type: 'text' },
+                { key: 'category.name', label: 'headers.category', type: 'text' }
+            ],
+            form: AppForms.PartForm
+        });
+
+        pages.push({
+            slug: 'part-category',
+            title: 'inventory.category.title',
+            subtitle: 'inventory.category.subtitle',
+            actions: isTaller ? [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }] : [],
+            actionsRows: [
+                { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
+                { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' }
+            ],
+            columns: [
+                { key: 'name', label: 'headers.name', type: 'text' }
+            ],
+            form: AppForms.PartCategoryForm
+        });
+
         // 4. FORO (TODOS MENOS TALLER QUE YA TIENE SUS PUBLICACIONES)
         if (!isTaller) {
             const forumSidebar: ObjectSidebar = {
                 icon: 'message',
                 label: 'nav.public_forum',
-                path: '/forum',
+                path: '/dashboard/forum',
                 slug: 'forum',
                 childs: [
-                    { icon: 'post', label: 'forum.post.title', path: '/forum/post', slug: 'forum-post' }
+                    { icon: 'post', label: 'forum.post.title', path: '/dashboard/forum/post', slug: 'forum-post' }
                 ]
             };
             sidebar.push(forumSidebar);
@@ -294,15 +366,16 @@ export default class DashboardService {
         });
 
         // 5. CLIENTE (MIS VEHÍCULOS Y SOLICITUDES)
-        const isClient = role === 'CLIENT';
-        if (isClient || isAdmin) {
+        if (isClient) {
             const clientSidebar: ObjectSidebar = {
                 icon: 'activity',
                 label: 'nav.garage',
-                path: '/garage',
+                path: '/dashboard/garage',
                 slug: 'garage',
                 childs: [
                     { icon: 'user', label: 'nav.my_vehicles', path: '/dashboard/vehicle', slug: 'vehicle' },
+
+                    { icon: 'tool', label: 'work.title', path: '/dashboard/work', slug: 'work' },
                     { icon: 'message', label: 'nav.my_requests', path: '/dashboard/service-request', slug: 'service-request' }
                 ]
             };

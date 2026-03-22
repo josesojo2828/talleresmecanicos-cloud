@@ -31,6 +31,8 @@ const CUSTOM_ICON_MAP: Record<string, string> = {
     'country': '/icons/svg/geo-country.svg',
     'state': '/icons/svg/geo-state.svg',
     'city': '/icons/svg/geo-city.svg',
+    'tool': '/icons/svg/cat-tech-repair.svg',
+    'message': '/icons/svg/msg-chat-bubble.svg',
 };
 
 
@@ -47,6 +49,8 @@ const LUCIDE_ICON_MAP: Record<string, keyof typeof LucideIcons> = {
     'country': 'Flag',
     'state': 'MapPinned',
     'city': 'Building2',
+    'tool': 'Wrench',
+    'message': 'MessageSquare',
 };
 
 interface DynamicIconProps {

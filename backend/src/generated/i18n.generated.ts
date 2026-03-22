@@ -173,6 +173,21 @@ export type I18nTranslations = {
             "subtitle": string;
             "my_management": string;
         };
+        "appointment": {
+            "title": string;
+            "description": string;
+            "dateTime": string;
+            "status": string;
+            "workshop": string;
+            "client": string;
+        };
+        "work": {
+            "title": string;
+            "publicId": string;
+            "description": string;
+            "status": string;
+            "images": string;
+        };
     };
 };
 /* prettier-ignore */

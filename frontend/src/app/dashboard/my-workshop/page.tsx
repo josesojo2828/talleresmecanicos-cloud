@@ -154,8 +154,11 @@ export default function MyWorkshopPage() {
         try {
             setIsSaving(true);
 
-            let logoKey = workshop.logoUrl; // default to current
-            if (workshop.logoKey) logoKey = workshop.logoKey;
+            let logoKey = workshop.logoKey || workshop.logoUrl;
+            // Solo limpiamos si es una URL externa (http)
+            if (logoKey && typeof logoKey === 'string' && logoKey.startsWith('http')) {
+                logoKey = logoKey.split('/').pop() || logoKey;
+            }
 
             // 1. Upload Logo if changed
             if (logo) {
@@ -169,12 +172,20 @@ export default function MyWorkshopPage() {
 
             // 2. Handle Showcase Images
             const newFileImages = showcaseImages.filter(img => img instanceof File) as File[];
-            const existingUrls = showcaseImages.filter(img => typeof img === 'string') as string[];
-
-            const retainedKeys = existingUrls.map(url => {
-                const idx = (workshop.images || []).indexOf(url);
-                return idx !== -1 ? (workshop.imageKeys || [])[idx] : null;
-            }).filter(k => k !== null);
+            
+            // Retener las imágenes que ya son strings (viejas)
+            const retainedKeys = showcaseImages
+                .filter(img => typeof img === 'string')
+                .map(img => {
+                    const str = img as string;
+                    // Solo limpiamos si es una URL externa (http)
+                    // Si es un path relativo (como workshops/images/...) lo mantenemos íntegro
+                    if (str.startsWith('http')) {
+                        return str.split('/').pop() || str;
+                    }
+                    return str;
+                })
+                .filter(Boolean);
 
             let newlyUploadedKeys: string[] = [];
             if (newFileImages.length > 0) {
@@ -429,7 +440,10 @@ export default function MyWorkshopPage() {
                                     {logo ? (
                                         <img src={URL.createObjectURL(logo)} className="w-full h-full object-cover" />
                                     ) : workshop.logoUrl ? (
-                                        <img src={workshop.logoUrl} className="w-full h-full object-cover" />
+                                        <img 
+                                            src={workshop.logoUrl.startsWith('http') ? workshop.logoUrl : `/talleres-mecanicos/${workshop.logoUrl}`} 
+                                            className="w-full h-full object-cover" 
+                                        />
                                     ) : (
                                         <>
                                             <Plus size={24} className="text-white/40 mb-1" />
@@ -451,7 +465,11 @@ export default function MyWorkshopPage() {
                                 {showcaseImages.map((img, idx) => (
                                     <div key={idx} className="aspect-square bg-white/5 rounded-2xl overflow-hidden relative group">
                                         <img
-                                            src={typeof img === 'string' ? img : URL.createObjectURL(img)}
+                                            src={
+                                                typeof img !== 'string' 
+                                                    ? URL.createObjectURL(img) 
+                                                    : (img.startsWith('http') ? img : `/talleres-mecanicos/${img}`)
+                                            }
                                             className="w-full h-full object-cover"
                                         />
                                         <button

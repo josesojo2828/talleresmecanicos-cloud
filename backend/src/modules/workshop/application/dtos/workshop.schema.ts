@@ -29,8 +29,16 @@ export const IDefaultWorkshopInclude: IWorkshopIncludeType = {
     user: true,
     country: true,
     city: true,
-    // categories: true,
-    publications: false,
+    works: true,
+    appointments: true,
+    _count: {
+        select: {
+            appointments: true,
+            works: true,
+            publications: true,
+            forumPosts: true,
+        }
+    }
 }
 
 export interface IWorkshopQueryFilter {

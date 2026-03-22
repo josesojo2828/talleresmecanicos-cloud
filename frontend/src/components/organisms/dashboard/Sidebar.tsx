@@ -56,16 +56,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
                 <div className="p-4 flex items-center justify-between border-b border-slate-50 h-16 md:h-20">
                     {!isCollapsed && (
                         <div className="flex items-center gap-2 pl-2">
-                            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-md shadow-primary/20">
+                            <div className="w-8 h-8 rounded-lg bg-[#006341] flex items-center justify-center shadow-md shadow-emerald-900/20">
                                 <span className="text-white font-black text-sm">T</span>
                             </div>
-                            <span className="font-extrabold text-lg text-slate-900 tracking-tighter">Talleres<span className="text-primary italic">Mecanicos</span></span>
+                            <span className="font-extrabold text-lg text-slate-900 tracking-tighter">Talleres<span className="text-[#006341] italic">Mecanicos</span></span>
                         </div>
                     )}
 
                     <button
                         onClick={() => setIsCollapsed(!isCollapsed)}
-                        className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-white hover:border-primary/20 transition-all mx-auto hidden lg:flex"
+                        className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:text-emerald-700 hover:bg-white hover:border-emerald-700/20 transition-all mx-auto hidden lg:flex"
                     >
                         {isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
                     </button>
@@ -98,7 +98,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
                         className={cn("group relative flex items-center gap-3 p-2 rounded-2xl border border-transparent transition-all", !isCollapsed && "hover:bg-white hover:border-slate-100 hover:shadow-sm")}
                     >
                         <div className="relative">
-                            <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center font-black text-primary text-xs shadow-inner uppercase">
+                            <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-500/10 flex items-center justify-center font-black text-emerald-700 text-xs shadow-inner uppercase">
                                 {user?.firstName?.charAt(0)}
                             </div>
                             <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center ring-2 ring-emerald-500/10">

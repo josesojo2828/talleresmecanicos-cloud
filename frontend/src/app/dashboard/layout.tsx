@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { AlertContainer } from "@/components/organisms/AlertContainer";
 import { AuthGuard } from "@/components/templates/AuthGuard";
 import { Menu, Bell, Settings, Wrench, ChevronRight } from "lucide-react";
 import { Sidebar } from "@/components/organisms/dashboard/Sidebar";
@@ -89,8 +88,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         </div>
                     </main>
                 </div>
-
-                <AlertContainer />
             </div>
         </AuthGuard>
     );

@@ -6,6 +6,7 @@ import {
     DeleteObjectCommand,
     HeadBucketCommand,
     CreateBucketCommand,
+    PutBucketPolicyCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
@@ -34,14 +35,43 @@ export class StorageService implements OnModuleInit {
     private async ensureBucketExists() {
         try {
             await this.s3Client.send(new HeadBucketCommand({ Bucket: this.bucketName }));
-            this.logger.log(`Bucket "${this.bucketName}" already exists.`);
+            this.logger.log(`Bucket "${this.bucketName}" already exists. Ensuring public policy...`);
+            await this.setPublicPolicy();
         } catch (error) {
             if (error.name === 'NotFound' || error.$metadata?.httpStatusCode === 404) {
                 this.logger.log(`Bucket "${this.bucketName}" does not exist. Creating...`);
                 await this.s3Client.send(new CreateBucketCommand({ Bucket: this.bucketName }));
+                this.logger.log(`Bucket "${this.bucketName}" created. Setting public policy...`);
+                await this.setPublicPolicy();
             } else {
                 this.logger.error('Error checking bucket existence', error);
             }
+        }
+    }
+
+    private async setPublicPolicy() {
+        const policy = {
+            Version: "2012-10-17",
+            Statement: [
+                {
+                    Effect: "Allow",
+                    Principal: "*",
+                    Action: ["s3:GetObject"],
+                    Resource: [`arn:aws:s3:::${this.bucketName}/*`],
+                },
+            ],
+        };
+
+        try {
+            await this.s3Client.send(
+                new PutBucketPolicyCommand({
+                    Bucket: this.bucketName,
+                    Policy: JSON.stringify(policy),
+                }),
+            );
+            this.logger.log(`Public policy set for bucket "${this.bucketName}"`);
+        } catch (error) {
+            this.logger.error(`Error setting public policy for bucket "${this.bucketName}"`, error);
         }
     }
 

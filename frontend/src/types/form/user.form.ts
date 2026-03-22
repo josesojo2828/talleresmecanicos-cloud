@@ -31,7 +31,7 @@ export const UserUpdateForm: FormStructure = {
             ]
         },
         {
-            name: 'kycLevel', label: 'user.kyc', type: 'select', gridCols: 2, options: [
+            name: 'kycLevel', label: 'user.kyc.default', type: 'select', gridCols: 2, options: [
                 { label: 'user.kyc.none', value: 0 },
                 { label: 'user.kyc.verified', value: 1 }
             ]

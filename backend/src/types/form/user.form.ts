@@ -100,12 +100,12 @@ export const NotificationCreateForm: FormStructure = {
 // --- PROFILE PAGE ---
 export const ProfileForm: FormStructure = {
     slug: 'profile',
-    title: 'Mi Perfil',
+    title: 'nav.profile',
     fields: [
-        { name: 'firstName', label: 'Nombre', type: 'text', gridCols: 2, validation: { required: true } },
-        { name: 'lastName', label: 'Apellido', type: 'text', gridCols: 2, validation: { required: true } },
-        { name: 'email', label: 'Email', type: 'email', validation: { required: true } },
-        { name: 'phone', label: 'Teléfono', type: 'text', gridCols: 2 },
-        { name: 'password', label: 'Nueva Contraseña', type: 'password', validation: { minLength: 8 }, placeholder: 'Dejar en blanco para no cambiar' }
+        { name: 'firstName', label: 'user.firstName', type: 'text', gridCols: 2, validation: { required: true } },
+        { name: 'lastName', label: 'user.lastName', type: 'text', gridCols: 2, validation: { required: true } },
+        { name: 'email', label: 'user.email', type: 'email', validation: { required: true } },
+        { name: 'phone', label: 'user.phone', type: 'text', gridCols: 2 },
+        { name: 'password', label: 'user.new_password', type: 'password', validation: { minLength: 8 }, placeholder: 'user.password_placeholder' }
     ]
 };

@@ -8,6 +8,21 @@
         "login": "Login successful",
         "logout": "Logout"
     },
+    "action": {
+        "add": "Add",
+        "edit": "Edit",
+        "delete": "Delete",
+        "view": "View",
+        "edit_info": "Edit Info",
+        "advertise": "Advertise",
+        "register_vehicle": "Register Vehicle",
+        "new_request": "New Request",
+        "view_details": "View Details",
+        "cancel": "Cancel"
+    },
+    "dialog": {
+        "delete_confirm": "You are about to permanently delete this entry from {slug}. This action is irreversible."
+    },
 
     "error": {
         "default": "An unexpected error occurred",
@@ -189,6 +204,37 @@
         "save": "Save",
         "upload_file": "Upload File"
     },
+    "headers": {
+        "name": "Name",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "description": "Description",
+        "status": "Status",
+        "email": "Email",
+        "role": "Role",
+        "date": "Date",
+        "actions": "Actions",
+        "created_at": "Created at",
+        "author": "Author",
+        "sos": "SOS",
+        "brand": "Brand",
+        "model": "Model",
+        "licensePlate": "Plate",
+        "year": "Year",
+        "city": "City",
+        "country": "Country",
+        "moderated": "Moderated",
+        "visible": "Visible",
+        "images": "Images",
+        "title": "Title",
+        "phone": "Phone",
+        "sku": "SKU",
+        "price": "Price",
+        "quantity": "Quantity",
+        "category": "Category",
+        "work": "Work",
+        "part": "Part"
+    },
     "status": {
         "all": "All",
         "active": "Active",
@@ -220,7 +266,10 @@
             "forum-comment": "Comment",
             "workshop": "Workshop",
             "workshop-category": "Workshop Category",
-            "publication": "Publication/Offer"
+            "publication": "Publication/Offer",
+            "work": "Work",
+            "part": "Part",
+            "part-category": "Part Category"
         }
     },
     "ficha": {
@@ -266,13 +315,17 @@
         "categories": "Categories",
         "my_workshop": "My Workshop",
         "my_publications": "My Publications",
+        "inventory": "Parts Inventory",
         "public_forum": "Public Forum",
         "directory": "Directory",
         "community": "Community",
         "about": "About Us",
         "brand": "Somos Nexo",
         "login": "Login",
-        "login_mobile": "Login to my account"
+        "login_mobile": "Login to my account",
+        "garage": "My Garage",
+        "my_vehicles": "My Vehicles",
+        "my_requests": "My Requests"
     },
     "hero": {
         "badge": "Connecting Latino talent in Japan",

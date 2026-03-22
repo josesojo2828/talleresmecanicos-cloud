@@ -113,20 +113,29 @@ export const useCrud = (slug: string) => {
             // 2. Buscamos campos que tengan archivos (File o Blob)
             const entries = Object.entries(body);
             for (const [key, val] of entries) {
-                if (val instanceof File) {
-                    // Carga individual
+                const isFile = val instanceof File || (val && typeof val === 'object' && 'name' in (val as any) && 'size' in (val as any));
+                const isFileArray = Array.isArray(val) && val.some(v => v instanceof File || (v && typeof v === 'object' && 'name' in (v as any)));
+
+                if (isFile && !Array.isArray(val)) {
                     const fileData = new FormData();
-                    fileData.append('file', val);
+                    fileData.append('file', val as File);
                     const res = await apiClient.post(`/storage/upload`, fileData, { params: { folder: slug } });
                     body[key] = res.data.key;
-                } else if (Array.isArray(val) && val.some(v => v instanceof File)) {
-                    // Carga múltiple
+                } 
+                else if (isFileArray) {
                     const filesData = new FormData();
-                    val.forEach(file => {
-                        if (file instanceof File) filesData.append('files', file);
+                    (val as any[]).forEach(file => {
+                        if (file instanceof File || (file && typeof file === 'object' && 'name' in file)) {
+                            filesData.append('files', file);
+                        }
                     });
                     const res = await apiClient.post(`/storage/upload-multiple`, filesData, { params: { folder: slug } });
                     body[key] = res.data.map((r: any) => r.key);
+                }
+                else if (val && typeof val === 'object' && !(val instanceof Date)) {
+                    if (Object.keys(val).length === 0) {
+                        body[key] = null;
+                    }
                 }
             }
 

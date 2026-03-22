@@ -13,9 +13,10 @@ async function getWorkshop(id: string) {
     }
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-    const workshop = await getWorkshop(params.id);
-    
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const { id } = await params;
+    const workshop = await getWorkshop(id);
+
     if (!workshop) {
         return {
             title: 'Taller No Encontrado | Red de Talleres',
@@ -28,11 +29,14 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         openGraph: {
             title: workshop.name,
             description: workshop.description,
-            images: workshop.logoUrl ? [workshop.logoUrl] : [],
+            images: workshop.logoUrl
+                ? [workshop.logoUrl.startsWith('http') ? workshop.logoUrl : `/talleres-mecanicos/${workshop.logoUrl}`]
+                : [],
         },
     };
 }
 
-export default function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+    await params; // Ensure params are unwrapped if needed by components inside, but client components do it via useParams
     return <WorkshopClient />;
 }

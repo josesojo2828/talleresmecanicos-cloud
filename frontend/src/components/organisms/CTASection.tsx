@@ -37,12 +37,12 @@ export const CTASection = () => {
                                     <span className="text-emerald-600">tu Taller Mecánico</span>
                                 </h3>
                                 <p className="text-slate-500 text-lg font-medium leading-relaxed max-w-sm">
-                                    Únete a la plataforma líder y gestiona tus citas, clientes y reputación en un solo lugar.
+                                    Únete a la plataforma líder y gestiona tus trabajos, clientes y reputación en un solo lugar.
                                 </p>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {['Agenda Digital', 'Pagos Online', 'Perfil Premium', 'Nuevos Clientes'].map((item, i) => (
+                                {['Control de Trabajos', 'Pagos Online', 'Perfil Premium', 'Nuevos Clientes'].map((item, i) => (
                                     <div key={i} className="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-50 p-3 rounded-2xl border border-slate-100 group-hover:bg-white group-hover:border-emerald-200 transition-all">
                                         <CheckCircle size={14} className="text-emerald-500" /> {item}
                                     </div>
@@ -77,12 +77,12 @@ export const CTASection = () => {
                                     <span className="text-emerald-200">Mecánicos de Confianza</span>
                                 </h3>
                                 <p className="text-emerald-50/90 text-lg font-medium leading-relaxed max-w-sm">
-                                    Compara presupuestos y reserva citas en los talleres mejor valorados de tu ciudad.
+                                     Compara presupuestos y contacta con los talleres mejor valorados de tu ciudad.
                                 </p>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {['Reserva en Segundos', 'Precios Claros', 'Citas Inmediatas', 'Chat Directo'].map((item, i) => (
+                                {['Chat Directo', 'Precios Claros', 'Soporte 24/7', 'Expertos Certificados'].map((item, i) => (
                                     <div key={i} className="flex items-center gap-2 text-xs font-bold text-white bg-white/10 p-3 rounded-2xl border border-white/10 backdrop-blur-sm group-hover:bg-white/20 transition-all">
                                         <CheckCircle size={14} className="text-emerald-300" /> {item}
                                     </div>

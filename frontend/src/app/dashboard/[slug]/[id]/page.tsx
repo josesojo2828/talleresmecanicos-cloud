@@ -8,14 +8,18 @@ import { useTranslations } from 'next-intl';
 import { SimpleStats } from '@/features/dashboard/components/SimpleStats';
 import { FormGenerator } from '@/features/dashboard/components/FormGenerator';
 import { useCrud } from '@/features/dashboard/hooks/useCrud';
-import { 
-    Activity, Database, Settings, Users, 
-    Globe, Wrench, MessageSquare, 
-    Shield, Layers
+import {
+    Activity, Database, Settings, Users,
+    Globe, Wrench, MessageSquare,
+    Shield, Layers, Image as ImageIcon
 } from 'lucide-react';
+import { GalleryManager } from '@/features/dashboard/components/GalleryManager';
 import { UserRole } from '@/types/enums';
 import { Loader2 } from 'lucide-react';
 import CustomCrud from '@/features/dashboard/pages/CustomCrud';
+import { WorkDetail } from '@/features/dashboard/components/work/WorkDetail';
+import { PublicationDetail } from '@/features/dashboard/components/publication/PublicationDetail';
+import { PartDetail } from '@/features/dashboard/components/part/PartDetail';
 
 const EmbeddedCrud = ({ slug, initialFilters, title }: { slug: string, initialFilters?: Record<string, any>, title: string }) => {
     const crud = useCrud(slug);
@@ -26,13 +30,13 @@ const EmbeddedCrud = ({ slug, initialFilters, title }: { slug: string, initialFi
                 <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest">{title}</h3>
             </header>
             <div className="bg-white/40 border border-white/50 rounded-[2rem] overflow-hidden">
-                <CustomCrud 
-                    {...crud} 
+                <CustomCrud
+                    {...crud}
                     slug={slug}
-                    initialFilters={initialFilters} 
-                    embedded 
-                    hideHeader 
-                    hideFilters 
+                    initialFilters={initialFilters}
+                    embedded
+                    hideHeader
+                    hideFilters
                 />
             </div>
         </div>
@@ -44,11 +48,11 @@ export default function RecordDetailPage() {
     const router = useRouter();
     const slug = params.slug as string;
     const id = params.id as string;
-    
-    const { data, loading, isMutating, updateRecord } = useFicha(slug, id);
+
+    const { data, loading, isMutating, updateRecord, refresh } = useFicha(slug, id);
     const { config } = useCrud(slug);
     const t = useTranslations();
-    
+
     const [activeTab, setActiveTab] = useState('stats');
 
     const tabs = useMemo(() => {
@@ -57,6 +61,10 @@ export default function RecordDetailPage() {
             { id: 'records', label: t('ficha.tabs.records'), icon: <Database size={16} /> },
             { id: 'data', label: t('ficha.tabs.data'), icon: <Settings size={16} /> },
         ];
+        if (slug === 'workshop') {
+            base.splice(2, 0, { id: 'gallery', label: t('ficha.tabs.gallery'), icon: <ImageIcon size={16} /> });
+        }
+
         return base;
     }, [slug, t]);
 
@@ -79,8 +87,8 @@ export default function RecordDetailPage() {
                     <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tight">{t('ficha.error.restricted_title')}</h1>
                     <p className="text-sm font-bold text-slate-400 mt-2">{t('ficha.error.restricted_desc')}</p>
                 </div>
-                <button 
-                    onClick={() => router.back()} 
+                <button
+                    onClick={() => router.back()}
                     className="px-8 py-3 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg active:scale-95"
                 >
                     {t('action.back')}
@@ -121,6 +129,14 @@ export default function RecordDetailPage() {
                         <EmbeddedCrud title={t('dashboard.detail.forum-comment')} slug="forum-comment" initialFilters={{ postId: data.id }} />
                     </div>
                 );
+            case 'workshop':
+                return (
+                    <div className="space-y-12">
+                        <EmbeddedCrud title={t('work.title')} slug="work" initialFilters={{ workshopId: data.id }} />
+                        <EmbeddedCrud title={t('inventory.title')} slug="part" initialFilters={{ workshopId: data.id }} />
+                        <EmbeddedCrud title={t('publication.title')} slug="publication" initialFilters={{ workshopId: data.id }} />
+                    </div>
+                );
             default:
                 return null;
         }
@@ -136,10 +152,63 @@ export default function RecordDetailPage() {
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             tabs={tabs}
+            hideHeader={['work', 'publication', 'part'].includes(slug)}
+            hideTabs={['work', 'publication', 'part'].includes(slug)}
         >
             {activeTab === 'stats' && (
-                <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
-                    <SimpleStats slug={slug} data={data} />
+                <div className="space-y-12 animate-in fade-in zoom-in-95 duration-500">
+                    {slug === 'work' ? (
+                        <WorkDetail data={data} updateRecord={updateRecord} refresh={refresh} />
+                    ) : slug === 'publication' ? (
+                        <PublicationDetail data={data} updateRecord={updateRecord} refresh={refresh} />
+                    ) : slug === 'part' ? (
+                        <PartDetail data={data} updateRecord={updateRecord} refresh={refresh} />
+                    ) : (
+                        <>
+                            <SimpleStats slug={slug} data={data} />
+
+                            {slug === 'workshop' && (
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                                    {/* Latest Works */}
+                                    <div className="bg-white/40 p-10 rounded-[3rem] border border-white shadow-xl space-y-6">
+                                        <header className="flex items-center justify-between border-b border-slate-100 pb-4">
+                                            <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                                                <Wrench size={18} className="text-emerald-500" /> Últimos Trabajos
+                                            </h3>
+                                            <button onClick={() => setActiveTab('records')} className="text-[10px] font-black uppercase text-emerald-600 hover:scale-105 transition-transform">Ver todos</button>
+                                        </header>
+
+                                        <div className="space-y-3">
+                                            {data.works?.slice(0, 4).map((work: any) => (
+                                                <div key={work.id} className="flex items-center justify-between p-4 bg-white/60 rounded-2xl border border-white shadow-sm hover:shadow-md transition-all group cursor-pointer">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-9 h-9 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:text-emerald-500 group-hover:bg-emerald-50 transition-colors">
+                                                            <Wrench size={16} />
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs font-black text-slate-900 line-clamp-1">{work.title}</p>
+                                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none mt-1">{work.publicId}</p>
+                                                        </div>
+                                                    </div>
+                                                    <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[8px] font-black uppercase tracking-widest border border-emerald-100 whitespace-nowrap">
+                                                        {work.status}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                            {(!data.works || data.works.length === 0) && (
+                                                <div className="text-center py-10 space-y-2 opacity-30">
+                                                    <Wrench size={32} className="mx-auto mb-2" />
+                                                    <p className="text-[10px] font-black uppercase tracking-widest italic">No hay trabajos registrados</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
             )}
 
@@ -154,10 +223,19 @@ export default function RecordDetailPage() {
                 </div>
             )}
 
+            {activeTab === 'gallery' && (
+                <div className="max-w-6xl mx-auto px-6">
+                    <GalleryManager
+                        images={data.images}
+                        onUpdate={updateRecord}
+                    />
+                </div>
+            )}
+
             {activeTab === 'data' && (
                 <div className="max-w-4xl mx-auto bg-white/50 p-10 rounded-[2.5rem] border border-white shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500">
                     {config?.form ? (
-                        <FormGenerator 
+                        <FormGenerator
                             structure={config.form}
                             defaultValues={data}
                             isUpdate={true}

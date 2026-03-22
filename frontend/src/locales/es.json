@@ -8,6 +8,21 @@
         "login": "Inicio de sesión exitoso",
         "logout": "Cerrar sesión"
     },
+    "action": {
+        "add": "Agregar",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "view": "Ver",
+        "edit_info": "Editar Información",
+        "advertise": "Anunciar",
+        "register_vehicle": "Registrar Vehículo",
+        "new_request": "Nueva Solicitud",
+        "view_details": "Ver Detalles",
+        "cancel": "Cancelar"
+    },
+    "dialog": {
+        "delete_confirm": "¿Estás seguro de que deseas eliminar permanentemente este registro de {slug}? Esta acción no se puede deshacer."
+    },
 
     "error": {
         "default": "Ocurrió un error inesperado",
@@ -38,9 +53,60 @@
     },
     "user": {
         "management": "Gestión de Usuarios",
-        "title": "Usuarios",
-        "subtitle": "Administración de usuarios y roles",
-        "my_management": "Mi Cuenta"
+        "title": {
+            "default": "Usuarios",
+            "create": "Nuevo Usuario"
+        },
+        "subtitle": {
+            "default": "Administración de usuarios y roles",
+            "create": "Registrar un nuevo usuario en el sistema"
+        },
+        "my_management": "Mi Cuenta",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "email": "Correo Electrónico",
+        "password": "Contraseña",
+        "new_password": "Nueva Contraseña",
+        "password_placeholder": "Dejar en blanco para no cambiar",
+        "phone": "Teléfono",
+        "permission": "Permisos / Rol",
+        "referralCode": "Código de Referido",
+        "referredBy": "Referido por",
+        "status": "Estado de Cuenta",
+        "kyc": {
+            "default": "Verificación (KYC)",
+            "none": "No Verificado",
+            "verified": "Verificado"
+        }
+    },
+    "profile": {
+        "birthDate": "Fecha de Nacimiento",
+        "avatar": "Imagen de Perfil",
+        "user": "Usuario Asociado"
+    },
+    "address": {
+        "country": "País",
+        "state": "Estado / Provincia",
+        "city": "Ciudad",
+        "street": "Dirección Detallada",
+        "zip": "Código Postal",
+        "user": "Usuario"
+    },
+    "session": {
+        "token": "Token de Acceso",
+        "ip": "Dirección IP",
+        "expiry": "Fecha de Expiración",
+        "user": "Usuario"
+    },
+    "device": {
+        "id": "ID del Dispositivo",
+        "fcm": "Token Push (FCM)",
+        "user": "Usuario"
+    },
+    "notification": {
+        "user": "Destinatario",
+        "title": "Título de Notificación",
+        "content": "Contenido del mensaje"
     },
     "workshop": {
         "title": "Talleres",
@@ -54,6 +120,7 @@
         "website": "Sitio Web",
         "latitude": "Latitud",
         "longitude": "Longitud",
+        "logo": "Logo del Taller",
         "openingHours": "Horario de Atención",
         "country": "País",
         "city": "Ciudad",
@@ -71,7 +138,8 @@
             "title": "Foro de Comunidad",
             "subtitle": "Discusiones y temas de la comunidad",
             "title_label": "Título del Tema",
-            "content": "Contenido del mensaje"
+            "content": "Contenido del mensaje",
+            "categories": "Categorías Relacionadas"
         },
         "enabled": "Habilitado / Moderado"
     },
@@ -80,6 +148,8 @@
         "subtitle": "Ofertas y anuncios del taller",
         "title_label": "Título del Anuncio",
         "content": "Detalle de la publicación",
+        "images": "Fotos del Anuncio",
+        "categories": "Categorías",
         "enabled": "Activo"
     },
     "regions": {
@@ -146,12 +216,29 @@
         "icon": "Icono"
     },
     "vehicle": {
-        "title": "Mi Garage",
-        "subtitle": "Gestiona tus vehículos registrados"
+        "title": "Mi Garage / Vehículos",
+        "subtitle": "Gestiona tus vehículos registrados",
+        "lastOilChange": "Último Cambio de Aceite"
     },
     "service_request": {
-        "title": "Mis Solicitudes",
+        "title": "Mis Solicitudes de Servicio",
         "subtitle": "Solicitudes de servicio y SOS proyectados a talleres"
+    },
+    "appointment": {
+        "title": "Gestión de Citas",
+        "description": "Control de citas y solicitudes de clientes",
+        "workshop": "Taller Destino",
+        "client": "Cliente",
+        "dateTime": "Fecha y Hora",
+        "status": "Estado de la Cita"
+    },
+    "work": {
+        "title": "Órdenes de Trabajo",
+        "description": "Seguimiento técnico de reparaciones y mantenimientos",
+        "client": "Cliente Asignado",
+        "status": "Estado del Trabajo",
+        "publicId": "ID Público",
+        "images": "Evidencia Visual"
     },
     "action": {
         "discard": "Descartar",
@@ -195,14 +282,17 @@
         "city": "Ciudad",
         "country": "País",
         "moderated": "Moderado",
-        "visible": "Visible"
-    },
-    "status": {
-        "all": "Todos",
-        "active": "Activo",
-        "enabled": "Habilitado",
-        "disabled": "Inactivo",
-        "inactive": "Inactivo"
+        "visible": "Visible",
+        "images": "Imágenes",
+        "title": "Título",
+        "sos": "SOS",
+        "phone": "Teléfono",
+        "sku": "SKU",
+        "price": "Precio",
+        "quantity": "Cantidad",
+        "category": "Categoría",
+        "work": "Trabajo",
+        "part": "Repuesto"
     },
     "dashboard": {
         "search": "Buscar en base de datos...",
@@ -221,7 +311,10 @@
             "forum-post": "Tema del Foro",
             "forum-comment": "Comentario",
             "publication": "Anuncio/Oferta",
-            "support-assignment": "Asignación de Soporte"
+            "support-assignment": "Asignación de Soporte",
+            "work": "Trabajo",
+            "part": "Repuesto",
+            "part-category": "Categoría de Repuesto"
         }
     },
     "ficha": {
@@ -233,7 +326,8 @@
         "tabs": {
             "stats": "Estadísticas",
             "records": "Registros Internos",
-            "data": "Actualizar Datos"
+            "data": "Actualizar Datos",
+            "gallery": "Galería"
         },
         "error": {
             "restricted_title": "Acceso Restringido",
@@ -577,5 +671,85 @@
             "description": "Nuestra comunidad crece gracias al aporte de personas como tú. Si tienes recursos que compartir o quieres ser parte del equipo, contáctanos.",
             "button": "Contactar con el Equipo"
         }
+    },
+    "inventory": {
+        "title": "Inventario de Repuestos",
+        "description": "Gestiona el stock de piezas y repuestos de tu taller",
+        "add_part": "Registrar Repuesto",
+        "category": {
+            "title": "Categorías de Repuestos",
+            "subtitle": "Organiza tus piezas por categorías"
+        }
+    },
+    "headers": {
+        "name": "Nombre",
+        "sku": "SKU / Código",
+        "price": "Precio",
+        "quantity": "Cantidad",
+        "category": "Categoría",
+        "description": "Descripción",
+        "title": "Título",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "role": "Rol",
+        "status": "Estado",
+        "brand": "Marca",
+        "model": "Modelo",
+        "year": "Año",
+        "licensePlate": "Placa/Matrícula",
+        "images": "Imágenes",
+        "date": "Fecha",
+        "visible": "Visible",
+        "sos": "Prioridad SOS",
+        "phone": "Teléfono"
+    },
+    "work": {
+        "title": "Órdenes de Trabajo",
+        "description": "Control detallado de cada reparación y servicio",
+        "publicId": "ID Público",
+        "status": "Estado del Trabajo",
+        "client": "Cliente Asignado",
+        "client_registered": "Cliente en la Plataforma (Vincular)"
+    },
+    "nav": {
+        "home": "Inicio",
+        "directory": "Explorar Directorio",
+        "community": "Comunidad",
+        "about": "Sobre Nosotros",
+        "workshops": "Talleres",
+        "workshop_list": "Lista de Talleres",
+        "categories": "Categorías",
+        "my_workshop": "Perfil de Taller",
+        "my_publications": "Mis Publicaciones",
+        "inventory": "Inventario de Repuestos",
+        "public_forum": "Foro Público",
+        "login": "Iniciar Sesión",
+        "login_mobile": "Acceder",
+        "profile": "Mi Perfil",
+        "exit": "Salir",
+        "user_management": "Gestión de Usuarios",
+        "regions": "Regiones",
+        "countries": "Países",
+        "cities": "Ciudades",
+        "garage": "Mi Garaje",
+        "my_vehicles": "Mis Vehículos",
+        "my_requests": "Mis Solicitudes",
+        "all_works": "Órdenes de Trabajo (Todos)",
+        "all_parts": "Piezas / Inventario (Global)"
+    },
+    "status": {
+        "all": "Todos",
+        "active": "Activo",
+        "enabled": "Habilitado",
+        "disabled": "Inactivo",
+        "inactive": "Inactivo",
+        "pending": "Pendiente",
+        "accepted": "Aceptado",
+        "rejected": "Rechazado",
+        "completed": "Completado",
+        "cancelled": "Cancelado",
+        "open": "Abierto",
+        "in_progress": "En Progreso",
+        "delivered": "Entregado"
     }
 }

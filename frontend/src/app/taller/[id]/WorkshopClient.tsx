@@ -4,13 +4,19 @@ import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { 
-    ChevronLeft, Star, MapPin, Phone, MessageCircle, 
+import {
+    ChevronLeft, Star, MapPin, Phone, MessageCircle,
     Globe, Clock, Share2, Heart, Wrench, ShieldCheck,
-    Navigation, ExternalLink, Mail, Award
+    Navigation, ExternalLink, Mail, Award, LogIn,
+    ChevronRight,
+    CheckCircle,
+    Instagram, Facebook, Twitter, Youtube
 } from "lucide-react";
 import apiClient from "@/utils/api/api.client";
 import { cn } from "@/utils/cn";
+import { Map } from "@/components/molecules/Map";
+import { useAuthStore } from "@/store/useAuthStore";
+import { toast } from "sonner";
 
 interface Workshop {
     id: string;
@@ -27,23 +33,116 @@ interface Workshop {
     images: string[];
     rating?: number;
     openingHours?: string;
+    socialMedia?: any; // JSON
     city?: { name: string };
     country?: { name: string; flag: string };
     categories?: { id: string; name: string }[];
+    works?: any[];
 }
 
 export default function WorkshopClient() {
     const { id } = useParams();
     const router = useRouter();
+    const { user, isAuthenticated } = useAuthStore();
     const [workshop, setWorkshop] = useState<Workshop | null>(null);
     const [loading, setLoading] = useState(true);
     const [activeImage, setActiveImage] = useState(0);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+
+
+    // Helper: Parse schedule if it's JSON
+    const formatSchedule = (hours: any) => {
+        if (!hours) return 'Lun a Vie 08:00 - 18:00';
+
+        let parsed: Record<string, any> = {};
+        if (typeof hours === 'string') {
+            try {
+                parsed = JSON.parse(hours);
+            } catch (e) {
+                return hours;
+            }
+        } else {
+            parsed = hours;
+        }
+
+        const DAYS_ORDER = [
+            { key: "monday", label: "Lunes", short: "Lun" },
+            { key: "tuesday", label: "Martes", short: "Mar" },
+            { key: "wednesday", label: "Miércoles", short: "Mié" },
+            { key: "thursday", label: "Jueves", short: "Jue" },
+            { key: "friday", label: "Viernes", short: "Vie" },
+            { key: "saturday", label: "Sábado", short: "Sáb" },
+            { key: "sunday", label: "Domingo", short: "Dom" }
+        ];
+
+        // Ensure we have a valid object and at least one day enabled
+        const activeDays = DAYS_ORDER.filter(d => parsed && parsed[d.key]?.enabled);
+        
+        if (activeDays.length === 0) {
+            // Check if it's the old string format or empty
+            if (Object.keys(parsed).length === 0) return 'Horario no definido';
+            return 'Cerrado temporalmente';
+        }
+
+        // Grouping logic: Only group if consecutive in the calendar AND with same hours
+        const groups: {start: string, end: string, time: string}[] = [];
+        let currentGroup: any = null;
+
+        activeDays.forEach((day, index) => {
+            const dayData = parsed[day.key];
+            const timeStr = `${dayData.open} - ${dayData.close}`;
+            
+            // Re-find the absolute position in the week to detect gaps
+            const currentWeekPos = DAYS_ORDER.findIndex(d => d.key === day.key);
+            const prevDayInActive = index > 0 ? activeDays[index - 1] : null;
+            const prevWeekPos = prevDayInActive ? DAYS_ORDER.findIndex(d => d.key === prevDayInActive.key) : -1;
+
+            // Start a new group if:
+            // 1. First day of active
+            // 2. Time is different
+            // 3. There is a gap in the week position (e.g., skips Tuesday)
+            if (!currentGroup || currentGroup.time !== timeStr || currentWeekPos !== prevWeekPos + 1) {
+                currentGroup = { start: day.short, end: day.short, time: timeStr };
+                groups.push(currentGroup);
+            } else {
+                currentGroup.end = day.short;
+            }
+        });
+
+        return groups.map(g => {
+            if (g.start === g.end) return `${g.start}: ${g.time}`;
+            return `${g.start} a ${g.end}: ${g.time}`;
+        }).join('\n');
+    };
+
+    const getFullImagePath = (path?: string | null) => {
+        if (!path) return null;
+        if (path.startsWith('http') || path.startsWith('/')) {
+            return path;
+        }
+        return `/talleres-mecanicos/${path}`;
+    };
+
+    const localImages = workshop?.images || [];
+
+    useEffect(() => {
+        if (localImages.length > 0 && activeImage >= localImages.length) {
+            setActiveImage(0);
+        }
+    }, [localImages.length, activeImage]);
 
     useEffect(() => {
         const fetchWorkshop = async () => {
             try {
                 const res = await apiClient.get(`/workshop/${id}`);
-                setWorkshop(res.data?.body?.data || res.data?.data || res.data);
+                // Extract entity from interceptor's 'body' property
+                const data = res.data?.body || res.data;
+                setWorkshop(data);
             } catch (err) {
                 console.error("Error fetching workshop:", err);
             } finally {
@@ -72,246 +171,254 @@ export default function WorkshopClient() {
         </div>
     );
 
-    return (
-        <div className="min-h-screen bg-slate-50 pb-20">
-            {/* Header / Hero Section */}
-            <div className="relative h-[45vh] lg:h-[55vh] w-full overflow-hidden">
-                <div className="absolute inset-0 bg-slate-900">
-                    <Image 
-                        src={
-                            (workshop.images[activeImage]?.startsWith('http') || workshop.images[activeImage]?.startsWith('/'))
-                                ? workshop.images[activeImage]
-                                : (workshop.images[activeImage] ? `/${workshop.images[activeImage]}` : 'https://images.unsplash.com/photo-1486006396193-471a2fc880d4?q=80&w=1200')
-                        } 
-                        alt={workshop.name} 
-                        fill 
-                        className="object-cover opacity-60 scale-105"
-                    />
-                </div>
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-black/20" />
-                
-                {/* Upper Nav */}
-                <div className="absolute top-0 left-0 right-0 p-6 md:p-10 flex justify-between items-center z-10">
-                    <button 
-                        onClick={() => router.back()} 
-                        className="p-4 bg-white/10 backdrop-blur-md rounded-2xl text-white hover:bg-white hover:text-slate-900 transition-all border border-white/10"
-                    >
-                        <ChevronLeft size={20} />
-                    </button>
-                    <div className="flex gap-3">
-                        <button className="p-4 bg-white/10 backdrop-blur-md rounded-2xl text-white hover:bg-rose-500 transition-all border border-white/10">
-                            <Heart size={20} />
-                        </button>
-                        <button className="p-4 bg-white/10 backdrop-blur-md rounded-2xl text-white hover:bg-emerald-500 transition-all border border-white/10">
-                            <Share2 size={20} />
-                        </button>
-                    </div>
-                </div>
 
-                {/* Info Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 lg:p-20 text-white">
-                    <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-end justify-between gap-8">
-                        <div className="space-y-4">
-                            <div className="flex flex-wrap gap-2">
-                                {workshop.categories?.map(cat => (
-                                    <span key={cat.id} className="px-3 py-1 bg-emerald-500/30 backdrop-blur-md text-emerald-400 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-500/20">
-                                        {cat.name}
-                                    </span>
-                                ))}
-                            </div>
-                            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none uppercase">
-                                {workshop.name}
-                            </h1>
-                            <div className="flex items-center gap-6">
-                                <div className="flex items-center gap-2">
-                                    <div className="flex gap-0.5">
-                                        {[1,2,3,4,5].map(i => (
-                                            <Star key={i} size={16} className={cn("fill-amber-400 text-amber-400", i > (workshop.rating || 4) && "fill-white/20 text-white/20")} />
-                                        ))}
-                                    </div>
-                                    <span className="text-xl font-black">{workshop.rating || '4.8'}</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-slate-300 font-bold uppercase tracking-widest text-xs">
-                                    <MapPin size={16} /> {workshop.city?.name}, {workshop.country?.name}
-                                </div>
-                            </div>
+
+    const renderSocialIcon = (platform: string, url: string) => {
+        const p = platform.toLowerCase();
+        const iconProps = { size: 22, className: "group-hover:scale-110 transition-transform" };
+
+        let icon = <Globe {...iconProps} />;
+        if (p.includes('whatsapp')) icon = <MessageCircle {...iconProps} />;
+        if (p.includes('instagram')) icon = <Instagram {...iconProps} />;
+        if (p.includes('facebook')) icon = <Facebook {...iconProps} />;
+        if (p.includes('twitter') || p.includes('x.com')) icon = <Twitter {...iconProps} />;
+        if (p.includes('youtube')) icon = <Youtube {...iconProps} />;
+
+        return (
+            <div className="flex items-center justify-center">
+                {icon}
+            </div>
+        );
+    };
+
+    const localLogo = (workshop.logoUrl && typeof workshop.logoUrl === 'string' && !workshop.logoUrl.startsWith('http')) ? workshop.logoUrl : null;
+    const safeActiveImage = activeImage >= localImages.length ? 0 : activeImage; return (
+        <div className="min-h-screen bg-[#F8FAFC]" suppressHydrationWarning>
+            {/* 1. TOP HEADER / ACTION BAR */}
+            <div className="sticky top-0 z-[100] bg-white/80 backdrop-blur-xl border-b border-slate-100 px-6 py-4">
+                <div className="max-w-7xl mx-auto flex justify-between items-center">
+                    <button
+                        onClick={() => router.back()}
+                        className="flex items-center gap-2 group"
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-slate-900 group-hover:text-white transition-all">
+                            <ChevronLeft size={20} />
                         </div>
-                        
-                        <div className="flex gap-4 w-full md:w-auto">
-                            {workshop.whatsapp && (
-                                <a 
-                                    href={`https://wa.me/${workshop.whatsapp}`}
-                                    target="_blank"
-                                    className="flex-1 md:flex-initial flex items-center justify-center gap-3 px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-white rounded-[2rem] font-black uppercase tracking-widest text-xs transition-all shadow-xl shadow-emerald-500/20"
-                                >
-                                    <MessageCircle size={20} /> Contactar
-                                </a>
-                            )}
-                            <button className="p-4 bg-white/20 backdrop-blur-md rounded-[2rem] text-white hover:bg-white hover:border-white transition-all border border-white/10">
-                                <Navigation size={24} />
-                            </button>
-                        </div>
-                    </div>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Volver</span>
+                    </button>
+
                 </div>
             </div>
 
-            {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 -mt-10 relative z-20">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    {/* Left Column: Details & Images */}
-                    <div className="lg:col-span-2 space-y-12">
-                        {/* Gallery */}
-                        <section className="bg-white rounded-[3rem] p-4 shadow-xl border border-white">
-                            <div className="grid grid-cols-4 gap-4 h-[500px]">
-                                <div className="col-span-3 rounded-[2.5rem] overflow-hidden relative">
-                                    <Image 
-                                        src={
-                                            (workshop.images[activeImage]?.startsWith('http') || workshop.images[activeImage]?.startsWith('/'))
-                                                ? workshop.images[activeImage]
-                                                : (workshop.images[activeImage] ? `/${workshop.images[activeImage]}` : 'https://images.unsplash.com/photo-1486006396193-471a2fc880d4?q=80&w=1200')
-                                        } 
-                                        alt="Main Gallery" 
-                                        fill 
+            <main className="max-w-7xl mx-auto px-6 lg:px-12 py-10 space-y-10">
+
+                {/* 2. HERO SECTION: Title & Main Gallery */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    {/* Left: Info & Logo */}
+                    <div className="lg:col-span-4 space-y-8 lg:sticky lg:top-32">
+                        <div className="bg-white rounded-[3rem] p-0 shadow-xl shadow-slate-200/50 border border-white sticky top-28 overflow-hidden">
+                            {/* Logo Hero */}
+                            <div className="h-48 bg-slate-900 relative">
+                                {workshop.logoUrl ? (
+                                    <Image
+                                        unoptimized
+                                        src={getFullImagePath(workshop.logoUrl) || ''}
+                                        alt={workshop.name}
+                                        fill
                                         className="object-cover"
                                     />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-white/10 uppercase font-black text-2xl tracking-tighter">
+                                        <Wrench size={48} className="mr-2" /> {workshop.name.slice(0, 2)}
+                                    </div>
+                                )}
+                                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
+                            </div>
+
+                            <div className="px-8 pb-10 -mt-8 relative">
+                                <div className="inline-flex px-3 py-1 bg-emerald-500 text-white rounded-lg text-[10px] font-black uppercase tracking-widest mb-6 shadow-lg shadow-emerald-500/20">
+                                    Oficial
                                 </div>
-                                <div className="flex flex-col gap-4 overflow-y-auto custom-scrollbar pr-2">
-                                    {workshop.images.length > 0 ? workshop.images.map((img, idx) => (
-                                        <button 
+
+                                <div className="space-y-4">
+                                    <div className="flex flex-wrap gap-2">
+                                        {workshop.categories?.map(cat => (
+                                            <span key={cat.id} className="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-lg text-[8px] font-black uppercase tracking-widest border border-emerald-100">
+                                                {cat.name}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <h1 className="text-4xl font-black text-slate-900 uppercase tracking-tighter leading-[0.9]">
+                                        {workshop.name}
+                                    </h1>
+                                    <p className="text-sm text-slate-500 font-medium leading-relaxed pt-4 border-t border-slate-100">
+                                        {workshop.description || 'Este taller es parte de nuestra red certificada de especialistas mecánicos.'}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right: Gallery and Map */}
+                    <div className="lg:col-span-8 space-y-8">
+                        {/* Main Image Slider Area */}
+                        <div className="bg-white rounded-[2.5rem] p-4 lg:p-6 shadow-xl shadow-slate-200/50 border border-white">
+                            <div className="relative aspect-video rounded-[2rem] overflow-hidden bg-slate-100 group shadow-lg">
+                                {localImages && localImages.length > 0 ? (
+                                    <Image
+                                        unoptimized
+                                        src={getFullImagePath(localImages[safeActiveImage]) || ''}
+                                        alt={workshop.name}
+                                        fill
+                                        className="object-cover transition-all duration-700"
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 flex items-center justify-center text-slate-300">
+                                        <Wrench size={80} className="rotate-45" />
+                                    </div>
+                                )}
+                                <div className="absolute bottom-6 left-6 right-6 flex justify-between items-center bg-black/20 backdrop-blur-md rounded-2xl p-4 border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="text-[10px] font-black text-white uppercase tracking-widest">Vista del Taller {safeActiveImage + 1}/{localImages.length || 0}</span>
+                                    <div className="flex gap-2">
+                                        <button onClick={() => setActiveImage(prev => prev > 0 ? prev - 1 : localImages.length - 1)} className="w-8 h-8 rounded-lg bg-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all">
+                                            <ChevronLeft size={16} />
+                                        </button>
+                                        <button onClick={() => setActiveImage(prev => prev < localImages.length - 1 ? prev + 1 : 0)} className="w-8 h-8 rounded-lg bg-white/20 text-white flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all">
+                                            <ChevronRight size={16} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Thumbnails */}
+                            {localImages.length > 1 && (
+                                <div className="flex gap-3 mt-6 p-2 overflow-x-auto custom-scrollbar">
+                                    {localImages.map((img, idx) => (
+                                        <button
                                             key={idx}
                                             onClick={() => setActiveImage(idx)}
                                             className={cn(
-                                                "relative aspect-square rounded-2xl overflow-hidden border-2 transition-all shrink-0",
-                                                activeImage === idx ? "border-emerald-500 shadow-lg scale-95" : "border-transparent opacity-60 hover:opacity-100"
+                                                "relative w-24 h-16 rounded-xl overflow-hidden border-2 transition-all shrink-0",
+                                                activeImage === idx ? "border-emerald-500 scale-95" : "border-slate-50 opacity-60"
                                             )}
                                         >
-                                            <Image 
-                                                src={img.startsWith('http') || img.startsWith('/') ? img : `/${img}`} 
-                                                alt="Gallery thumb" 
-                                                fill 
-                                                className="object-cover" 
-                                            />
+                                            <Image unoptimized src={getFullImagePath(img) || ''} alt="Thumb" fill className="object-cover" />
                                         </button>
-                                    )) : (
-                                        <div className="aspect-square bg-slate-100 rounded-2xl flex items-center justify-center text-slate-300">
-                                            <Wrench size={24} />
-                                        </div>
-                                    )}
+                                    ))}
                                 </div>
-                            </div>
-                        </section>
+                            )}
+                        </div>
 
-                        {/* Description */}
-                        <section className="bg-white rounded-[3rem] p-10 md:p-14 shadow-sm border border-slate-100 space-y-8">
-                            <header className="flex items-center justify-between">
-                                <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">Sobre el Taller</h2>
-                                <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400">
-                                    <Award size={24} />
-                                </div>
-                            </header>
-                            <p className="text-lg text-slate-500 leading-relaxed italic font-medium">
-                                "{workshop.description}"
-                            </p>
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 pt-8 border-t border-slate-50">
-                                <div className="space-y-1">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Especialidad</p>
-                                    <p className="font-bold text-slate-900">Mecánica General</p>
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Certificación</p>
-                                    <p className="font-bold text-slate-900 flex items-center gap-1">
-                                        Oficial <ShieldCheck size={14} className="text-emerald-500" />
+                        {/* 2.5 Check Order Status Search */}
+                        <div className="bg-slate-900 rounded-[2.5rem] p-10 lg:p-14 text-white relative overflow-hidden shadow-2xl shadow-slate-900/40 border border-white/5">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500 rounded-full blur-[120px] opacity-20 -mr-32 -mt-32" />
+                            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-5 gap-10 items-center">
+                                <div className="lg:col-span-3 space-y-6">
+                                    <h2 className="text-4xl font-black uppercase tracking-tighter leading-none italic">
+                                        ¿Quieres saber el<br/>
+                                        <span className="text-emerald-400">avance de tu vehículo?</span>
+                                    </h2>
+                                    <p className="text-slate-400 text-sm font-medium leading-relaxed max-w-sm">
+                                        Introduce el ID público que el taller te proporcionó al recibir tu vehículo para consultar el estado en tiempo real.
                                     </p>
                                 </div>
-                                <div className="space-y-1">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Atiende</p>
-                                    <p className="font-bold text-slate-900">Particulares y Flotas</p>
+                                <div className="lg:col-span-2 bg-white/5 backdrop-blur-md rounded-[2rem] p-6 border border-white/10 lg:sticky lg:top-4 w-full">
+                                    <div className="flex flex-col gap-3">
+                                        <input 
+                                            type="text" 
+                                            placeholder="EJ: ABCD1234"
+                                            className="w-full bg-white/10 border border-white/10 rounded-2xl px-6 py-4 text-white text-xs font-black uppercase tracking-widest focus:bg-white focus:text-slate-900 focus:outline-none transition-all placeholder:text-white/20"
+                                            id="public-work-id"
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    const idVal = (e.target as HTMLInputElement).value;
+                                                    if (idVal) router.push(`/taller/${id}/t/${idVal.trim().toUpperCase()}`);
+                                                }
+                                            }}
+                                        />
+                                        <button 
+                                            onClick={() => {
+                                                const idVal = (document.getElementById('public-work-id') as HTMLInputElement).value;
+                                                if (idVal) router.push(`/taller/${id}/t/${idVal.trim().toUpperCase()}`);
+                                            }}
+                                            className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-black uppercase tracking-widest text-[10px] px-8 py-4 rounded-2xl transition-all shadow-lg shadow-emerald-500/20"
+                                        >
+                                            Consultar ahora
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </section>
-                    </div>
+                        </div>
 
-                    {/* Right Column: Info Sidebar */}
-                    <div className="space-y-8">
-                        {/* Map Cardio */}
-                        <section className="bg-white rounded-[3rem] p-8 shadow-xl border border-slate-100 relative overflow-hidden group">
-                           <div className="h-48 bg-slate-100 rounded-[2rem] overflow-hidden mb-6 relative">
-                               {/* Mock Map Background */}
-                               <div className="absolute inset-0 bg-[#eef2f5] flex items-center justify-center">
-                                   <div className="w-12 h-12 bg-white rounded-full shadow-2xl flex items-center justify-center">
-                                       <div className="w-3 h-3 bg-emerald-500 rounded-full" />
-                                   </div>
-                               </div>
-                               <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/10 backdrop-blur-[2px]">
-                                   <button className="bg-white px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-900 shadow-2xl flex items-center gap-2">
-                                       <Navigation size={14} /> Ver en Google Maps
-                                   </button>
-                               </div>
-                           </div>
-                           <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                               <MapPin size={14} className="text-rose-500" /> Ubicación
-                           </h3>
-                           <p className="text-sm font-bold text-slate-800 leading-snug">
-                               {workshop.address}
-                           </p>
-                           <p className="text-xs text-slate-400 mt-2">{workshop.city?.name}, {workshop.country?.name}</p>
-                        </section>
+                        {/* Location Details & Map */}
+                        <div className="bg-white rounded-[2.5rem] p-10 shadow-xl shadow-slate-200/50 border border-white grid grid-cols-1 md:grid-cols-2 gap-10">
+                            <div className="space-y-10">
+                                <header className="space-y-2">
+                                    <h3 className="text-xl font-black text-slate-900 uppercase">Ubicación y Horarios</h3>
+                                    <div className="w-20 h-1.5 bg-rose-500 rounded-full" />
+                                </header>
 
-                        {/* Contact Card */}
-                        <section className="bg-slate-900 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full -translate-y-16 translate-x-16" />
-                            
-                            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-8 flex items-center gap-2">
-                                <Phone size={14} className="text-emerald-400" /> Información de Contacto
-                            </h3>
-                            
-                            <div className="space-y-6 relative z-10">
-                                {workshop.phone && (
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-emerald-400"><Phone size={18} /></div>
+                                <div className="space-y-8">
+                                    <div className="flex gap-5">
+                                        <div className="w-12 h-12 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center shrink-0"><MapPin size={24} /></div>
                                         <div>
-                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Llámanos</p>
-                                            <p className="text-sm font-black">{workshop.phone}</p>
+                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Dirección Exacta</p>
+                                            <p className="text-sm font-bold text-slate-900 leading-tight">{workshop.address}</p>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">{workshop.city?.name}, {workshop.country?.name}</p>
                                         </div>
                                     </div>
-                                )}
-                                {workshop.email && (
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-emerald-400"><Mail size={18} /></div>
+                                    <div className="flex gap-5">
+                                        <div className="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center shrink-0"><Clock size={24} /></div>
                                         <div>
-                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Email</p>
-                                            <p className="text-sm font-black">{workshop.email}</p>
-                                        </div>
-                                    </div>
-                                )}
-                                {workshop.website && (
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-emerald-400"><Globe size={18} /></div>
-                                        <div>
-                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Web</p>
-                                            <a href={workshop.website.startsWith('http') ? workshop.website : `https://${workshop.website}`} target="_blank" className="text-sm font-black hover:text-emerald-400 flex items-center gap-2 transition-colors">
-                                                {workshop.website.replace(/^https?:\/\//, '')} <ExternalLink size={12} />
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
-                                {workshop.openingHours && (
-                                    <div className="flex items-start gap-4 pt-4 border-t border-white/10 mt-6">
-                                        <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-emerald-400"><Clock size={18} /></div>
-                                        <div>
-                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Horarios</p>
-                                            <p className="text-xs font-medium text-slate-300 leading-relaxed whitespace-pre-line">
-                                                {workshop.openingHours}
+                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Horario Laboral</p>
+                                            <p className="text-sm font-bold text-slate-800 leading-relaxed whitespace-pre-line">
+                                                {formatSchedule(workshop.openingHours)}
                                             </p>
                                         </div>
                                     </div>
+                                </div>
+
+                                {workshop.socialMedia && (
+                                    <div className="pt-6 border-t border-slate-50">
+                                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4">Síguenos en</p>
+                                        <div className="flex gap-2">
+                                            {Object.entries(workshop.socialMedia).map(([platform, url]) => (
+                                                <a key={platform} href={String(url)} target="_blank" className="w-12 h-12 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center hover:bg-slate-900 hover:text-white transition-all shadow-sm border border-white">
+                                                    {renderSocialIcon(platform, String(url))}
+                                                </a>
+                                            ))}
+                                        </div>
+                                    </div>
                                 )}
                             </div>
-                        </section>
+
+                            <div className="h-[400px] bg-slate-50 rounded-[2.5rem] overflow-hidden border border-slate-100 relative">
+                                <Map
+                                    center={[workshop.latitude || 0, workshop.longitude || 0]}
+                                    zoom={15}
+                                    markers={[{
+                                        lat: workshop.latitude || 0,
+                                        lng: workshop.longitude || 0,
+                                        title: workshop.name,
+                                        address: workshop.address,
+                                        logoUrl: getFullImagePath(workshop.logoUrl) || undefined
+                                    }]}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
             </main>
+
+            {/* --- WhatsApp --- */}
+            {workshop.whatsapp && (
+                <a href={`https://wa.me/${workshop.whatsapp}`} target="_blank" className="fixed bottom-10 right-10 w-20 h-20 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-90 transition-all z-[100] group">
+                    <div className="absolute inset-0 bg-emerald-500 rounded-full animate-ping opacity-20" />
+                    <MessageCircle size={32} />
+                </a>
+            )}
         </div>
     );
 }

@@ -3,6 +3,7 @@ import { LoadUserService } from "./load.user";
 import { LoadRegionsService } from "./load.regions";
 import { LoadForumService } from "./load.forum";
 import { LoadPublicationsService } from "./load.publications";
+import { LoadInventoryService } from "./load.inventory";
 
 /**
  * Main seed coordinator to ensure correct order of execution.
@@ -15,7 +16,8 @@ export class MainSeedService implements OnApplicationBootstrap {
         private readonly regions: LoadRegionsService,
         private readonly users: LoadUserService,
         private readonly forum: LoadForumService,
-        private readonly publications: LoadPublicationsService
+        private readonly publications: LoadPublicationsService,
+        private readonly inventory: LoadInventoryService
     ) { }
 
     async onApplicationBootstrap() {
@@ -34,6 +36,9 @@ export class MainSeedService implements OnApplicationBootstrap {
             
             // 4. Publications (Depends on users and workshops)
             await this.publications.execute();
+
+            // 5. Inventory (Depends on workshops)
+            await this.inventory.execute();
 
             this.logger.log('--- SEEDING FINALIZADO CON ÉXITO ---');
         } catch (error) {

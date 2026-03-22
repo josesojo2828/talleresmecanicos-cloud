@@ -39,9 +39,8 @@ export class WorkshopUCase extends WorkshopModel {
     }
 
     async update(id: string, data: IUpdateWorkshopDto, user: any) {
-        await this.findOne(id, user); // Verification included in findOne
-        
-        console.log(data);
+        console.log(`[WorkshopUCase] Updating workshop ${id} with data:`, JSON.stringify(data, null, 2));
+        await this.findOne(id, user); 
         
         const { 
             name, description, address, phone, whatsapp, website, 
@@ -58,8 +57,17 @@ export class WorkshopUCase extends WorkshopModel {
         if (website !== undefined) body.website = website;
         if (latitude !== undefined) body.latitude = latitude;
         if (longitude !== undefined) body.longitude = longitude;
-        if (logoUrl !== undefined) body.logoUrl = logoUrl;
-        if (images !== undefined) body.images = images;
+        if (logoUrl !== undefined) {
+            if (typeof logoUrl === 'string') body.logoUrl = logoUrl;
+            else body.logoUrl = null; 
+        }
+        if (images !== undefined) {
+            if (Array.isArray(images)) {
+                body.images = images.filter(img => typeof img === 'string');
+            } else {
+                body.images = [];
+            }
+        }
         if (openingHours !== undefined) body.openingHours = openingHours;
         if (socialMedia !== undefined) body.socialMedia = socialMedia;
         if (enabled !== undefined) body.enabled = enabled;

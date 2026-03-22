@@ -29,6 +29,7 @@ export class StorageController {
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(FilesInterceptor('files', 10))
     async uploadFiles(@UploadedFiles() files: Express.Multer.File[], @Query('folder') folder = 'general') {
+        if (!files || files.length === 0) return [];
         const results = await Promise.all(
             files.map(async (file) => {
                 const key = await this.storageService.uploadFile(file, folder);

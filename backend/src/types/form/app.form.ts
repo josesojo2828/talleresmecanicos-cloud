@@ -17,7 +17,6 @@ export const WorkshopForm: FormStructure = {
         { name: 'name', label: 'workshop.name', type: 'text', validation: { required: true } },
         { name: 'description', label: 'workshop.description', type: 'textarea' },
         { name: 'logoUrl', label: 'workshop.logo', type: 'image' },
-        { name: 'images', label: 'workshop.images', type: 'image', multiple: true, validation: { max: 5 } },
         { name: 'address', label: 'workshop.address', type: 'text', validation: { required: true } },
         { name: 'phone', label: 'workshop.phone', type: 'text', gridCols: 2 },
         { name: 'whatsapp', label: 'workshop.whatsapp', type: 'text', gridCols: 2 },
@@ -89,33 +88,120 @@ export const PublicationForm: FormStructure = {
 
 export const VehicleForm: FormStructure = {
     slug: 'vehicle',
-    title: 'Mi Vehículo',
+    title: 'vehicle.title',
     fields: [
-        { name: 'brand', label: 'Marca', type: 'text', validation: { required: true }, gridCols: 2 },
-        { name: 'model', label: 'Modelo', type: 'text', validation: { required: true }, gridCols: 2 },
-        { name: 'year', label: 'Año', type: 'number', gridCols: 2 },
-        { name: 'licensePlate', label: 'Placa', type: 'text', gridCols: 2 },
-        { name: 'lastOilChange', label: 'Último cambio de aceite', type: 'date' }
+        { name: 'brand', label: 'headers.brand', type: 'text', validation: { required: true }, gridCols: 2 },
+        { name: 'model', label: 'headers.model', type: 'text', validation: { required: true }, gridCols: 2 },
+        { name: 'year', label: 'headers.year', type: 'number', gridCols: 2 },
+        { name: 'licensePlate', label: 'headers.licensePlate', type: 'text', gridCols: 2 },
+        { name: 'lastOilChange', label: 'vehicle.lastOilChange', type: 'date' }
     ]
 };
 
 export const ServiceRequestForm: FormStructure = {
     slug: 'service-request',
-    title: 'Solicitud de Servicio',
+    title: 'service_request.title',
     fields: [
-        { name: 'title', label: 'Título', type: 'text', validation: { required: true } },
-        { name: 'description', label: 'Descripción del problema', type: 'textarea', validation: { required: true } },
-        { name: 'images', label: 'Fotos', type: 'image', multiple: true, validation: { max: 5 } },
+        { name: 'title', label: 'headers.title', type: 'text', validation: { required: true } },
+        { name: 'description', label: 'headers.description', type: 'textarea', validation: { required: true } },
+        { name: 'images', label: 'headers.images', type: 'image', multiple: true, validation: { max: 5 } },
         {
             name: 'vehicleId',
-            label: 'Vehículo',
+            label: 'vehicle.title',
             type: 'autocomplete',
             remote: { slug: 'VEHICLE' },
             validation: { required: true }
         },
-        { name: 'isSOS', label: 'Es emergencia (SOS)', type: 'switch', defaultValue: false },
-        { name: 'latitude', label: 'Latitud', type: 'hidden' },
-        { name: 'longitude', label: 'Longitud', type: 'hidden' }
+        { name: 'isSOS', label: 'headers.sos', type: 'switch', defaultValue: false },
+        { name: 'latitude', label: 'workshop.latitude', type: 'hidden' },
+        { name: 'longitude', label: 'workshop.longitude', type: 'hidden' }
+    ]
+};
+
+export const AppointmentForm: FormStructure = {
+    slug: 'appointment',
+    title: 'appointment.title',
+    fields: [
+        { 
+            name: 'workshopId', 
+            label: 'appointment.workshop', 
+            type: 'autocomplete', 
+            remote: { slug: 'WORKSHOP' }, 
+            validation: { required: true } 
+        },
+        { name: 'dateTime', label: 'appointment.dateTime', type: 'date', validation: { required: true } },
+        { name: 'description', label: 'appointment.description', type: 'textarea' },
+        { 
+            name: 'status', 
+            label: 'appointment.status', 
+            type: 'select', 
+            options: [
+                { label: 'status.pending', value: 'PENDING' },
+                { label: 'status.accepted', value: 'ACCEPTED' },
+                { label: 'status.rejected', value: 'REJECTED' },
+                { label: 'status.completed', value: 'COMPLETED' },
+                { label: 'status.cancelled', value: 'CANCELLED' }
+            ],
+            defaultValue: 'PENDING'
+        }
+    ]
+};
+
+export const WorkForm: FormStructure = {
+    slug: 'work',
+    title: 'work.title',
+    fields: [
+        { name: 'title', label: 'headers.title', type: 'text', validation: { required: true } },
+        { name: 'description', label: 'work.description', type: 'textarea' },
+        { name: 'clientName', label: 'headers.name', type: 'text' },
+        { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text' },
+        { name: 'clientPhone', label: 'headers.phone', type: 'text' },
+        { 
+            name: 'clientId', 
+            label: 'work.client_registered', 
+            type: 'autocomplete', 
+            remote: { slug: 'USER' }
+        },
+        { 
+            name: 'status', 
+            label: 'work.status', 
+            type: 'select', 
+            options: [
+                { label: 'status.open', value: 'OPEN' },
+                { label: 'status.in_progress', value: 'IN_PROGRESS' },
+                { label: 'status.completed', value: 'COMPLETED' },
+                { label: 'status.delivered', value: 'DELIVERED' }
+            ],
+            defaultValue: 'OPEN'
+        },
+        { name: 'images', label: 'work.images', type: 'image', multiple: true, validation: { max: 10 } }
+    ]
+};
+
+export const PartForm: FormStructure = {
+    slug: 'part',
+    title: 'inventory.title',
+    fields: [
+        { name: 'name', label: 'headers.name', type: 'text', validation: { required: true } },
+        { name: 'sku', label: 'headers.sku', type: 'text', gridCols: 2 },
+        { name: 'price', label: 'headers.price', type: 'number', gridCols: 2 },
+        { name: 'quantity', label: 'headers.quantity', type: 'number', validation: { required: true }, defaultValue: 0 },
+        { 
+            name: 'categoryId', 
+            label: 'headers.category', 
+            type: 'autocomplete', 
+            remote: { slug: 'PART_CATEGORY' } 
+        },
+        { name: 'description', label: 'headers.description', type: 'textarea' }
+    ]
+};
+
+export const PartCategoryForm: FormStructure = {
+    slug: 'part-category',
+    title: 'inventory.category.title',
+    fields: [
+        { name: 'name', label: 'headers.name', type: 'text', validation: { required: true } },
+        { name: 'description', label: 'headers.description', type: 'textarea' }
     ]
 };
 

@@ -49,11 +49,17 @@ export const SimpleStats: React.FC<{ slug: string; data: any }> = ({ slug, data 
     // Generate mockup stats based on slug
     const getStats = () => {
         switch (slug) {
+            case 'workshop':
+                const counts = data._count || {};
+                return [
+                    { label: 'Trabajos Realizados', value: counts.works || 0, icon: <Wrench size={24} />, color: 'emerald', trend: '+2 esta semana' },
+                    { label: 'Publicaciones y Actividad', value: (counts.publications || 0) + (counts.forumPosts || 0), icon: <MessageSquare size={24} />, color: 'amber', trend: 'Activo' },
+                ];
             case 'country':
                 return [
                     { label: t('dashboard.detail.city'), value: data.cities?.length || 0, icon: <TrendingUp size={24} />, color: 'blue', trend: '+2' },
                     { label: t('dashboard.detail.workshop'), value: data.workshops?.length || 0, icon: <Wrench size={24} />, color: 'emerald', trend: '+12%' },
-                    { label: t('dashboard.detail.user'), value: data.users?.length || 0, icon: <Users size={24} />, color: 'purple', trend: t('ficha.stats.new') },
+                    { label: t('dashboard.detail.user'), value: data.users?.length || 0, icon: <Users size={24} />, color: 'amber', trend: t('ficha.stats.new') },
                 ];
             case 'forum-post':
                 return [
@@ -62,9 +68,9 @@ export const SimpleStats: React.FC<{ slug: string; data: any }> = ({ slug, data 
                 ];
             default:
                 return [
-                    { label: t('ficha.stats.appearances'), value: '1.2k', icon: <TrendingUp size={24} />, color: 'emerald', trend: '+5%' },
-                    { label: t('ficha.stats.views'), value: '4.8k', icon: <Activity size={24} />, color: 'blue', trend: '+10%' },
-                    { label: t('ficha.stats.engagement'), value: '12%', icon: <Users size={24} />, color: 'purple' },
+                    { label: t('ficha.stats.appearances'), value: '0', icon: <TrendingUp size={24} />, color: 'emerald' },
+                    { label: t('ficha.stats.views'), value: '0', icon: <Activity size={24} />, color: 'blue' },
+                    { label: t('ficha.stats.engagement'), value: '0%', icon: <Users size={24} />, color: 'emerald' },
                 ];
         }
     };

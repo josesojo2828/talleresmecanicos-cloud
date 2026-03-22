@@ -15,10 +15,10 @@ export default function NotFound() {
                         <span className="text-2xl font-bold text-slate-400 tracking-[0.4em] uppercase">Not_Found</span>
                     </div>
                 </div>
-                
+
                 <div className="space-y-4">
                     <Typography variant="H2" className="text-slate-900 !text-3xl font-black italic">
-                        Perdido en el Nexo?
+                        Perdido en la red de talleresmecanicos.com?
                     </Typography>
                     <Typography variant="P" className="text-slate-500 font-medium">
                         La página que buscas no existe o ha sido movida. Vuelve al inicio para seguir explorando.

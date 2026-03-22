@@ -12,7 +12,9 @@ export type SUPPORT_SELECT =
     | 'SUBSCRIPTIONPLAN'
     | 'USER'
     | 'CATEGORY_ITEMS'
-    | 'VEHICLE';
+    | 'VEHICLE'
+    | 'PART'
+    | 'PART_CATEGORY';
 
 export interface ObjectSelect {
     id: string,

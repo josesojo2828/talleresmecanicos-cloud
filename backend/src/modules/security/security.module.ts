@@ -5,6 +5,7 @@ import { LoadUserService } from "./application/service/load.user";
 import { LoadRegionsService } from "./application/service/load.regions";
 import { LoadForumService } from "./application/service/load.forum";
 import { LoadPublicationsService } from "./application/service/load.publications";
+import { LoadInventoryService } from "./application/service/load.inventory";
 import { MainSeedService } from "./application/service/main.seed";
 
 @Module({
@@ -15,6 +16,7 @@ import { MainSeedService } from "./application/service/main.seed";
         LoadRegionsService,
         LoadForumService,
         LoadPublicationsService,
+        LoadInventoryService,
         MainSeedService,
 
         PrismaService,

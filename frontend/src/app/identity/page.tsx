@@ -92,7 +92,7 @@ export default function IdentityPage() {
                 {/* Header */}
                 <div className="text-center mb-24">
                     <Typography variant="CAPTION" className="text-primary mb-3">Identity System v2.0</Typography>
-                    <Typography variant="H1" className="mb-4 !text-4xl md:!text-6xl font-black italic">Somos Nexo</Typography>
+                    <Typography variant="H1" className="mb-4 !text-4xl md:!text-6xl font-black italic">Talleres Mecanicos</Typography>
                     <Typography variant="P" className="text-slate-500 max-w-xl mx-auto text-sm md:text-base font-medium">
                         Una identidad visual refinada que combina la frescura de la bandera de México con una interfaz de cristal moderna y compacta.
                     </Typography>
@@ -124,7 +124,7 @@ export default function IdentityPage() {
                             description="Base translúcida para paneles y tarjetas con efecto de cristal."
                         />
                         <ColorSwatch
-                            name="Nexo Error"
+                            name="Talleres Error"
                             hex="#ef4444"
                             description="Funcional para alertas y validaciones críticas."
                         />

@@ -3,7 +3,6 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { AlertContainer } from "@/components/organisms/AlertContainer";
 import { ModalContainer } from "@/components/organisms/ModalContainer";
-import { CommunityChat } from "@/components/organisms/CommunityChat";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { CountryProvider } from "@/components/providers/CountryProvider";
 import { ThemeWrapper } from "@/components/providers/ThemeWrapper";
@@ -39,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" data-theme="mexico-light" suppressHydrationWarning>
       <body
         className={`${plusJakartaSans.variable} antialiased bg-base-100 text-base-content selection:bg-primary/20`}
         suppressHydrationWarning
@@ -49,7 +48,6 @@ export default function RootLayout({
             <CountryProvider>
               <ThemeWrapper>
                 {children}
-                <CommunityChat />
               </ThemeWrapper>
             </CountryProvider>
             <Toaster position="bottom-right" richColors expand={true} />

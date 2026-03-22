@@ -19,7 +19,9 @@ model User {
   deletedAt          DateTime?           @map("deleted_at")
   enabled            Boolean             @default(true)
   countryId          String?             @map("country_id")
+  appointments       Appointment[]
   auditLogs          AuditLog[]
+  chatMessages       ChatMessage[]
   devices            Device[]
   forumComments      ForumComment[]
   forumFavorites     ForumFavorite[]
@@ -30,8 +32,8 @@ model User {
   publications       Publication[]
   sessions           Session[]
   supportAssignments SupportAssignment[]
-  chatMessages       ChatMessage[]
   country            Country?            @relation("UserCountryPreference", fields: [countryId], references: [id])
+  works              Work[]
   workshop           Workshop?
 
   @@map("users")
@@ -195,8 +197,12 @@ model Workshop {
   deletedAt          DateTime?            @map("deleted_at")
   slug               String?              @unique
   WorkshopToCategory WorkshopToCategory[]
+  appointments       Appointment[]
   forumPosts         ForumPost[]
   publications       Publication[]
+  works              Work[]
+  parts              Part[]
+  partCategories     PartCategory[]
   city               City                 @relation(fields: [cityId], references: [id])
   country            Country              @relation(fields: [countryId], references: [id])
   user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -303,9 +309,114 @@ model ChatMessage {
   @@map("chat_messages")
 }
 
+model Appointment {
+  id          String            @id @default(uuid())
+  workshopId  String            @map("workshop_id")
+  clientId    String            @map("client_id")
+  dateTime    DateTime          @map("date_time")
+  status      AppointmentStatus @default(PENDING)
+  description String?
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime?         @updatedAt @map("updated_at")
+  deletedAt   DateTime?         @map("deleted_at")
+  client      User              @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  workshop    Workshop          @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+
+  @@index([workshopId])
+  @@index([clientId])
+  @@map("appointments")
+}
+
+model Work {
+  id          String     @id @default(uuid())
+  publicId    String     @unique @default(cuid()) @map("public_id")
+  workshopId  String     @map("workshop_id")
+  clientId    String?    @map("client_id")
+  title       String
+  description String?
+  status      WorkStatus @default(OPEN)
+  clientName  String?    @map("client_name")
+  clientPhone String?    @map("client_phone")
+  vehicleLicensePlate String? @map("vehicle_license_plate")
+  images      String[]
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime?  @updatedAt @map("updated_at")
+  deletedAt   DateTime?  @map("deleted_at")
+  client      User?      @relation(fields: [clientId], references: [id])
+  workshop    Workshop   @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  partsUsed   WorkPart[]
+
+  @@index([workshopId])
+  @@index([clientId])
+  @@index([publicId])
+  @@map("works")
+}
+
+model PartCategory {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  workshopId  String    @map("workshop_id")
+  workshop    Workshop  @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  parts       Part[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@unique([name, workshopId])
+  @@map("part_categories")
+}
+
+model Part {
+  id          String        @id @default(uuid())
+  name        String
+  sku         String?
+  description String?
+  quantity    Int           @default(0)
+  price       Float?
+  workshopId  String        @map("workshop_id")
+  categoryId  String?       @map("category_id")
+  workshop    Workshop      @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  category    PartCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  worksUsedIn WorkPart[]
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime?     @updatedAt @map("updated_at")
+  deletedAt   DateTime?     @map("deleted_at")
+
+  @@map("parts")
+}
+
+model WorkPart {
+  id        String   @id @default(uuid())
+  workId    String   @map("work_id")
+  partId    String   @map("part_id")
+  quantity  Int      @default(1)
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+  part      Part     @relation(fields: [partId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([workId, partId], name: "workPartId")
+  @@map("work_parts")
+}
+
 enum UserRole {
   ADMIN
   SUPPORT
   TALLER
   CLIENT
+}
+
+enum AppointmentStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+enum WorkStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  DELIVERED
 }

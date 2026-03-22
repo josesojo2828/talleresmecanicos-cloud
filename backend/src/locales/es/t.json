@@ -103,5 +103,20 @@
         "title": "Usuarios",
         "subtitle": "Listado de usuarios del sistema",
         "my_management": "Mi Cuenta"
+    },
+    "appointment": {
+        "title": "Citas",
+        "description": "Detalle de la cita",
+        "dateTime": "Fecha y Hora",
+        "status": "Estado de la cita",
+        "workshop": "Taller",
+        "client": "Cliente"
+    },
+    "work": {
+        "title": "Trabajos Realizados",
+        "publicId": "ID Público",
+        "description": "Descripción del trabajo",
+        "status": "Estado del trabajo",
+        "images": "Imágenes del trabajo"
     }
 }

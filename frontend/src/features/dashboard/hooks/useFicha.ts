@@ -31,10 +31,8 @@ export function useFicha(slug: string, id: string) {
             const res = await apiClient.put(`/${slug}/${id}`, formData);
             const updated = res.data?.body || res.data;
             setData(updated);
-            addAlert('Los cambios se han guardado correctamente.', 'success');
             return { success: true };
         } catch (error) {
-            addAlert('No se pudieron guardar los cambios.', 'error');
             return { success: false };
         } finally {
             setIsMutating(false);

@@ -14,6 +14,10 @@ import { WorkshopModule } from './modules/workshop/workshop.module';
 import { ForumModule } from './modules/forum/forum.module';
 import { SupportModule } from './modules/support/support.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { AppointmentModule } from './modules/appointment/appointment.module';
+import { WorkModule } from './modules/work/work.module';
+import { PartModule } from './modules/part/part.module';
+import { SystemModule } from './modules/system/system.module';
 // import { ClientModule } from './modules/client/client.module';
 
 @Module({
@@ -43,6 +47,10 @@ import { ChatModule } from './modules/chat/chat.module';
     ForumModule,
     SupportModule,
     ChatModule,
+    AppointmentModule,
+    WorkModule,
+    PartModule,
+    SystemModule,
     // ClientModule,
 
     // SECURITY
