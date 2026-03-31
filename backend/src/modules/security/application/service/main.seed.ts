@@ -32,15 +32,15 @@ export class MainSeedService implements OnApplicationBootstrap {
             // 2. Users (Depends on roles and potentially regions for workshops)
             await this.users.execute();
             
-            this.logger.log('MainSeedService: Llamando a Forum Seeder...');
-            // 3. Forum (Depends on users)
-            await this.forum.execute();
+            // this.logger.log('MainSeedService: Llamando a Forum Seeder...');
+            // // 3. Forum (Depends on users)
+            // await this.forum.execute();
             
-            // 4. Publications (Depends on users and workshops)
-            await this.publications.execute();
+            // // 4. Publications (Depends on users and workshops)
+            // await this.publications.execute();
 
-            // 5. Inventory (Depends on workshops)
-            await this.inventory.execute();
+            // // 5. Inventory (Depends on workshops)
+            // // await this.inventory.execute();
 
             // 6. Mario Demo Account (Complete flow)
             await this.mario.execute();

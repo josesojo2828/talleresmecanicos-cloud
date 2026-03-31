@@ -148,36 +148,6 @@ export class LoadMarioService {
             }
         }
 
-        // 6. Crear 3 Publicaciones de alto valor
-        const pubCount = await this.prisma.publication.count({ where: { workshopId: workshop.id } });
-        if (pubCount < 3) {
-            await this.prisma.publication.createMany({
-                data: [
-                    {
-                        title: 'Afinación Mayor con Escaneo Computarizado',
-                        content: 'Incluye limpieza de inyectores, cambio de bujías, filtros y aceite. Garantía de 6 meses.',
-                        images: ['https://images.unsplash.com/photo-1487754156051-c358a3e00b1a?q=80&w=800'],
-                        userId: mario.id,
-                        workshopId: workshop.id
-                    },
-                    {
-                        title: 'Especialista en Transmisiones Automáticas',
-                        content: 'Reparación y mantenimiento de cajas DSG, CVT y convencionales. Contamos con equipo de diagnóstico original.',
-                        images: ['https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800'],
-                        userId: mario.id,
-                        workshopId: workshop.id
-                    },
-                    {
-                        title: 'Servicio de Frenos Cerámicos',
-                        content: 'Instalación de pastillas de alta eficiencia para un frenado superior y silencioso.',
-                        images: ['https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=800'],
-                        userId: mario.id,
-                        workshopId: workshop.id
-                    }
-                ]
-            });
-        }
-
         // 7. Crear Órdenes de Trabajo (Culminadas e integradas)
         const workData = [
             {
