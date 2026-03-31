@@ -200,7 +200,7 @@ export default class DashboardService {
         if (isAdmin || isSupport) {
             workshopSidebar.childs.push({ icon: 'list', label: 'nav.workshop_list', path: '/dashboard/workshop', slug: 'workshop' });
             workshopSidebar.childs.push({ icon: 'category', label: 'nav.categories', path: '/dashboard/category', slug: 'workshop-category' });
-            
+
             if (isAdmin) {
                 workshopSidebar.childs.push({ icon: 'tool', label: 'nav.all_works', path: '/dashboard/work', slug: 'work' });
                 workshopSidebar.childs.push({ icon: 'archive', label: 'nav.all_parts', path: '/dashboard/part', slug: 'part' });
@@ -209,7 +209,7 @@ export default class DashboardService {
 
         if (isTaller) {
             workshopSidebar.childs.push({ icon: 'info', label: 'nav.my_workshop', path: '/dashboard/my-workshop', slug: 'my-workshop' });
-
+            workshopSidebar.childs.push({ icon: 'calendar', label: 'appointment.title', path: '/dashboard/appointment', slug: 'appointment' });
             workshopSidebar.childs.push({ icon: 'tool', label: 'work.title', path: '/dashboard/work', slug: 'work' });
             workshopSidebar.childs.push({ icon: 'archive', label: 'nav.inventory', path: '/dashboard/part', slug: 'part' });
             workshopSidebar.childs.push({ icon: 'post', label: 'nav.my_publications', path: '/dashboard/publication', slug: 'publication' });
@@ -247,18 +247,20 @@ export default class DashboardService {
             });
         }
 
-        pages.push({
-            slug: 'workshop-category',
-            title: 'nav.categories',
-            subtitle: 'workshop.categories.subtitle',
-            actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
-            actionsRows: [{ icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' }],
-            columns: [
-                { key: 'name', label: 'headers.name', type: 'text' },
-                { key: 'enabled', label: 'headers.status', type: 'boolean' }
-            ],
-            form: AppForms.WorkshopCategoryForm
-        });
+        if (isAdmin || isSupport) {
+            pages.push({
+                slug: 'workshop-category',
+                title: 'nav.categories',
+                subtitle: 'workshop.categories.subtitle',
+                actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
+                actionsRows: [{ icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' }],
+                columns: [
+                    { key: 'name', label: 'headers.name', type: 'text' },
+                    { key: 'enabled', label: 'headers.status', type: 'boolean' }
+                ],
+                form: AppForms.WorkshopCategoryForm
+            });
+        }
 
         pages.push({
             slug: 'publication',
@@ -277,7 +279,23 @@ export default class DashboardService {
             form: AppForms.PublicationForm
         });
 
-
+        // 3.1 CITAS (APPOINTMENTS)
+        pages.push({
+            slug: 'appointment',
+            title: 'appointment.title',
+            subtitle: 'appointment.subtitle',
+            actions: (isTaller || isAdmin) ? [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }] : [],
+            actionsRows: [
+                { icon: 'edit', label: 'action.manage', action: 'edit', type: 'modal' },
+                (isTaller || isAdmin) ? { icon: 'delete', label: 'action.cancel', action: 'delete', type: 'modal' } : null
+            ].filter(Boolean) as any,
+            columns: [
+                { key: 'dateTime', label: 'headers.date', type: 'date' },
+                { key: 'clientName', label: 'headers.client', type: 'text' },
+                { key: 'status', label: 'headers.status', type: 'badge' }
+            ],
+            form: AppForms.AppointmentForm
+        });
 
         // 3.2 TRABAJOS (WORKS)
         pages.push({
