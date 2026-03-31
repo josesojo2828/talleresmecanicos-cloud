@@ -15,12 +15,18 @@ export class AppointmentController {
     constructor(private readonly useCase: AppointmentUCase) {}
 
     @Post()
-    @Roles(UserRole.ADMIN, UserRole.CLIENT)
+    @Roles(UserRole.ADMIN, UserRole.CLIENT, UserRole.TALLER)
     async create(@Body() data: ICreateAppointmentDto, @CurrentUser() user: any) {
         // If Client, force clientId to their own id
         if (user.role === UserRole.CLIENT) {
             data.clientId = user.id;
         }
+        
+        // If Workshop, force workshopId to their own workshop
+        if (user.role === UserRole.TALLER) {
+            data.workshopId = user.workshop?.id;
+        }
+        
         return await this.useCase.create(data);
     }
 
