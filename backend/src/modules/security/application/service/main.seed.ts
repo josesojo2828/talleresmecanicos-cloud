@@ -4,6 +4,7 @@ import { LoadRegionsService } from "./load.regions";
 import { LoadForumService } from "./load.forum";
 import { LoadPublicationsService } from "./load.publications";
 import { LoadInventoryService } from "./load.inventory";
+import { LoadMarioService } from "./load.mario";
 
 /**
  * Main seed coordinator to ensure correct order of execution.
@@ -17,7 +18,8 @@ export class MainSeedService implements OnApplicationBootstrap {
         private readonly users: LoadUserService,
         private readonly forum: LoadForumService,
         private readonly publications: LoadPublicationsService,
-        private readonly inventory: LoadInventoryService
+        private readonly inventory: LoadInventoryService,
+        private readonly mario: LoadMarioService
     ) { }
 
     async onApplicationBootstrap() {
@@ -39,6 +41,9 @@ export class MainSeedService implements OnApplicationBootstrap {
 
             // 5. Inventory (Depends on workshops)
             await this.inventory.execute();
+
+            // 6. Mario Demo Account (Complete flow)
+            await this.mario.execute();
 
             this.logger.log('--- SEEDING FINALIZADO CON ÉXITO ---');
         } catch (error) {

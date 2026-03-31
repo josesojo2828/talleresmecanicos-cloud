@@ -55,14 +55,14 @@ export class LoadUserService {
             where: { email: 'demo@example.com' },
             update: {
                 passwordHash,
-                role: 'SUPPORT',
+                role: 'TALLER',
             },
             create: {
                 email: 'demo@example.com',
                 passwordHash,
                 firstName: 'Demo',
                 lastName: 'User',
-                role: 'SUPPORT',
+                role: 'TALLER',
                 profile: {
                     create: {}
                 }
@@ -150,6 +150,22 @@ export class LoadUserService {
                 }
             });
 
+            // Associate workshop also to demoUser if desired, or just create another one
+            await this.prisma.workshop.upsert({
+                where: { userId: demoUser.id },
+                update: { enabled: true },
+                create: {
+                    name: 'Demo Workshop',
+                    address: 'Calle Falsa 123',
+                    phone: '123456789',
+                    userId: demoUser.id,
+                    countryId: defaultCountry.id,
+                    cityId: defaultCity.id,
+                    enabled: true,
+                    slug: 'demo-workshop'
+                }
+            });
+
             // Create some Works
             const workCount = await this.prisma.work.count({ where: { workshopId: workshop.id } });
             if (workCount === 0) {
@@ -182,8 +198,6 @@ export class LoadUserService {
                 });
             }
         }
-
-
 
         const users = [superadmin, admin, demoUser, tallerUser, clientUser];
 
