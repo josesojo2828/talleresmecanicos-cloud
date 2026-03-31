@@ -14,8 +14,10 @@ echo "🛑 Deteniendo servicios..."
 docker compose down
 
 # 3. Construir y levantar servicios
-echo "🏗️ Construyendo y levantando servicios (Producción)..."
-docker compose up -d --build --no-cache
+echo "🏗️ Construyendo servicios (sin caché)..."
+docker compose build --no-cache
+echo "🚀 Levantando servicios..."
+docker compose up -d
 
 # 4. Actualización de Base de Datos (Opcional)
 echo "🗄️ ¿Deseas aplicar las migraciones de la base de datos ahora mismo? (s/n)"
