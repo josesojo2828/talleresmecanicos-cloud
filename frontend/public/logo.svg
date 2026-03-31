@@ -1,0 +1,10 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo Hexagonal (Tuerca Industrial) -->
+  <path d="M16 2L28.1244 9V23L16 30L3.87564 23V9L16 2Z" fill="#10b981"/>
+  
+  <!-- Símbolo Interno (Trazo Dinámico / Herramienta / Carretera) -->
+  <path d="M11 11L16 16L21 11V21H16V16L11 21V11Z" fill="white" fill-opacity="0.9"/>
+  
+  <!-- Detalle de Brillo Técnico -->
+  <path d="M16 2L3.87564 9L16 16L28.1244 9L16 2Z" fill="white" fill-opacity="0.1"/>
+</svg>

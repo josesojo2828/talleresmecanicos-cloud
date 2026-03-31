@@ -1,0 +1,18 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Sombra de Profundidad -->
+  <path d="M32 4L60 18V46L32 60L4 46V18L32 4Z" fill="#1e293b" fill-opacity="0.1"/>
+  
+  <!-- Cuerpo Principal (Hexágono Isométrico / Cubo Tech) -->
+  <path d="M32 2L58 17V47L32 62L6 47V17L32 2Z" fill="#10b981"/>
+  
+  <!-- División de Caras (Perspectiva) -->
+  <path d="M32 2V32L58 17" stroke="white" stroke-width="0.5" stroke-opacity="0.2"/>
+  <path d="M32 62V32L6 17" stroke="white" stroke-width="0.5" stroke-opacity="0.2"/>
+  <path d="M6 17L32 32L58 17" stroke="white" stroke-width="0.5" stroke-opacity="0.2"/>
+
+  <!-- Símbolo "M" (Mecánico / Motor / Modular) -->
+  <path d="M20 22L32 34L44 22V42H38V30L32 36L26 30V42H20V22Z" fill="white" fill-opacity="0.95"/>
+
+  <!-- Indicador Led de "Sistema Activo" -->
+  <circle cx="32" cy="54" r="2" fill="#34d399" />
+</svg>
