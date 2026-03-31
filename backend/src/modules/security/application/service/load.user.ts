@@ -129,8 +129,8 @@ export class LoadUserService {
                     address: 'Av. Insurgentes Sur 123, Ciudad de México',
                     phone: '+52 55 1234 5678',
                     whatsapp: '+52 55 1234 5678',
-                    latitude: 19.3582,
-                    longitude: -99.1764,
+                    latitude: 10.4806,
+                    longitude: -66.9036,
                     logoUrl: 'https://images.unsplash.com/photo-1599256621730-535171e28e50?q=80&w=200',
                     images: [
                         'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=1200',
@@ -161,6 +161,8 @@ export class LoadUserService {
                     userId: demoUser.id,
                     countryId: defaultCountry.id,
                     cityId: defaultCity.id,
+                    latitude: 10.4910,
+                    longitude: -66.8620,
                     enabled: true,
                     slug: 'demo-workshop'
                 }

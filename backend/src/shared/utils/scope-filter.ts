@@ -31,7 +31,9 @@ export function getScopeFilter(user: any) {
     }
 
     if (user.role === UserRole.TALLER) {
-        return { userId: user.id };
+        // En consultas generales, el TALLER puede ver todo lo habilitado.
+        // El filtrado por userId se maneja específicamente en controladores privados (ej: MyWorkshop)
+        return { enabled: true };
     }
 
     if (user.role === 'PUBLIC') {
