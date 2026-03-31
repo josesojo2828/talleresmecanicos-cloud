@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -6,22 +6,25 @@ import {
     Wrench, CheckCircle2, Clock, Truck, 
     Images, FileText, MapPin, Phone, 
     Calendar, ShieldCheck, ExternalLink,
-    AlertTriangle
+    AlertTriangle, Car, User, Info,
+    ArrowRight, Check, Play, PackageCheck
 } from "lucide-react";
 import axios from "axios";
 import { cn } from "@/utils/cn";
+import { Header } from "@/components/organisms/Header";
+import { Footer } from "@/components/organisms/Footer";
 
 // Simple unauthenticated client for public access
 const publicApi = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL || '/api/v1',
 });
 
-const STATUS_CONFIG: Record<string, { label: string; icon: any; color: string; bg: string }> = {
-    OPEN: { label: "Recibido", icon: FileText, color: "text-blue-600", bg: "bg-blue-50" },
-    IN_PROGRESS: { label: "En Proceso", icon: Clock, color: "text-amber-600", bg: "bg-amber-50" },
-    COMPLETED: { label: "Listo para Entrega", icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50" },
-    DELIVERED: { label: "Entregado", icon: ShieldCheck, color: "text-slate-600", bg: "bg-slate-50" },
-};
+const STATUS_STEPS = [
+    { id: 'OPEN', label: 'Recibido', description: 'Vehículo ingresado al taller', icon: FileText },
+    { id: 'IN_PROGRESS', label: 'En Proceso', description: 'Técnicos trabajando', icon: Wrench },
+    { id: 'COMPLETED', label: 'Finalizado', description: 'Pruebas de calidad listas', icon: PackageCheck },
+    { id: 'DELIVERED', label: 'Entregado', description: 'Retirado por el cliente', icon: ShieldCheck },
+];
 
 export default function PublicWorkPage() {
     const params = useParams();
@@ -52,8 +55,8 @@ export default function PublicWorkPage() {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 gap-4">
-                <div className="w-12 h-12 border-4 border-emerald-500/10 border-t-emerald-500 rounded-full animate-spin" />
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Verificando Orden de Trabajo...</p>
+                <div className="w-16 h-16 border-4 border-emerald-500/10 border-t-emerald-500 rounded-full animate-spin" />
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 animate-pulse">Sincronizando con el Taller...</p>
             </div>
         );
     }
@@ -61,179 +64,255 @@ export default function PublicWorkPage() {
     if (error || !work) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-6 text-center">
-                <div className="w-20 h-20 bg-rose-50 text-rose-500 rounded-[2rem] flex items-center justify-center mb-6 shadow-xl shadow-rose-500/10">
-                    <AlertTriangle size={32} />
+                <div className="w-24 h-24 bg-rose-50 text-rose-500 rounded-[3rem] flex items-center justify-center mb-8 shadow-2xl shadow-rose-500/10 transform -rotate-6">
+                    <AlertTriangle size={40} />
                 </div>
-                <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-2">Orden no encontrada</h1>
-                <p className="text-sm text-slate-500 max-w-xs mx-auto leading-relaxed">Verifica el enlace o contacta con el taller para obtener el ID correcto.</p>
-                <a href="/" className="mt-8 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 hover:tracking-[0.3em] transition-all">Regresar al inicio</a>
+                <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tighter mb-4">Orden no encontrada</h1>
+                <p className="text-sm font-bold text-slate-400 max-w-sm mx-auto leading-relaxed">Lo sentimos, no pudimos localizar esta orden de trabajo. Asegúrate de que el enlace sea correcto o contacta a tu mecánico.</p>
+                <a href="/" className="mt-12 px-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:scale-105 transition-all">Ir al Inicio</a>
             </div>
         );
     }
 
-    const currentStatus = STATUS_CONFIG[work.status] || STATUS_CONFIG.OPEN;
+    // Determine current status index for the Stepper
+    const currentStatusIndex = STATUS_STEPS.findIndex(step => step.id === work.status);
 
     return (
-        <div className="min-h-screen bg-slate-50 pb-20">
-            {/* Header / Navbar Sencillo */}
-            <nav className="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-6 md:px-12 mb-8 md:mb-12 sticky top-0 z-50 shadow-sm backdrop-blur-xl bg-white/80">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-emerald-500 flex items-center justify-center rounded-xl text-white font-black shadow-lg shadow-emerald-500/20">
-                        <Wrench size={20} />
-                    </div>
-                    <span className="font-black text-slate-900 uppercase tracking-tighter text-lg">{work.workshop?.name}</span>
-                </div>
-                <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-4 py-2 rounded-full border border-slate-100">
-                    <ShieldCheck size={14} className="text-emerald-500" />
-                    Portal Público Seguro
-                </div>
-            </nav>
-
-            <div className="max-w-5xl mx-auto px-4">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    
-                    {/* Columna Izquierda: Detalles del Trabajo */}
-                    <div className="lg:col-span-8 space-y-8">
-                        
-                        {/* Tarjeta de Estatus Principal */}
-                        <div className="bg-white rounded-[40px] p-8 md:p-12 shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden relative group">
-                            <div className="absolute top-0 right-0 w-48 h-48 bg-slate-50 rounded-full translate-x-20 -translate-y-20 transition-transform duration-700 group-hover:scale-110" />
-                            
-                            <div className="relative">
-                                <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 pb-8 border-b border-slate-50">
-                                    <div>
-                                        <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-3 italic">Orden de Servicio</p>
-                                        <h1 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight uppercase tracking-tight">{work.title}</h1>
-                                    </div>
-                                    <div className={cn("px-8 py-4 rounded-3xl flex items-center gap-3 shadow-sm border border-transparent", currentStatus.bg)}>
-                                        <currentStatus.icon size={24} className={currentStatus.color} />
-                                        <span className={cn("font-black uppercase tracking-widest text-xs", currentStatus.color)}>
-                                            {currentStatus.label}
-                                        </span>
-                                    </div>
-                                </header>
-
-                                <div className="space-y-10">
-                                    {/* Descripción Técnica */}
-                                    <div>
-                                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2 italic">
-                                            <FileText size={14} /> Reporte Técnico
-                                        </h3>
-                                        <p className="text-slate-600 text-lg leading-relaxed font-medium">
-                                            {work.description || "Iniciando diagnóstico..."}
-                                        </p>
-                                    </div>
-
-                                    {/* Galería Visual */}
-                                    {work.images && work.images.length > 0 && (
-                                        <div>
-                                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2 italic">
-                                                <Images size={14} /> Evidencia Operativa ({work.images.length})
-                                            </h3>
-                                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                                                {work.images.map((img: string, i: number) => (
-                                                    <div key={i} className="aspect-square rounded-3xl overflow-hidden bg-slate-100 group/img cursor-pointer relative shadow-sm hover:shadow-xl transition-all">
-                                                        <img src={img} className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-110" />
-                                                        <div className="absolute inset-0 bg-slate-900/0 group-hover/img:bg-slate-900/20 transition-colors" />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
+        <div className="min-h-screen bg-slate-50 selection:bg-emerald-500 selection:text-white">
+            <Header />
+            
+            {/* Context Header */}
+            <div className="bg-slate-900 pt-32 pb-48 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-emerald-500/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 animate-pulse" />
+                <div className="max-w-7xl mx-auto px-6 relative z-10">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
+                        <div className="max-w-2xl">
+                           <div className="flex items-center gap-3 mb-6">
+                              <span className="px-3 py-1 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-lg">
+                                 {work.publicId}
+                              </span>
+                              <span className="text-emerald-500/50 font-black tracking-tighter text-sm uppercase">Verification Portal v2.0</span>
+                           </div>
+                           <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-[0.9] mb-4">
+                              {work.title}
+                           </h1>
+                           <p className="text-slate-400 font-medium text-lg leading-relaxed flex items-center gap-2">
+                               <Car size={20} className="text-emerald-500" /> Seguimiento en tiempo real para tu vehículo
+                           </p>
                         </div>
-
-                        {/* Línea de Tiempo / Footer */}
-                        <div className="bg-slate-900 rounded-[40px] p-8 md:p-10 text-white shadow-2xl overflow-hidden relative">
-                            <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full translate-x-10 -translate-y-10" />
-                            <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                                <div>
-                                    <h4 className="text-xs font-black uppercase tracking-widest text-emerald-400 mb-2 italic">¿Alguna duda?</h4>
-                                    <p className="text-white/60 text-xs font-medium leading-relaxed">Comunícate directamente con el taller asignado para más detalles técnicos sobre tu vehículo.</p>
-                                </div>
-                                <div className="flex flex-wrap gap-3">
-                                    {work.workshop?.whatsapp && (
-                                        <a 
-                                            href={`https://wa.me/${work.workshop.whatsapp}`}
-                                            className="px-6 py-3 bg-white/10 hover:bg-emerald-500 hover:scale-105 transition-all rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2"
-                                        >
-                                            WhatsApp Taller
-                                        </a>
-                                    )}
-                                    {work.workshop?.phone && (
-                                        <a 
-                                            href={`tel:${work.workshop.phone}`}
-                                            className="px-6 py-3 bg-white text-slate-900 hover:bg-emerald-50 transition-colors rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2"
-                                        >
-                                            <Phone size={12} /> Contactar
-                                        </a>
-                                    )}
-                                </div>
-                            </div>
+                        <div className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-[2.5rem] flex items-center gap-6">
+                              <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+                                 <ShieldCheck size={32} />
+                              </div>
+                              <div>
+                                 <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Estado de Seguridad</p>
+                                 <p className="text-sm font-black text-white uppercase tracking-tight">Orden Verificada</p>
+                              </div>
                         </div>
                     </div>
-
-                    {/* Columna Derecha: Resumen Técnico */}
-                    <div className="lg:col-span-4 space-y-6">
-                        
-                        {/* Datos de Gestión */}
-                        <div className="bg-white rounded-[40px] p-8 border border-slate-100 shadow-sm animate-in slide-in-from-right-4 duration-500">
-                            <h3 className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-8 flex items-center gap-2 italic">
-                                <ShieldCheck size={14} /> Ficha Técnica
-                            </h3>
-                            
-                            <div className="space-y-8">
-                                <div className="flex items-center gap-5">
-                                    <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400">
-                                        <Calendar size={18} />
-                                    </div>
-                                    <div>
-                                        <p className="text-[9px] font-black text-slate-400 uppercase italic mb-1">Registro Inicial</p>
-                                        <p className="text-xs font-black text-slate-900 uppercase">{new Date(work.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center gap-5">
-                                    <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400">
-                                        <ExternalLink size={18} />
-                                    </div>
-                                    <div>
-                                        <p className="text-[9px] font-black text-slate-400 uppercase italic mb-1">Identificador Público</p>
-                                        <p className="text-xs font-black text-slate-900 uppercase font-mono">{work.publicId}</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center gap-5 pt-8 border-t border-slate-50">
-                                    <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
-                                        <MapPin size={18} />
-                                    </div>
-                                    <div>
-                                        <p className="text-[9px] font-black text-emerald-600 uppercase italic mb-1">Ubicación del Taller</p>
-                                        <p className="text-xs font-black text-slate-900 uppercase">{work.workshop?.address || "Dirección pendiente"}</p>
-                                        <p className="text-[9px] font-bold text-slate-400 uppercase mt-1">{work.workshop?.city?.name}, {work.workshop?.country?.name}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Banner publicitario / confianza */}
-                        <div className="bg-emerald-500 rounded-[40px] p-8 text-white relative overflow-hidden group shadow-xl shadow-emerald-500/20">
-                            <div className="absolute inset-0 bg-slate-900 opacity-0 group-hover:opacity-10 transition-opacity" />
-                            <div className="relative">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mb-6">
-                                    <ShieldCheck size={20} />
-                                </div>
-                                <h4 className="text-sm font-black uppercase tracking-tight mb-3">Taller Verificado</h4>
-                                <p className="text-white/80 text-[11px] font-medium leading-relaxed">
-                                    Este taller utiliza nuestro sistema SaaS para garantizar transparencia y puntualidad en sus trabajos técnicos.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
+
+            <main className="max-w-7xl mx-auto px-6 -mt-32 relative z-20 pb-40">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    
+                    {/* Left Column: Tracking Content */}
+                    <div className="lg:col-span-8 space-y-8">
+                        
+                        {/* 1. Stepper / Tracking Status */}
+                        <section className="bg-white rounded-[3rem] p-10 md:p-14 shadow-2xl shadow-slate-200/50 border border-white">
+                            <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-12 flex items-center gap-3">
+                                <Clock size={16} /> Progreso de la Reparación
+                            </h2>
+                            
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 relative">
+                                {/* Desktop Connector Lines */}
+                                <div className="hidden md:block absolute top-7 left-12 right-12 h-0.5 bg-slate-100 -z-10" />
+                                
+                                {STATUS_STEPS.map((step, idx) => {
+                                    const isCompleted = idx < currentStatusIndex;
+                                    const isCurrent = idx === currentStatusIndex;
+                                    const isLast = idx === STATUS_STEPS.length - 1;
+
+                                    return (
+                                        <div key={idx} className="flex flex-col items-center text-center group">
+                                            <div className={cn(
+                                                "w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 relative z-10",
+                                                isCompleted ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/20" : 
+                                                isCurrent ? "bg-slate-900 text-white shadow-xl scale-110" : 
+                                                "bg-slate-50 text-slate-300 border border-slate-100"
+                                            )}>
+                                                {isCompleted ? <Check size={24} /> : <step.icon size={24} />}
+                                                {isCurrent && (
+                                                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full border-2 border-white animate-ping" />
+                                                )}
+                                            </div>
+                                            <div className="mt-6">
+                                                <h4 className={cn(
+                                                    "text-xs font-black uppercase tracking-widest mb-1 transition-colors",
+                                                    isCurrent ? "text-slate-900" : isCompleted ? "text-emerald-600" : "text-slate-400"
+                                                )}>
+                                                    {step.label}
+                                                </h4>
+                                                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tight">
+                                                    {step.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </section>
+
+                        {/* 2. Evidence Feed (Photos) */}
+                        <section className="bg-white rounded-[3rem] p-10 md:p-14 shadow-2xl shadow-slate-200/50 border border-white overflow-hidden">
+                            <header className="flex items-center justify-between mb-10">
+                                <div>
+                                    <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 flex items-center gap-3">
+                                        <Images size={16} /> Galería de Evidencias
+                                    </h2>
+                                    <p className="text-sm font-black text-slate-900 uppercase">Respaldo visual del trabajo realizado</p>
+                                </div>
+                                <span className="bg-slate-50 px-4 py-2 rounded-xl text-[10px] font-black text-slate-400 border border-slate-100 uppercase italic">
+                                    {work.images?.length || 0} Capturas
+                                </span>
+                            </header>
+
+                            {work.images && work.images.length > 0 ? (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    {work.images.map((img: string, i: number) => (
+                                        <div key={i} className="group relative aspect-[16/10] rounded-[2.5rem] overflow-hidden bg-slate-50 border border-slate-100 transition-all hover:shadow-2xl hover:-translate-y-2 duration-500">
+                                            <img 
+                                                src={img} 
+                                                alt={`Evidencia ${i + 1}`} 
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            <div className="absolute bottom-6 left-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
+                                                <span className="px-4 py-2 bg-white/20 backdrop-blur-md rounded-xl text-[8px] font-black text-white uppercase tracking-widest border border-white/20">
+                                                    Imagen de Proceso #{i + 1}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="py-20 text-center bg-slate-50 rounded-[2.5rem] border border-dashed border-slate-200">
+                                    <Images size={48} className="mx-auto text-slate-200 mb-6" />
+                                    <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">Sin evidencias visuales todavía</h3>
+                                    <p className="text-[10px] font-bold text-slate-300 uppercase mt-2">El mecánico subirá fotos cuando comience la reparación.</p>
+                                </div>
+                            )}
+                        </section>
+
+                        {/* 3. Status History Log (Simple Mock if not in DB yet, but let's use the description) */}
+                        <section className="bg-slate-900 rounded-[3rem] p-10 md:p-14 text-white shadow-2xl relative overflow-hidden">
+                             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full translate-x-20 -translate-y-20" />
+                             <h2 className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] mb-10 flex items-center gap-3 italic">
+                                <FileText size={16} /> Detalles del Reporte Técnico
+                             </h2>
+                             <div className="max-w-2xl">
+                                <p className="text-slate-400 font-bold mb-6 italic text-sm">Registro capturado el {new Date(work.createdAt).toLocaleDateString()}</p>
+                                <p className="text-xl md:text-2xl font-medium leading-relaxed text-slate-200">
+                                    "{work.description || "El equipo técnico está realizando el diagnóstico inicial. Mantente atento a las actualizaciones y evidencias fotográficas."}"
+                                </p>
+                             </div>
+                        </section>
+
+                    </div>
+
+                    {/* Right Column: Information Cards */}
+                    <div className="lg:col-span-4 space-y-6">
+                        
+                        {/* Workshop Verified Card */}
+                        <div className="bg-white rounded-[3rem] p-8 border border-white shadow-lg shadow-slate-200/40">
+                            <div className="flex items-center gap-4 mb-10">
+                                {work.workshop?.logoUrl ? (
+                                    <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 p-2">
+                                        <img src={work.workshop.logoUrl} alt={work.workshop.name} className="w-full h-full object-contain" />
+                                    </div>
+                                ) : (
+                                    <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-white">
+                                        <Wrench size={32} />
+                                    </div>
+                                )}
+                                <div>
+                                    <p className="text-[9px] font-black text-emerald-600 uppercase italic">Taller Encargado</p>
+                                    <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">{work.workshop?.name}</h3>
+                                </div>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div className="flex items-start gap-4">
+                                   <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
+                                      <MapPin size={18} />
+                                   </div>
+                                   <div>
+                                      <p className="text-[9px] font-black text-slate-400 uppercase italic mb-1">Ubicación</p>
+                                      <p className="text-xs font-black text-slate-900 uppercase leading-snug">{work.workshop?.address}</p>
+                                      <p className="text-[9px] font-bold text-slate-400 uppercase mt-1">{work.workshop?.city?.name}, {work.workshop?.country?.name}</p>
+                                   </div>
+                                </div>
+
+                                <div className="pt-8 border-t border-slate-50 flex flex-col gap-3">
+                                   {work.workshop?.whatsapp && (
+                                       <a href={`https://wa.me/${work.workshop.whatsapp}`} target="_blank" className="w-full py-4 bg-emerald-500 text-white rounded-2xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20">
+                                          WhatsApp de Atención
+                                       </a>
+                                   )}
+                                   <a href={`tel:${work.workshop?.phone}`} className="w-full py-4 bg-slate-50 text-slate-600 rounded-2xl text-[10px] font-black uppercase flex items-center justify-center gap-2 hover:bg-slate-100 transition-all">
+                                      Llamar ahora
+                                   </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Vehicle Card */}
+                        <div className="bg-white rounded-[3rem] p-8 border border-white shadow-lg shadow-slate-200/40 relative overflow-hidden group">
+                           <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full translate-x-10 -translate-y-10 group-hover:scale-110 transition-transform duration-700" />
+                           <h3 className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-8 flex items-center gap-2 italic relative">
+                                <Car size={14} /> Ficha del Vehículo
+                           </h3>
+                           
+                           <div className="space-y-6 relative">
+                               <div>
+                                  <p className="text-[9px] font-black text-slate-400 uppercase italic mb-1">Identificación del Auto</p>
+                                  <p className="text-xl font-black text-slate-900 tracking-wider">
+                                     {work.vehicleLicensePlate || "PLACA-NO-REG"}
+                                  </p>
+                               </div>
+
+                               <div>
+                                  <p className="text-[9px] font-black text-slate-400 uppercase italic mb-1">ID Público de Seguimiento</p>
+                                  <div className="flex items-center gap-2">
+                                     <code className="text-xs font-black text-slate-500 uppercase bg-slate-50 px-3 py-1 rounded-lg border border-slate-100">{work.publicId}</code>
+                                  </div>
+                               </div>
+                           </div>
+                        </div>
+
+                        {/* Confidence Card */}
+                        <div className="bg-slate-900 rounded-[3rem] p-8 text-white shadow-2xl relative overflow-hidden group">
+                             <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-5 transition-opacity" />
+                             <div className="relative">
+                                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-6 text-emerald-400">
+                                   <ShieldCheck size={28} />
+                                </div>
+                                <h4 className="text-lg font-black uppercase tracking-tight mb-4">Garantía Digital</h4>
+                                <p className="text-slate-400 text-[11px] font-bold leading-relaxed mb-6 italic">
+                                   Al retirar tu vehículo, este historial quedará disponible para futuras consultas, protegiendo el valor de reventa de tu auto.
+                                </p>
+                                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white border-none text-[9px] font-black p-6 rounded-2xl">
+                                   DESCUBRIR MÁS SOBRE RINDE+
+                                </Button>
+                             </div>
+                        </div>
+
+                    </div>
+                </div>
+            </main>
+            
+            <Footer />
         </div>
     );
 }

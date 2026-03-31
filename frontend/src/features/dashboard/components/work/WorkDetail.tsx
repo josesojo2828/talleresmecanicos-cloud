@@ -9,7 +9,8 @@ import {
     Zap, Info, ListFilter, PlusCircle,
     LayoutDashboard, X,
     Save,
-    Minus
+    Minus,
+    Images
 } from 'lucide-react';
 import { toast } from 'sonner';
 import apiClient from '@/utils/api/api.client';
@@ -104,13 +105,13 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
     };
 
     const copyPublicLink = () => {
-        const url = `${window.location.origin}/taller/${data.workshop?.slug}/trabajo/${data.publicId}`;
+        const url = `${window.location.origin}/trabajo/${data.workshop?.slug}/${data.publicId}`;
         navigator.clipboard.writeText(url);
         toast.success("Enlace copiado al portapapeles");
     };
 
     const openPublicPage = () => {
-        const url = `${window.location.origin}/taller/${data.workshop?.slug}/trabajo/${data.publicId}`;
+        const url = `${window.location.origin}/trabajo/${data.workshop?.slug}/${data.publicId}`;
         window.open(url, '_blank');
     };
 
@@ -333,9 +334,40 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                 <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/20 rounded-full blur-[60px] group-hover:bg-emerald-500/30 transition-all" />
                                     <div className="relative">
-                                        <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Visibilidad</p>
-                                        <h4 className="text-lg font-black uppercase tracking-tight leading-none mb-4">Página de Seguimiento</h4>
-                                        <button onClick={openPublicPage} className="w-full py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all">Ver Resultados en Vivo</button>
+                                        <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Visibilidad para el Cliente</p>
+                                        <h4 className="text-lg font-black uppercase tracking-tight leading-none mb-4">Portal de Seguimiento Público</h4>
+                                        <div className="flex gap-2">
+                                            <button onClick={openPublicPage} className="flex-1 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2">
+                                                <Eye size={14} /> Ver Resultados
+                                            </button>
+                                            <button onClick={copyPublicLink} className="p-3 bg-emerald-500 hover:bg-emerald-600 rounded-xl transition-all shadow-lg shadow-emerald-500/20">
+                                                <Copy size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Live Evidence Preview for Mechanic */}
+                                <div className="bg-white/40 p-8 rounded-[2.5rem] border border-white shadow-xl md:col-span-2">
+                                    <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2"><Images size={16} /> Evidencias Actuales</h4>
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                                        {data.images?.map((img: string, i: number) => (
+                                            <div key={i} className="aspect-square rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative group">
+                                                <img src={img} alt="Evidence" className="w-full h-full object-cover" />
+                                                <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <Info size={16} className="text-white" />
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {(!data.images || data.images.length === 0) && (
+                                            <div className="col-span-full py-8 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                                                <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Sin fotos de evidencia cargadas</p>
+                                            </div>
+                                        )}
+                                        <button onClick={() => setActiveSection('data')} className="aspect-square rounded-2xl border border-dashed border-slate-200 flex flex-col items-center justify-center gap-2 text-slate-400 hover:text-emerald-500 hover:border-emerald-500 transition-all font-black uppercase text-[8px]">
+                                            <Plus size={20} />
+                                            Gestionar
+                                        </button>
                                     </div>
                                 </div>
                             </div>

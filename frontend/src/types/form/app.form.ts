@@ -126,6 +126,7 @@ export const WorkForm: FormStructure = {
     fields: [
         { name: 'title', label: 'headers.title', type: 'text', validation: { required: true } },
         { name: 'description', label: 'headers.description', type: 'textarea' },
+        { name: 'images', label: 'headers.images', type: 'image', multiple: true, validation: { max: 8 } },
         { name: 'clientName', label: 'headers.name', type: 'text', gridCols: 2 },
         { name: 'clientPhone', label: 'headers.phone', type: 'text', gridCols: 2 },
         { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text' },
