@@ -351,7 +351,9 @@
     },
     "nav": {
         "home": "Inicio",
-        "directory": "Explorar Directorio",
+        "directory": "Mapa Interactivo",
+        "workshops_list": "Talleres",
+        "map": "Mapa",
         "community": "Comunidad",
         "about": "Sobre Nosotros",
         "workshops": "Talleres",

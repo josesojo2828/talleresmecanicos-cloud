@@ -35,7 +35,8 @@ export const Header = () => {
 
     const navLinks = [
         { href: "/", label: t("home"), icon: Home },
-        { href: "/directorio", label: t("directory"), icon: Search },
+        { href: "/talleres-mecanicos", label: t("workshops_list"), icon: Wrench },
+        { href: "/directorio", label: t("map"), icon: Search },
         { href: "/comunidad", label: t("community"), icon: Users2 },
         ...(isAuthenticated ? [{ href: "/chat", label: "Chat General", icon: MessageSquare }] : []),
         { href: "/nosotros", label: t("about"), icon: Info },
