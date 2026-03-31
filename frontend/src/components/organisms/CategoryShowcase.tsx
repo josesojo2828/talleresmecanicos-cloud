@@ -25,7 +25,7 @@ export const CategoryShowcase = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await apiClient.get('/category-items', {
+                const res = await apiClient.get('/workshop-category', {
                     params: { take: 6 }
                 });
                 const body = res.data?.body || res.data;

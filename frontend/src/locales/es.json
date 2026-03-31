@@ -182,10 +182,10 @@
         "vision_title": "Nuestra Visión",
         "values_title": "Pilares y Valores",
         "objectives_title": "Ruta de Objetivos",
-        "pretitle": "Identidad Corporativa",
-        "hero_title_part1": "Conectando Visión,",
-        "hero_title_accent": "Creando Futuro.",
-        "hero_subtitle": "Somos el puente estratégico entre el talento latino y las oportunidades en Japón. Nuestra historia se escribe con cada conexión exitosa."
+        "pretitle": "Red Automotriz",
+        "hero_title_part1": "Potenciando Talleres,",
+        "hero_title_accent": "Conectando Mecánicos.",
+        "hero_subtitle": "Aceleramos el crecimiento de talleres mecánicos integrando tecnología y clientes en un solo lugar. Miles de reparaciones exitosas nos respaldan."
     },
     "value": {
         "title": "Valores",
@@ -226,6 +226,7 @@
     },
     "appointment": {
         "title": "Gestión de Citas",
+        "subtitle": "Control de citas y solicitudes de clientes",
         "description": "Control de citas y solicitudes de clientes",
         "workshop": "Taller Destino",
         "client": "Cliente",
@@ -285,14 +286,14 @@
         "visible": "Visible",
         "images": "Imágenes",
         "title": "Título",
-        "sos": "SOS",
         "phone": "Teléfono",
         "sku": "SKU",
         "price": "Precio",
         "quantity": "Cantidad",
         "category": "Categoría",
         "work": "Trabajo",
-        "part": "Repuesto"
+        "part": "Repuesto",
+        "client": "Cliente"
     },
     "dashboard": {
         "search": "Buscar en base de datos...",
@@ -390,50 +391,50 @@
     },
     "landing": {
         "categories": {
-            "title": "Explora el <span>Directorio.</span>",
-            "subtitle": "Las categorías principales para potenciar tu negocio en Japón.",
+            "title": "Explora los <span>Beneficios.</span>",
+            "subtitle": "Las herramientas principales para potenciar tu taller.",
             "cta": "Explorar todo",
             "items": {
                 "gastronomy": {
-                  "title": "Gastronomía",
-                  "description": "Restaurantes, insumos y esos antojos que extrañas de nuestra tierra."
+                  "title": "Control Total",
+                  "description": "Gestiona órdenes, clientes y finanzas en un solo panel."
                 },
                 "professional": {
-                  "title": "Servicios",
-                  "description": "Abogados, mudanzas, traductores y soporte profesional garantizado."
+                  "title": "Visibilidad",
+                  "description": "Miles de clientes buscando talleres responsables cerca de su ubicación."
                 },
                 "products": {
-                  "title": "Productos",
-                  "description": "Artesanías, moda y el mercadito más grande de la comunidad latina."
+                  "title": "Prestigio",
+                  "description": "Sistema de calificaciones y nivel de certificación técnica."
                 }
             }
         },
         "logo_cloud": {
-            "text": "Colaborando con la comunidad en Japón"
+            "text": "Colaborando con los mejores mecánicos de la región"
         },
         "value_proposition": {
             "steps": {
                 "explore": {
-                    "title": "Explora",
-                    "desc": "Navega por categorías o usa la búsqueda inteligente."
+                    "title": "Regístrate",
+                    "desc": "Crea o reclama tu perfil oficial en minutos."
                 },
                 "connect": {
                     "title": "Conecta",
-                    "desc": "Contacta directamente con servicios de total confianza."
+                    "desc": "Atrae clientes que valoran la honestidad y el buen diagnóstico."
                 },
                 "participate": {
-                    "title": "Participa",
-                    "desc": "Únete a eventos, talleres y recursos de la comunidad."
+                    "title": "Crece",
+                    "desc": "Aumenta tus ingresos y automatiza tus órdenes de trabajo."
                 }
             }
         },
         "bento": {
-            "title": "Potencia tu presencia en Japón",
-            "subtitle": "Herramientas diseñadas para elevar la visibilidad de los emprendedores latinos.",
+            "title": "Potencia tu taller mecánico",
+            "subtitle": "Herramientas diseñadas para elevar la rentabilidad de mecánicos independientes.",
             "network": {
-                "badge": "Global_Network_v2.0",
-                "title": "Alcanced <span>Nacional.</span>",
-                "description": "Conectamos tu visión con clientes reales en cada rincón de Japón, desde las megaciudades hasta los pueblos más remotos.",
+                "badge": "Red_Mecánica_v2.0",
+                "title": "Alcance <span>Nacional.</span>",
+                "description": "Conectamos tu taller con clientes reales que necesitan reparaciones, services programados o SOS.",
                 "status_label": "Estado",
                 "status_value": "Mapa_Activo"
             },
@@ -458,40 +459,40 @@
             "contact": "Contáctanos",
             "questions": [
                 {
-                    "question": "¿Es gratis publicar mi negocio?",
-                    "answer": "Sí, publicar tu negocio en Somos Nexo es completamente gratuito. Puedes crear tu perfil, agregar tus servicios y empezar a recibir clientes sin ningún costo."
+                    "question": "¿Es gratis publicar mi taller?",
+                    "answer": "Sí, publicar tu taller en la plataforma es gratuito. Puedes crear tu perfil, agregar tus especialidades y empezar a recibir clientes sin costo inicial."
                 },
                 {
-                    "question": "¿Quién puede usar Somos Nexo?",
-                    "answer": "Somos Nexo está diseñado para la comunidad latina en Japón. Ya seas emprendedor, profesional independiente, o simplemente busques servicios y productos de la comunidad, eres bienvenido."
+                    "question": "¿Quién puede usar la plataforma?",
+                    "answer": "Está diseñado para dueños de talleres automotrices, hojalatería, eléctricos automotrices o servicios de detailing y estética."
                 },
                 {
-                    "question": "¿Cómo validan que los negocios son reales?",
-                    "answer": "Nuestro equipo revisa cada negocio registrado antes de aprobarlo. Además, las reseñas de otros usuarios de la comunidad ayudan a mantener la confianza en el directorio."
+                    "question": "¿Cómo validan que los clientes son reales?",
+                    "answer": "Los clientes deben registrarse y verificar su identidad antes de solicitar citas o servicios SOS al taller."
                 },
                 {
-                    "question": "¿Está disponible en japonés?",
-                    "answer": "Actualmente la plataforma está en español, pero estamos trabajando en agregar soporte multilingüe incluyendo japonés e inglés."
+                    "question": "¿Puedo agregar a mis mecánicos al sistema?",
+                    "answer": "Sí, el módulo interno te permite crear órdenes de trabajo y asignar reparaciones a mecánicos dentro de un mismo taller."
                 },
                 {
-                    "question": "¿Cómo contacto a un negocio?",
-                    "answer": "Cada perfil de negocio incluye información de contacto directa como WhatsApp, email o redes sociales según lo que el negocio prefiera compartir."
+                    "question": "¿Cómo contacto a los clientes?",
+                    "answer": "El cliente puede chatear contigo desde que realiza la solicitud. Podrás mandarle presupuestos y gestionar la reparación de forma digital."
                 },
                 {
-                    "question": "¿Puedo modificar mi perfil de negocio después?",
-                    "answer": "¡Claro que sí! Puedes actualizar la información de tu negocio en cualquier momento desde tu panel de control."
+                    "question": "¿Puedo modificar la información de mi taller después de registrado?",
+                    "answer": "¡Claro que sí! Desde el panel Administrativo podrás editar el horario, imágenes, equipo diagnóstico y métodos de pago aceptados."
                 }
             ]
         },
         "cta": {
-            "badge": "Publica tu negocio",
-            "title": "¿Tienes un emprendimiento?",
-            "description": "Llega a miles de latinos en Japón hoy mismo. Crea tu perfil en minutos.",
-            "button": "Publicar aquí"
+            "badge": "Publica tu taller",
+            "title": "¿Tienes un taller mecánico?",
+            "description": "Sistematiza el manejo de tus órdenes de trabajo y recibe clientes filtrados por internet.",
+            "button": "Registrar Taller Gratis"
         },
         "stats": {
             "items": [
-                { "label": "Negocios Activos", "detail": "En todo Japón" },
+                { "label": "Negocios Activos", "detail": "A nivel nacional" },
                 { "label": "Usuarios Nexo", "detail": "Comunidad creciente" },
                 { "label": "Categorías", "detail": "Servicios variados" },
                 { "label": "Regiones", "detail": "Todas las prefecturas" }
@@ -504,7 +505,7 @@
                 {
                     "name": "Carlos Méndez",
                     "role": "Dueño de 'El Sabor Gitano'",
-                    "text": "Nexo cambió la forma en que los clientes nos encuentran en Tokio. Las reservas aumentaron un 40% en el primer mes."
+                    "text": "Nexo cambió la forma en que los clientes agendan su trabajo en la ciudad. Triplicamos reparaciones el primer mes."
                 },
                 {
                     "name": "Ana García",
@@ -524,7 +525,7 @@
                 {
                     "name": "Juan Pérez",
                     "role": "Exportador",
-                    "text": "La mejor herramienta para latinos en Japón."
+                    "text": "La mejor herramienta para dueños de talleres automotrices."
                 }
             ]
         },
@@ -560,8 +561,8 @@
             "terms": "Términos",
             "privacy": "Privacidad"
         },
-        "location": "Tokyo, Japón",
-        "copy": "Building for the latino community.",
+        "location": "Ciudad Central, Latam",
+        "copy": "Construyendo tecnología para el sector automotriz.",
         "status": "Sistema Activo",
         "stack": "Construido con Stack Premium"
     },
@@ -571,37 +572,37 @@
             "platform_access": "Acceso a la Plataforma",
             "community_rebirth_title": "Tu comunidad",
             "community_rebirth_span": "vuelve a nacer.",
-            "community_rebirth_description": "Conecta con negocios, servicios y el corazón de la comunidad latina en Japón. Todo en un solo lugar.",
-            "social_proof": "Únete a +5,000 latinos"
+            "community_rebirth_description": "Gestiona los trabajos de tu taller, recibe clientes y atiende SOS. Todo en un solo lugar.",
+            "social_proof": "Únete a +5,000 talleres"
         },
         "login": {
-            "title": "TalleresMecanicos Login",
+            "title": "Portal para Talleres",
             "email": "Email",
             "password": "Contraseña",
             "remember": "Recordarme",
             "forgot": "¿Olvidaste tu contraseña?",
             "button": "Ingresar al Panel",
             "loading": "Iniciando sesión...",
-            "no_account": "¿No tienes cuenta?",
+            "no_account": "¿Aún no afilias tu taller?",
             "register": "Registrar Taller Gratis"
         },
         "register": {
-            "title": "Crear Cuenta",
-            "role_selection": "Selecciona tu perfil",
+            "title": "Únete a la Red de Talleres",
+            "role_selection": "Confirmar Registro",
             "role_client": "Soy Cliente",
-            "role_client_desc": "Busco talleres de confianza para mi vehículo",
-            "role_workshop": "Soy Taller",
-            "role_workshop_desc": "Quiero registrar mi negocio y recibir clientes",
-            "firstName": "Nombre",
+            "role_client_desc": "",
+            "role_workshop": "Soy Taller Mecánico",
+            "role_workshop_desc": "Gestión de trabajos, SOS y clientes",
+            "firstName": "Nombre de quien registra",
             "lastName": "Apellido",
-            "email": "Email",
-            "password": "Contraseña",
+            "email": "Correo Electrónico (Para usar como usuario principal)",
+            "password": "Contraseña Maestra",
             "confirm": "Confirmar Contraseña",
             "terms": "Acepto los {terms} y la {privacy}",
             "terms_link": "términos y condiciones",
             "privacy_link": "privacidad",
             "button": "Finalizar Registro",
-            "loading": "Procesando...",
+            "loading": "Afiliando Taller...",
             "has_account": "¿Ya tienes cuenta?",
             "login": "Inicia sesión",
             "strength": {
@@ -614,14 +615,14 @@
     },
     "community": {
         "hero": {
-            "badge": "Hub Comunitario v1.0",
-            "title": "Nuestrad <span>Comunidad.</span>",
-            "description": "Más que un directorio, somos un nexo vital. Conectamos talento, experiencias y recursos para empoderar a los latinos en la tierra del sol naciente."
+            "badge": "Hub Automotriz v1.0",
+            "title": "Nuestra <span>Comunidad.</span>",
+            "description": "Más que un software, somos el nexo del gremio. Conectamos talento, experiencias y diagnósticos para empoderar a los talleres mecánicos."
         },
         "social": {
             "instagram": {
                 "title": "Instagram Live",
-                "description": "Síguenos para historias diarias, eventos en vivo y lo último de los negocios latinos en Japón.",
+                "description": "Reels técnicos, casos de diagnóstico difícil y actualizaciones para nuestro gremio automotriz.",
                 "button": "Seguir ahora"
             },
             "whatsapp": {
@@ -632,27 +633,27 @@
         },
         "resources": {
             "title": "Recursos Vitales",
-            "subtitle": "Información crítica para tu éxito y estabilidad en Japón.",
+            "subtitle": "Manuales y guías críticas para el diagnóstico y reparación de vehículos modernos.",
             "items": {
                 "embassy": {
-                    "title": "Embajada de Venezuela",
-                    "description": "Trámites consulares, pasaportes y asistencia legal oficial para venezolanos en Japón.",
-                    "category": "Oficial"
+                    "title": "Catálogos OEM",
+                    "description": "Acceso directo a esquemas eléctricos y catálogos de piezas oficiales de las marcas más populares.",
+                    "category": "Diagramas"
                 },
                 "guide": {
-                    "title": "Guía de Vida en Japón",
-                    "description": "Portal oficial con información sobre visados, impuestos, salud y educación en varios idiomas.",
-                    "category": "Gobierno"
+                    "title": "Guía de Diagnóstico Avanzado",
+                    "description": "Procedimientos estandarizados y boletines técnicos para motores modernos.",
+                    "category": "Técnico"
                 },
                 "social": {
-                    "title": "Comunidad Latina",
-                    "description": "Grupos de apoyo y redes de contacto para hispanohablantes integrándose en la sociedad japonesa.",
-                    "category": "Social"
+                    "title": "Foro de Mecánicos",
+                    "description": "Redes de consulta rápida donde mecánicos top comparten soluciones complejas a fallas atípicas.",
+                    "category": "Debate"
                 },
                 "legal": {
-                    "title": "Asesoría Legal",
-                    "description": "Recursos y contactos para asesoría legal especializada en leyes de inmigración y negocios.",
-                    "category": "Servicios"
+                    "title": "Gestión de Cobros y Garantías",
+                    "description": "Asesoría y manuales para gestionar garantías de repuestos en tu taller sin perder dinero.",
+                    "category": "Administración"
                 }
             }
         },
@@ -662,7 +663,7 @@
             "members": {
                 "jose": {
                     "role": "Founder & Lead Architect",
-                    "bio": "Visionario enfocado en conectar la comunidad latina con la tecnología en Japón."
+                    "bio": "Visionario enfocado en digitalizar por completo el ecosistema de los talleres automotrices latinoamericanos."
                 },
                 "support": {
                     "role": "Community Support",
