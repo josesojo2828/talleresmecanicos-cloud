@@ -58,9 +58,6 @@ services:
       MINIO_EXTERNAL_ENDPOINT: ${MINIO_EXTERNAL_ENDPOINT}
     ports:
       - "${BACKEND_PORT_EXTERNAL}:${BACKEND_PORT_INTERNAL}"
-    volumes:
-      - ${BACKEND_CONTEXT}:/app
-      - /app/node_modules
     networks:
       - tm_network
 
@@ -96,9 +93,6 @@ services:
       NODE_ENV: ${NODE_ENV}
     ports:
       - "${FRONTEND_PORT_EXTERNAL}:${FRONTEND_PORT_INTERNAL}"
-    volumes:
-      - ${FRONTEND_CONTEXT}:/app
-      - /app/node_modules
     networks:
       - tm_network
 
