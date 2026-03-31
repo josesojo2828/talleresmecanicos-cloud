@@ -27,7 +27,10 @@ export const useRegister = () => {
             data.confirmPassword,
             data.acceptTerms,
             data.country,
-            data.city
+            data.city,
+            data.role,
+            data.workshopName,
+            data.workshopAddress
         );
 
         if (validationErrors.length > 0) {

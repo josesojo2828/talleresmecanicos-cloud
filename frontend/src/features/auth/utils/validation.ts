@@ -142,7 +142,10 @@ export const validateRegisterForm = (
     confirmPassword: string,
     acceptTerms: boolean,
     country: string,
-    city: string
+    city: string,
+    role: string,
+    workshopName?: string,
+    workshopAddress?: string
 ): ValidationError[] => {
     const errors: ValidationError[] = [];
 
@@ -181,6 +184,15 @@ export const validateRegisterForm = (
 
     if(!city) {
         errors.push({ field: "city", message: "Selecciona tu ciudad" });
+    }
+
+    if (role === 'TALLER') {
+        if (!workshopName || workshopName.trim().length < 3) {
+            errors.push({ field: "workshopName", message: "El nombre del taller debe tener al menos 3 caracteres" });
+        }
+        if (!workshopAddress || workshopAddress.trim().length < 5) {
+            errors.push({ field: "workshopAddress", message: "La dirección del taller debe ser más descriptiva" });
+        }
     }
 
     return errors;

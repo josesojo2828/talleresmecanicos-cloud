@@ -99,10 +99,17 @@ export class AuthService {
         console.log(registerDto);
         console.log(emailLower);
 
-        // Automatización: Si es un taller, crear el taller en blanco
+        // Automatización: Si es un taller, crear el taller con los datos enviados
         if (registerDto.role === 'TALLER') {
-            const workshopName = `Taller de ${registerDto.firstName}`;
-            const slug = workshopName.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') + '-' + Math.random().toString(36).substring(2, 5);
+            const workshopName = registerDto.workshopName || `Taller de ${registerDto.firstName}`;
+            const address = registerDto.workshopAddress || '';
+            const slug = (registerDto.workshopName || (registerDto.firstName + ' ' + registerDto.lastName))
+                .toLowerCase()
+                .trim()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Eliminar acentos
+                .replace(/[^a-z0-9 ]/g, '') // Eliminar caracteres especiales
+                .replace(/ /g, '-') // Cambiar espacios por guiones
+                + '-' + Math.random().toString(36).substring(2, 6);
             
             const user = await this.prisma.user.create({
                 data: {
@@ -117,11 +124,11 @@ export class AuthService {
                             name: workshopName,
                             slug,
                             images: [],
-                            address: '',
+                            address: address,
                             country: { connect: { id: registerDto.country } },
                             city: { connect: { id: registerDto.city } },
                             enabled: true,
-                            openingHours: '',
+                            openingHours: 'Lun-Sáb 8:00 - 18:00',
                             socialMedia: {},
                         }
                     }
@@ -145,9 +152,27 @@ export class AuthService {
             userId = user.id;
         }
 
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+            include: IDefaultUserInclude
+        });
+
+        const dashboardPromise = this.dashboardService.getPages(user as any);
+
+        const payload = {
+            email: user.email,
+            sub: user.id,
+            role: user.role
+        };
+
+        const token = this.jwtService.sign(payload);
+        const dashboard = await dashboardPromise;
+
         return {
-            message: 'Usuario registrado exitosamente',
-            userId: userId
+            message: 't.success.register',
+            token: token,
+            user: user,
+            dashboard: dashboard
         };
     }
 

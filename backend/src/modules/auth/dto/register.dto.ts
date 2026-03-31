@@ -29,4 +29,10 @@ export class RegisterDto {
     @IsString()
     @IsNotEmpty({ message: 'La ciudad es requerida' })
     city: string;
+
+    @IsString()
+    workshopName?: string;
+
+    @IsString()
+    workshopAddress?: string;
 }

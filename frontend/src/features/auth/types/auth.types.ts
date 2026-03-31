@@ -28,6 +28,8 @@ export interface RegisterData {
     acceptTerms: boolean;
     country: string;
     city: string;
+    workshopName?: string;
+    workshopAddress?: string;
 }
 
 // API Response types

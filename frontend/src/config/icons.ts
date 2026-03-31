@@ -39,7 +39,8 @@ import {
     MessageSquare,
     Send,
     Bot,
-    AlertTriangle
+    AlertTriangle,
+    Map
 } from "lucide-react";
 
 export const ICONS = {
@@ -67,6 +68,7 @@ export const ICONS = {
     users: Users,
     coffee: Coffee,
     briefcase: Briefcase,
+    map: Map,
     "arrow-right": ArrowRight,
     "shopping-bag": ShoppingBag,
     lock: Lock,

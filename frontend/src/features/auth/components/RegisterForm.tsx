@@ -43,6 +43,8 @@ export const RegisterForm = () => {
             confirmPassword: "",
             country: "", // Valor para el AutocompleteInput de País
             city: "",    // Valor para el AutocompleteInput de Ciudad
+            workshopName: "",
+            workshopAddress: "",
             acceptTerms: false
         }
     });
@@ -165,6 +167,35 @@ export const RegisterForm = () => {
             </div>
 
             {/* Campo Confirmar Contraseña */}
+            {/* Campos de Taller (Solo si es taller) */}
+            {watch("role") === 'TALLER' && (
+                <div className="space-y-4 animation-slide-down border-l-4 border-primary pl-4 bg-primary/5 py-3 rounded-r-2xl">
+                    <Typography variant="P" className="text-[10px] font-black uppercase tracking-widest text-primary px-1">Configuración del Taller</Typography>
+                    
+                    <FormField
+                        label="Nombre Comercial del Taller"
+                        placeholder="Ej: Mario Motors Express"
+                        value={watch("workshopName")}
+                        onChange={(e) => setValue("workshopName", e.target.value)}
+                        error={fieldErrors.workshopName || formErrors.workshopName?.message}
+                        icon="briefcase"
+                        disabled={isLoading}
+                        required
+                    />
+
+                    <FormField
+                        label="Dirección Principal"
+                        placeholder="Ej: Av. Principal calle 4, local 2"
+                        value={watch("workshopAddress")}
+                        onChange={(e) => setValue("workshopAddress", e.target.value)}
+                        error={fieldErrors.workshopAddress || formErrors.workshopAddress?.message}
+                        icon="map"
+                        disabled={isLoading}
+                        required
+                    />
+                </div>
+            )}
+
             <FormField
                 label={t("confirm")}
                 type={showConfirmPassword ? "text" : "password"}
