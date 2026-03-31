@@ -41,50 +41,51 @@ export class LoadMarioService {
             }
         });
 
-        // 2. Buscar Regiones para CDMX
-        const mexico = await this.prisma.country.findUnique({ where: { name: 'México' } });
-        const cdmx = await this.prisma.city.findFirst({ 
+        // 2. Buscar Regiones para Venezuela (Forzado para prueba de directorio)
+        const country = await this.prisma.country.findFirst({ where: { name: 'Venezuela' } });
+        const city = await this.prisma.city.findFirst({ 
             where: { 
-                name: 'Ciudad de México',
-                countryId: mexico?.id 
+                name: 'Caracas',
+                countryId: country?.id 
             } 
         });
 
-        if (!mexico || !cdmx) {
-            this.logger.error('MARIO SEED: No se encontró México o CDMX en las regiones. Abortando.');
+        if (!country || !city) {
+            this.logger.error('MARIO SEED: No se encontró Venezuela o Caracas. Abortando.');
             return;
         }
 
-        // 3. Crear Taller "Mario Motors"
+        // 3. Crear Taller "Mario Motors" en Venezuela para que salga en el mismo filtro
         const workshop = await this.prisma.workshop.upsert({
             where: { userId: mario.id },
             update: {
-                name: 'Mario Motors CDMX',
-                address: 'Av. Paseo de la Reforma 250, Juárez, CDMX',
-                phone: '+52 55 9876 5432',
-                whatsapp: '+52 55 9876 5432',
-                latitude: 19.4270,
-                longitude: -99.1676,
+                name: 'Mario Motors VZLA',
+                address: 'Av. Libertador, Caracas',
+                phone: '+58 212 987 6543',
+                whatsapp: '+58 212 987 6543',
+                latitude: 10.4910,
+                longitude: -66.8620,
                 enabled: true,
-                slug: 'mario-motors-cdmx'
+                slug: 'mario-motors-vzla',
+                countryId: country.id,
+                cityId: city.id
             },
             create: {
-                name: 'Mario Motors CDMX',
-                address: 'Av. Paseo de la Reforma 250, Juárez, CDMX',
-                phone: '+52 55 9876 5432',
-                whatsapp: '+52 55 9876 5432',
-                latitude: 19.4270,
-                longitude: -99.1676,
+                name: 'Mario Motors VZLA',
+                address: 'Av. Libertador, Caracas',
+                phone: '+58 212 987 6543',
+                whatsapp: '+58 212 987 6543',
+                latitude: 10.4910,
+                longitude: -66.8620,
                 logoUrl: 'https://images.unsplash.com/photo-1625047509168-a7026f36aeaf?q=80&w=200',
                 images: [
-                    'https://images.unsplash.com/photo-1530046339160-ce3e5b0c7a2f?q=80&w=1200',
-                    'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=1200'
+                    'https://images.unsplash.com/photo-1530046339160-ce3e5b0c7a2f?q=80&w=1200'
                 ],
                 userId: mario.id,
-                countryId: mexico.id,
-                cityId: cdmx.id,
+                countryId: country.id,
+                cityId: city.id,
                 enabled: true,
-                slug: 'mario-motors-cdmx',
+                slug: 'mario-motors-vzla',
                 openingHours: 'Lun-Sáb 8:00 - 19:00'
             }
         });
