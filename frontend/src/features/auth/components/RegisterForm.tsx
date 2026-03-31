@@ -18,7 +18,7 @@ import { AutocompleteInput } from "@/features/dashboard/components/AutocompleteI
 
 export const RegisterForm = () => {
     const t = useTranslations("auth.register");
-    const [step, setStep] = useState(0); // 0: Selección de Rol, 1: Detalles del Formulario
+    const [step, setStep] = useState(1); // 1: Detalles del Formulario (Rol fijo: TALLER)
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -35,7 +35,7 @@ export const RegisterForm = () => {
     } = useForm({
         // Definimos valores por defecto para todos los campos
         defaultValues: {
-            role: null as 'CLIENT' | 'TALLER' | null,
+            role: 'TALLER' as 'CLIENT' | 'TALLER' | null,
             firstName: "",
             lastName: "",
             email: "",
@@ -64,83 +64,10 @@ export const RegisterForm = () => {
         await handleRegister(data);
     };
 
-    // --- RENDERIZADO: PASO 0 (SELECCIÓN DE ROL) ---
-    if (step === 0) {
-        return (
-            <div className="space-y-8 mt-8 flex flex-col items-center animation-fade-in">
-                <Typography variant="H4" className="text-center font-bold text-slate-800">
-                    {t("role_selection")}
-                </Typography>
-
-                <div className="grid grid-cols-1 gap-4 w-full">
-                    {/* Botón Rol CLIENTE */}
-                    <button
-                        type="button"
-                        onClick={() => { 
-                            // Seteamos el valor en react-hook-form y avanzamos
-                            setValue('role', 'CLIENT'); 
-                            setStep(1); 
-                        }}
-                        className="group p-6 border-2 border-slate-100 rounded-3xl text-left transition-all hover:border-primary/50 hover:bg-primary/5 shadow-sm hover:shadow-md active:scale-[0.98]"
-                    >
-                        <div className="flex items-center gap-5">
-                            <div className="w-14 h-14 rounded-2xl bg-slate-50 group-hover:bg-primary/10 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
-                                <User size={28} />
-                            </div>
-                            <div className="flex-1">
-                                <Typography variant="P" className="font-black text-slate-700 group-hover:text-primary transition-colors text-lg">{t("role_client")}</Typography>
-                                <Typography variant="P" className="text-sm text-slate-400 group-hover:text-slate-500 transition-colors leading-tight">{t("role_client_desc")}</Typography>
-                            </div>
-                        </div>
-                    </button>
-
-                    {/* Botón Rol TALLER */}
-                    <button
-                        type="button"
-                        onClick={() => { 
-                            setValue('role', 'TALLER'); 
-                            setStep(1); 
-                        }}
-                        className="group p-6 border-2 border-slate-100 rounded-3xl text-left transition-all hover:border-primary/50 hover:bg-primary/5 shadow-sm hover:shadow-md active:scale-[0.98]"
-                    >
-                        <div className="flex items-center gap-5">
-                            <div className="w-14 h-14 rounded-2xl bg-slate-50 group-hover:bg-primary/10 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
-                                <Wrench size={28} />
-                            </div>
-                            <div className="flex-1">
-                                <Typography variant="P" className="font-black text-slate-700 group-hover:text-primary transition-colors text-lg">{t("role_workshop")}</Typography>
-                                <Typography variant="P" className="text-sm text-slate-400 group-hover:text-slate-500 transition-colors leading-tight">{t("role_workshop_desc")}</Typography>
-                            </div>
-                        </div>
-                    </button>
-                </div>
-
-                <p className="text-center mt-4">
-                    <Typography variant="P" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
-                        {t("has_account")}{" "}
-                        <Link href="/login" className="text-primary hover:text-primary-600 transition-colors font-black">
-                            {t("login")}
-                        </Link>
-                    </Typography>
-                </p>
-            </div>
-        );
-    }
-
     // --- RENDERIZADO: PASO 1 (FORMULARIO DETALLADO) ---
     return (
         // Usamos handleSubmit para envolver tu onSubmit
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-6 animation-fade-in">
-            {/* Botón Volver */}
-            <button
-                type="button"
-                onClick={() => setStep(0)}
-                className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-colors group"
-                disabled={isLoading}
-            >
-                <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-                Volver
-            </button>
 
             {/* Error Global (Backend) */}
             {error && (

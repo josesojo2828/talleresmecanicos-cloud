@@ -28,7 +28,7 @@ export class UserCrudController {
     }
 
     @Put(':id')
-    @Roles(UserRole.ADMIN)
+    @Roles(UserRole.ADMIN, UserRole.TALLER, UserRole.CLIENT)
     async update(@Param('id') id: string, @Body() body: IUpdateUserDto) {
         return await this.updateUseCase.execute({ data: body, id });
     }
@@ -40,7 +40,7 @@ export class UserCrudController {
     }
 
     @Get(':id')
-    @Roles(UserRole.ADMIN)
+    @Roles(UserRole.ADMIN, UserRole.TALLER, UserRole.CLIENT)
     async getById(@Param('id') id: string) {
         return await this.queryUseCase.findOne({ id });
     }

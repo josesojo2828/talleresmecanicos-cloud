@@ -32,7 +32,7 @@ export const NavItem: React.FC<NavItemProps> = ({ item, isCollapsed, pathname, t
                 >
                     <div className="flex items-center gap-3">
                         <DynamicIcon name={item.icon} className={cn("w-5 h-5 min-w-[20px] transition-transform", !isCollapsed && "group-hover:scale-110")} />
-                        {!isCollapsed && <span className="text-[11px] font-black uppercase tracking-widest">{t(item.label)}</span>}
+                        {!isCollapsed && <span className="text-[11px] font-black uppercase tracking-widest">{t(item.label === "user.title" ? "user.title.default" : item.label as any)}</span>}
                     </div>
                     {!isCollapsed && (
                         <div className="transition-transform duration-300">
@@ -54,7 +54,7 @@ export const NavItem: React.FC<NavItemProps> = ({ item, isCollapsed, pathname, t
                                         : "text-slate-400 hover:text-slate-900 hover:translate-x-1"
                                 )}
                             >
-                                {t(child.label)}
+                                {t(child.label === "user.title" ? "user.title.default" : child.label as any)}
                             </Link>
                         ))}
                     </div>
@@ -77,13 +77,13 @@ export const NavItem: React.FC<NavItemProps> = ({ item, isCollapsed, pathname, t
                 name={item.icon}
                 className={cn("w-5 h-5 transition-transform", !isCollapsed && "group-hover:scale-110")}
             />
-            {!isCollapsed && <span className="text-[11px] font-black uppercase tracking-widest">{t(item.label)}</span>}
+            {!isCollapsed && <span className="text-[11px] font-black uppercase tracking-widest">{t(item.label === "user.title" ? "user.title.default" : item.label as any)}</span>}
             {pathname === `/dashboard/${item.slug}` && !isCollapsed && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             )}
             {isCollapsed && (
                 <span className="absolute left-16 bg-slate-800 text-white text-[9px] font-black uppercase px-3 py-1.5 rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all translate-x-4 group-hover:translate-x-0 shadow-xl z-[100] whitespace-nowrap border border-white/10">
-                    {t(item.label)}
+                    {t(item.label === "user.title" ? "user.title.default" : item.label as any)}
                 </span>
             )}
         </Link>

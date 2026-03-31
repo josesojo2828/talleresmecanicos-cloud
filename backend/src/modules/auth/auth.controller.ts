@@ -21,6 +21,11 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Get('check')
     async check(@Request() req) {
-        return this.authService.check(req.user.userId);
+        return this.authService.check(req.user.id);
+    }
+
+    @Post('logout')
+    async logout() {
+        return { success: true };
     }
 }

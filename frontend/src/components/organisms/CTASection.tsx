@@ -15,9 +15,7 @@ export const CTASection = () => {
             <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none"
                 style={{ backgroundImage: `radial-gradient(#10b981 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
 
-            <div className="max-w-7xl mx-auto">
-                <div className="grid md:grid-cols-2 gap-8">
-
+            <div className="max-w-3xl mx-auto">
                     {/* Opción A: Para DUEÑOS DE TALLERES */}
                     <div className="relative group overflow-hidden bg-white p-10 rounded-[4rem] border border-slate-100 shadow-2xl shadow-slate-200/40 hover:-translate-y-3 transition-all duration-700">
                         {/* Blob decorativo animado */}
@@ -56,48 +54,6 @@ export const CTASection = () => {
                             </Link>
                         </div>
                     </div>
-
-                    {/* Opción B: Para CLIENTES / DUEÑOS DE VEHÍCULOS */}
-                    <div className="relative group overflow-hidden bg-gradient-to-br from-emerald-600 to-emerald-800 p-10 rounded-[4rem] shadow-2xl shadow-emerald-600/30 hover:-translate-y-3 transition-all duration-700">
-                        {/* Blobs decorativos */}
-                        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-700" />
-                        <div className="absolute top-1/2 -right-20 w-40 h-40 bg-emerald-400/20 rounded-full blur-2xl" />
-
-                        <div className="relative z-10 space-y-8">
-                            <div className="w-16 h-16 rounded-[2rem] bg-white flex items-center justify-center text-emerald-600 shadow-2xl group-hover:-rotate-12 transition-transform duration-500">
-                                <Car size={32} />
-                            </div>
-
-                            <div className="space-y-4">
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-[10px] font-black uppercase tracking-widest backdrop-blur-md border border-white/20">
-                                    Reparaciones Inteligentes
-                                </div>
-                                <h3 className="text-4xl font-black text-white leading-none tracking-tight">
-                                    Encuentra <br />
-                                    <span className="text-emerald-200">Mecánicos de Confianza</span>
-                                </h3>
-                                <p className="text-emerald-50/90 text-lg font-medium leading-relaxed max-w-sm">
-                                     Compara presupuestos y contacta con los talleres mejor valorados de tu ciudad.
-                                </p>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {['Chat Directo', 'Precios Claros', 'Soporte 24/7', 'Expertos Certificados'].map((item, i) => (
-                                    <div key={i} className="flex items-center gap-2 text-xs font-bold text-white bg-white/10 p-3 rounded-2xl border border-white/10 backdrop-blur-sm group-hover:bg-white/20 transition-all">
-                                        <CheckCircle size={14} className="text-emerald-300" /> {item}
-                                    </div>
-                                ))}
-                            </div>
-
-                            <Link href="/directorio" className="block pt-4">
-                                <Button className="w-full md:w-auto bg-white hover:bg-emerald-50 text-emerald-700 px-12 py-8 rounded-[2rem] text-base font-black shadow-2xl shadow-white/20 transition-all hover:scale-105">
-                                    Buscar Taller en mi Zona <ChevronRight className="ml-2 w-6 h-6" />
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
-
-                </div>
             </div>
         </section>
     );

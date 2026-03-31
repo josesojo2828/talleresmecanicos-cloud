@@ -95,7 +95,7 @@ export const LoginForm = () => {
             </Button>
 
             {/* Register Link */}
-            <p className="text-center">
+            <div className="text-center">
                 <Typography variant="P" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
                     {t("no_account")}{" "}
                     <Link
@@ -105,7 +105,7 @@ export const LoginForm = () => {
                         {t("register")}
                     </Link>
                 </Typography>
-            </p>
+            </div>
         </form>
     );
 };

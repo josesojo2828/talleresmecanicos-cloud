@@ -50,11 +50,6 @@ export const Hero = () => {
                                 {t("cta_primary")} <ArrowRight className="ml-2 w-5 h-5" />
                             </Button>
                         </Link>
-                        <Link href="/directorio" className="w-full sm:w-auto">
-                            <Button className="w-full px-10 py-7 text-lg rounded-2xl border-slate-200 bg-white text-slate-700 hover:bg-slate-50 shadow-sm">
-                                {t("cta_secondary")}
-                            </Button>
-                        </Link>
                     </div>
                 </div>
 
