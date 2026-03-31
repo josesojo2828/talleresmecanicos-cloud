@@ -178,40 +178,43 @@ export class LoadMarioService {
         }
 
         // 7. Crear Órdenes de Trabajo (Culminadas e integradas)
-        const workCount = await this.prisma.work.count({ where: { workshopId: workshop.id } });
-        if (workCount < 5) {
-            await this.prisma.work.createMany({
-                data: [
-                    {
-                        publicId: 'MARIO-W-001',
-                        title: 'Reparación de Transmisión Jetta A6',
-                        description: 'Cambio de cuerpo de válvulas y solenoide de 3ra.',
-                        status: WorkStatus.DELIVERED,
-                        workshopId: workshop.id,
-                        clientName: 'Juan Pérez',
-                        clientPhone: '5511223344',
-                        vehicleLicensePlate: 'MEX-123-A'
-                    },
-                    {
-                        publicId: 'MARIO-W-002',
-                        title: 'Afinación de Honda CR-V',
-                        description: 'Afinación mayor completa realizada con éxito.',
-                        status: WorkStatus.COMPLETED,
-                        workshopId: workshop.id,
-                        clientName: 'María García',
-                        clientPhone: '5599887766',
-                        vehicleLicensePlate: 'CDMX-998-Z'
-                    },
-                    {
-                        publicId: 'MARIO-W-003',
-                        title: 'Cambio de Suspensión Delantera',
-                        description: 'En proceso: Cambiando amortiguadores y terminales.',
-                        status: WorkStatus.IN_PROGRESS,
-                        workshopId: workshop.id,
-                        clientName: 'Carlos Tapia',
-                        vehicleLicensePlate: 'MEX-000-B'
-                    }
-                ]
+        const workData = [
+            {
+                publicId: 'MARIO-W-001',
+                title: 'Reparación de Transmisión Jetta A6',
+                description: 'Cambio de cuerpo de válvulas y solenoide de 3ra.',
+                status: WorkStatus.DELIVERED,
+                workshopId: workshop.id,
+                clientName: 'Juan Pérez',
+                clientPhone: '5511223344',
+                vehicleLicensePlate: 'MEX-123-A'
+            },
+            {
+                publicId: 'MARIO-W-002',
+                title: 'Afinación de Honda CR-V',
+                description: 'Afinación mayor completa realizada con éxito.',
+                status: WorkStatus.COMPLETED,
+                workshopId: workshop.id,
+                clientName: 'María García',
+                clientPhone: '5599887766',
+                vehicleLicensePlate: 'CDMX-998-Z'
+            },
+            {
+                publicId: 'MARIO-W-003',
+                title: 'Cambio de Suspensión Delantera',
+                description: 'En proceso: Cambiando amortiguadores y terminales.',
+                status: WorkStatus.IN_PROGRESS,
+                workshopId: workshop.id,
+                clientName: 'Carlos Tapia',
+                vehicleLicensePlate: 'MEX-000-B'
+            }
+        ];
+
+        for (const w of workData) {
+            await this.prisma.work.upsert({
+                where: { publicId: w.publicId },
+                update: { ...w },
+                create: { ...w }
             });
         }
 

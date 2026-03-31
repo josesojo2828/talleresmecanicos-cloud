@@ -2,7 +2,7 @@
 
 import { Typography } from "@/components/atoms/Typography";
 import { Button } from "@/components/atoms/Button";
-import { Briefcase, ChevronRight, Car, Building2, CheckCircle } from "lucide-react";
+import { ChevronRight, Building2, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
