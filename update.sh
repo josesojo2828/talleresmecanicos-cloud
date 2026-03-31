@@ -15,7 +15,7 @@ docker compose down
 
 # 3. Construir y levantar servicios
 echo "🏗️ Construyendo y levantando servicios (Producción)..."
-docker compose up -d --build
+docker compose up -d --build --no-cache
 
 # 4. Actualización de Base de Datos (Opcional)
 echo "🗄️ ¿Deseas aplicar las migraciones de la base de datos ahora mismo? (s/n)"
