@@ -35,7 +35,7 @@ export class LoadMarioService {
                 role: UserRole.TALLER,
                 profile: {
                     create: {
-                        avatarUrl: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=200'
+                        avatarUrl: ''
                     }
                 }
             }
@@ -77,10 +77,8 @@ export class LoadMarioService {
                 whatsapp: '+58 212 987 6543',
                 latitude: 10.4910,
                 longitude: -66.8620,
-                logoUrl: 'https://images.unsplash.com/photo-1625047509168-a7026f36aeaf?q=80&w=200',
-                images: [
-                    'https://images.unsplash.com/photo-1530046339160-ce3e5b0c7a2f?q=80&w=1200'
-                ],
+                logoUrl: '',
+                images: [],
                 userId: mario.id,
                 countryId: country.id,
                 cityId: city.id,

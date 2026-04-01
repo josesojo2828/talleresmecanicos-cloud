@@ -2,9 +2,15 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { ResponseInterceptor } from './shared/interceptor/response.interceptor'
 import { GlobalExceptionFilter } from './shared/interceptor/exception.interceptor'
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+  
+  // Increase payload limits for image uploads
+  app.use(express.json({ limit: '50mb' }));
+  app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
   app.setGlobalPrefix('api/v1');
   app.enableCors();
   app.enableShutdownHooks()

@@ -302,11 +302,20 @@ export function FormGenerator({ structure, defaultValues, isUpdate, onSubmit, on
                                                     
                                                     const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
                                                         const selectedFiles = Array.from(e.target.files || []);
-                                                        if (field.multiple) {
-                                                            onChange([...files, ...selectedFiles].slice(0, field.validation?.max || 10));
-                                                        } else {
-                                                            onChange(selectedFiles[0]);
-                                                        }
+                                                        
+                                                        selectedFiles.forEach(file => {
+                                                            const reader = new FileReader();
+                                                            reader.onloadend = () => {
+                                                                const base64String = reader.result as string;
+                                                                if (field.multiple) {
+                                                                    const currentFiles = Array.isArray(control._formValues[field.name]) ? control._formValues[field.name] : [];
+                                                                    onChange([...currentFiles, base64String].slice(0, field.validation?.max || 10));
+                                                                } else {
+                                                                    onChange(base64String);
+                                                                }
+                                                            };
+                                                            reader.readAsDataURL(file);
+                                                        });
                                                     };
 
                                                     return (
@@ -333,14 +342,16 @@ export function FormGenerator({ structure, defaultValues, isUpdate, onSubmit, on
                                                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                                                     {files.map((file: any, idx: number) => (
                                                                         <div key={idx} className="relative group aspect-square rounded-2xl overflow-hidden border border-base-300 bg-base-200">
-                                                                            {file instanceof File && (
-                                                                                <img
-                                                                                    src={URL.createObjectURL(file)}
-                                                                                    alt="preview"
-                                                                                    className="w-full h-full object-cover"
-                                                                                    onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)}
-                                                                                />
-                                                                            )}
+                                                                            <img
+                                                                                src={typeof file === 'string' ? file : URL.createObjectURL(file as any)}
+                                                                                alt="preview"
+                                                                                className="w-full h-full object-cover"
+                                                                                onLoad={(e) => {
+                                                                                    if (typeof file !== 'string') {
+                                                                                        URL.revokeObjectURL((e.target as HTMLImageElement).src);
+                                                                                    }
+                                                                                }}
+                                                                            />
                                                                             <button
                                                                                 type="button"
                                                                                 onClick={() => {
