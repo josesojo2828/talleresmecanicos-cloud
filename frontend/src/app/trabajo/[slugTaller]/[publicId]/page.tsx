@@ -95,12 +95,12 @@ export default function PublicWorkPage() {
                         <div className="max-w-2xl">
                             <div className="flex items-center gap-3 mb-6">
                                 <span className="px-3 py-1 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-lg">
-                                    {work.publicId}
-                                </span>
-                                <span className="text-emerald-500/50 font-black tracking-tighter text-sm uppercase">Verification Portal v2.0</span>
+                                     {work.publicId}
+                                 </span>
+                                <span className="text-emerald-500/80 font-black tracking-widest text-[10px] uppercase">SEGUIMIENTO DE TRABAJO</span>
                             </div>
                             <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-[0.9] mb-4">
-                                {work.title}
+                                {work.clientName || "ORDEN DE TRABAJO"}
                             </h1>
                             <p className="text-slate-400 font-medium text-lg leading-relaxed flex items-center gap-2">
                                 <Car size={20} className="text-emerald-500" /> Seguimiento en tiempo real para tu vehículo
@@ -111,8 +111,8 @@ export default function PublicWorkPage() {
                                 <ShieldCheck size={32} />
                             </div>
                             <div>
-                                <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Estado de Seguridad</p>
-                                <p className="text-sm font-black text-white uppercase tracking-tight">Orden Verificada</p>
+                                <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">PROCESO</p>
+                                <p className="text-sm font-black text-white uppercase tracking-tight italic">ORDEN VERIFICADA</p>
                             </div>
                         </div>
                     </div>
@@ -128,7 +128,7 @@ export default function PublicWorkPage() {
                         {/* 1. Stepper / Tracking Status */}
                         <section className="bg-white rounded-[3rem] p-10 md:p-14 shadow-2xl shadow-slate-200/50 border border-white">
                             <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-12 flex items-center gap-3">
-                                <Clock size={16} /> Progreso de la Reparación
+                                <Clock size={16} /> ESTADO ACTUAL
                             </h2>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 relative">
@@ -138,15 +138,12 @@ export default function PublicWorkPage() {
                                 {STATUS_STEPS.map((step, idx) => {
                                     const isCompleted = idx < currentStatusIndex;
                                     const isCurrent = idx === currentStatusIndex;
-                                    const isLast = idx === STATUS_STEPS.length - 1;
-
                                     return (
-                                        <div key={idx} className="flex flex-col items-center text-center group">
+                                        <div key={step.id} className="relative text-center md:text-left">
                                             <div className={cn(
-                                                "w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 relative z-10",
-                                                isCompleted ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/20" :
-                                                    isCurrent ? "bg-slate-900 text-white shadow-xl scale-110" :
-                                                        "bg-slate-50 text-slate-300 border border-slate-100"
+                                                "w-14 h-14 rounded-2xl flex items-center justify-center mx-auto md:mx-0 transition-all duration-500 relative",
+                                                isCurrent ? "bg-slate-900 text-white shadow-xl shadow-slate-200 scale-110" :
+                                                isCompleted ? "bg-emerald-100 text-emerald-600" : "bg-slate-50 text-slate-300"
                                             )}>
                                                 {isCompleted ? <Check size={24} /> : <step.icon size={24} />}
                                                 {isCurrent && (
@@ -155,7 +152,7 @@ export default function PublicWorkPage() {
                                             </div>
                                             <div className="mt-6">
                                                 <h4 className={cn(
-                                                    "text-xs font-black uppercase tracking-widest mb-1 transition-colors",
+                                                    "text-[10px] font-black uppercase tracking-widest mb-1 transition-colors",
                                                     isCurrent ? "text-slate-900" : isCompleted ? "text-emerald-600" : "text-slate-400"
                                                 )}>
                                                     {step.label}
@@ -175,12 +172,11 @@ export default function PublicWorkPage() {
                             <header className="flex items-center justify-between mb-10">
                                 <div>
                                     <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2 flex items-center gap-3">
-                                        <Images size={16} /> Galería de Evidencias
+                                        <Images size={16} /> EVIDENCIA FOTOGRÁFICA
                                     </h2>
-                                    <p className="text-sm font-black text-slate-900 uppercase">Respaldo visual del trabajo realizado</p>
                                 </div>
-                                <span className="bg-slate-50 px-4 py-2 rounded-xl text-[10px] font-black text-slate-400 border border-slate-100 uppercase italic">
-                                    {work.images?.length || 0} Capturas
+                                <span className="bg-slate-950 px-4 py-2 rounded-xl text-[10px] font-black text-white border border-slate-800 uppercase italic">
+                                    {work.images?.length || 0} CAPTURAS
                                 </span>
                             </header>
 
@@ -193,12 +189,6 @@ export default function PublicWorkPage() {
                                                 alt={`Evidencia ${i + 1}`}
                                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                             />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                            <div className="absolute bottom-6 left-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
-                                                <span className="px-4 py-2 bg-white/20 backdrop-blur-md rounded-xl text-[8px] font-black text-white uppercase tracking-widest border border-white/20">
-                                                    Imagen de Proceso #{i + 1}
-                                                </span>
-                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -206,7 +196,6 @@ export default function PublicWorkPage() {
                                 <div className="py-20 text-center bg-slate-50 rounded-[2.5rem] border border-dashed border-slate-200">
                                     <Images size={48} className="mx-auto text-slate-200 mb-6" />
                                     <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">Sin evidencias visuales todavía</h3>
-                                    <p className="text-[10px] font-bold text-slate-300 uppercase mt-2">El mecánico subirá fotos cuando comience la reparación.</p>
                                 </div>
                             )}
                         </section>
@@ -214,7 +203,7 @@ export default function PublicWorkPage() {
                         {/* 3. Budget & Total Summary (Transparency Step) */}
                         <section className="bg-white rounded-[3rem] p-10 md:p-14 shadow-2xl shadow-slate-200/50 border border-white">
                             <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-10 flex items-center gap-3">
-                                <Zap size={16} className="text-amber-500" /> Presupuesto Detallado
+                                <Zap size={16} className="text-amber-500" /> RESUMEN DE COSTOS
                             </h2>
 
                             <div className="space-y-6">
@@ -224,11 +213,10 @@ export default function PublicWorkPage() {
                                             <Package size={18} />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Repuestos y Materiales</p>
-                                            <p className="text-xs font-black text-slate-600 uppercase tracking-tight">Total de insumos utilizados</p>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">MATERIALES</p>
                                         </div>
                                     </div>
-                                    <span className="text-lg font-black text-slate-900">${(work.partsUsed?.reduce((acc: number, p: any) => acc + (p.quantity * (p.part.price || 0)), 0) || 0).toLocaleString()}</span>
+                                    <span className="text-lg font-black text-slate-900 font-mono italic">${(work.partsUsed?.reduce((acc: number, p: any) => acc + (p.quantity * (p.part.price || 0)), 0) || 0).toLocaleString()}</span>
                                 </div>
 
                                 <div className="flex items-center justify-between p-6 bg-slate-50 rounded-2xl border border-slate-100">
@@ -237,24 +225,23 @@ export default function PublicWorkPage() {
                                             <Wrench size={18} />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Mano de Obra / Servicio</p>
-                                            <p className="text-xs font-black text-slate-600 uppercase tracking-tight">Diagnóstico y especialidad técnica</p>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">MANO DE OBRA</p>
                                         </div>
                                     </div>
-                                    <span className="text-lg font-black text-slate-900">${(work.laborPrice || 0).toLocaleString()}</span>
+                                    <span className="text-lg font-black text-slate-900 font-mono italic">${(work.laborPrice || 0).toLocaleString()}</span>
                                 </div>
 
-                                <div className="flex items-center justify-between p-8 bg-slate-900 rounded-[2.5rem] border border-slate-800 shadow-xl relative overflow-hidden group">
+                                <div className="flex items-center justify-between p-8 bg-slate-950 rounded-[2.5rem] border border-slate-800 shadow-xl relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-[40px]" />
                                     <div className="relative">
-                                        <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] mb-1 italic">Total a Pagar</p>
-                                        <h3 className="text-4xl font-black text-white uppercase tracking-tighter">
+                                        <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] mb-1 italic">TOTAL FINAL</p>
+                                        <h3 className="text-4xl font-black text-white uppercase tracking-tighter italic">
                                             ${((work.partsUsed?.reduce((acc: number, p: any) => acc + (p.quantity * (p.part.price || 0)), 0) || 0) + (work.laborPrice || 0)).toLocaleString()}
                                         </h3>
                                     </div>
                                     <div className="relative text-right">
-                                        <div className="px-4 py-2 bg-emerald-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20">
-                                            Verificar Pago
+                                        <div className="px-6 py-3 bg-emerald-500 text-slate-950 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20">
+                                            PAGAR AHORA
                                         </div>
                                     </div>
                                 </div>

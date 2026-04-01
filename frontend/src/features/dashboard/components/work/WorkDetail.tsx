@@ -207,9 +207,9 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                         <Zap size={28} />
                     </div>
                     <div>
-                        <h2 className="text-sm font-black text-white uppercase tracking-[0.2em] leading-none mb-1.5">Consola de Control</h2>
+                        <h2 className="text-sm font-black text-white uppercase tracking-[0.2em] leading-none mb-1.5">{data.clientName || 'ORDEN DE TRABAJO'}</h2>
                         <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">Orden de Trabajo</span>
+                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">VEHÍCULO: {data.vehicleLicensePlate || 'S/P'}</span>
                             <span className="w-1 h-1 bg-slate-700 rounded-full" />
                             <span className="text-[10px] text-emerald-400 font-black uppercase tracking-widest">{data.publicId}</span>
                         </div>
@@ -316,56 +316,6 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                                 <Phone size={14} className="text-emerald-500" />
                                                 <span className="text-[11px] font-black uppercase tracking-tight">{data.clientPhone || 'Sin teléfono'}</span>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Stats & Costs Summary */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                <div className="bg-white/40 p-8 rounded-[2.5rem] border border-white shadow-xl">
-                                    <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2"><Package size={16} /> Repuestos</h4>
-                                    <div className="flex items-end justify-between font-black">
-                                        <div className="space-y-1">
-                                            <p className="text-3xl tracking-tighter text-slate-400 font-medium">${subtotalParts.toLocaleString()}</p>
-                                            <p className="text-[9px] text-slate-400 uppercase italic">Materiales</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="bg-white/40 p-8 rounded-[2.5rem] border border-white shadow-xl">
-                                    <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2"><Wrench size={16} /> Mano de Obra</h4>
-                                    <div className="flex items-end justify-between font-black">
-                                        <div className="space-y-1">
-                                            <p className="text-3xl tracking-tighter text-slate-400 font-medium">${(data.laborPrice || 0).toLocaleString()}</p>
-                                            <p className="text-[9px] text-slate-400 uppercase italic">Servicios técnicos</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="bg-emerald-500 p-8 rounded-[2.5rem] border border-emerald-400 text-white shadow-2xl shadow-emerald-500/20">
-                                    <h4 className="text-[10px] font-black text-white/50 uppercase tracking-widest mb-6 flex items-center gap-2"><Zap size={16} /> Total Presupuesto</h4>
-                                    <div className="flex items-end justify-between font-black">
-                                        <div className="space-y-1">
-                                            <p className="text-3xl tracking-tighter font-black">${(subtotalParts + (data.laborPrice || 0)).toLocaleString()}</p>
-                                            <p className="text-[9px] text-white/50 uppercase italic tracking-widest">Total acumulado</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden group md:col-span-3">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/20 rounded-full blur-[60px] group-hover:bg-emerald-500/30 transition-all" />
-                                    <div className="relative">
-                                        <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Visibilidad para el Cliente</p>
-                                        <h4 className="text-lg font-black uppercase tracking-tight leading-none mb-4">Portal de Seguimiento Público</h4>
-                                        <div className="flex gap-2">
-                                            <button onClick={openPublicPage} className="flex-1 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2">
-                                                <Eye size={14} /> Ver Resultados
-                                            </button>
-                                            <button onClick={copyPublicLink} className="p-3 bg-emerald-500 hover:bg-emerald-600 rounded-xl transition-all shadow-lg shadow-emerald-500/20">
-                                                <Copy size={16} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 {/* Live Evidence Preview for Mechanic */}
                                 <div className="bg-white/40 p-8 rounded-[2.5rem] border border-white shadow-xl md:col-span-2">
