@@ -50,7 +50,6 @@ export function AutocompleteInput({ field, control, parentId }: AutocompleteInpu
 
             try {
                 // Hacemos la petición GET a tu API
-                // alert(`/app/select/${field.remote.slug}`);
                 const response = await apiClient.get(`/app/select/${field.remote.slug}`, {
                     params: { parentId } // Enviamos parentId si existe
                 });

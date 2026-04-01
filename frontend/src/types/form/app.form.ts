@@ -129,7 +129,8 @@ export const WorkForm: FormStructure = {
         { name: 'images', label: 'headers.images', type: 'image', multiple: true, validation: { max: 8 } },
         { name: 'clientName', label: 'headers.name', type: 'text', gridCols: 2 },
         { name: 'clientPhone', label: 'headers.phone', type: 'text', gridCols: 2 },
-        { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text' },
+        { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text', gridCols: 2 },
+        { name: 'laborPrice', label: 'headers.price', type: 'number', gridCols: 2 },
         { 
             name: 'status', 
             label: 'headers.status', 

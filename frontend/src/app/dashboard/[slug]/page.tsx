@@ -13,7 +13,8 @@ export default function SlugCrudPage() {
 
     const {
         config, data, loading, save, remove, isMutating,
-        orderBy, toggleSort, search, setSearch, filters, setFilters
+        orderBy, toggleSort, search, setSearch, filters, setFilters,
+        page, setPage, total, take
     } = useCrud(slug);
 
     return (
@@ -55,6 +56,10 @@ export default function SlugCrudPage() {
                 toggleSort={toggleSort}
                 filters={filters}
                 setFilters={setFilters}
+                page={page}
+                setPage={setPage}
+                total={total}
+                take={take}
             />
         </div>
     );

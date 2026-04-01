@@ -17,7 +17,6 @@ export const ForumPostDetail: React.FC<ForumPostDetailProps> = ({ data }) => {
     const stats = [
         { label: 'Likes', value: data._count?.likes || 0, icon: <Heart size={16} className="text-rose-500" />, color: 'bg-rose-50' },
         { label: 'Comentarios', value: data._count?.comments || 0, icon: <MessageSquare size={16} className="text-blue-500" />, color: 'bg-blue-50' },
-        { label: 'Favoritos', value: data._count?.favorites || 0, icon: <Bookmark size={16} className="text-amber-500" />, color: 'bg-amber-50' },
         { label: 'Visitas', value: 124, icon: <Eye size={16} className="text-emerald-500" />, color: 'bg-emerald-50' },
     ];
 

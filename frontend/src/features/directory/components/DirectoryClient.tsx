@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import apiClient from "@/utils/api/api.client";
+import { useAlertStore } from '@/store/useAlertStore';
 import { cn } from "@/utils/cn";
 import { Map } from "@/components/molecules/Map";
 import { WorkshopSkeleton } from '@/components/atoms/Skeleton';
@@ -393,7 +394,7 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
                     setUserLocation([pos.coords.latitude, pos.coords.longitude]);
                     setSortByDistance(true);
                   }, (err) => {
-                    alert("Por favor permite el acceso a tu ubicación para usar esta función.");
+                    useAlertStore.getState().addAlert("Por favor permite el acceso a tu ubicación para usar esta función.", "warning");
                   });
                 } else {
                   setSortByDistance(!sortByDistance);

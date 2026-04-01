@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
     Eye, X, Plus, AlertCircle, ChevronUp, ChevronDown,
-    Loader2, Wrench, Save
+    Loader2, Wrench, Save, ChevronLeft, ChevronRight
 } from "lucide-react";
 
 // Types e Imports de formularios se mantienen igual...
@@ -41,6 +41,12 @@ interface CustomCrudProps {
     filters: Record<string, any>;
     setFilters: React.Dispatch<React.SetStateAction<Record<string, any>>>;
     
+    // Pagination
+    page?: number;
+    setPage?: (p: number) => void;
+    total?: number;
+    take?: number;
+
     // UI Enhancements for Embedding
     initialFilters?: Record<string, any>;
     hideHeader?: boolean;
@@ -115,7 +121,8 @@ const DataCell: React.FC<{
 
 export default function CustomCrud({
     slug, config, data, loading, save, remove, isMutating, orderBy, toggleSort, filters, setFilters,
-    initialFilters, hideHeader, hideFilters, embedded
+    initialFilters, hideHeader, hideFilters, embedded,
+    page, setPage, total, take
 }: CustomCrudProps) {
     const router = useRouter();
     const t = useTranslations();
@@ -313,6 +320,52 @@ export default function CustomCrud({
                         </tbody>
                     </table>
                 </div>
+
+                {/* Pagination Footer */}
+                {(page !== undefined && setPage && total !== undefined && take !== undefined && total > take) ? (
+                    <footer className="px-8 py-6 bg-slate-50/50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                            Mostrando <span className="text-slate-900">{(page - 1) * take + 1}</span> a <span className="text-slate-900">{Math.min(page * take, total)}</span> de <span className="text-slate-900">{total}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button
+                                disabled={page === 1}
+                                onClick={() => setPage(page - 1)}
+                                className="p-2 bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-emerald-600 disabled:opacity-30 disabled:hover:text-slate-400 transition-all shadow-sm"
+                            >
+                                <ChevronLeft size={16} />
+                            </button>
+                            
+                            <div className="flex items-center gap-1.5 px-3">
+                                {Array.from({ length: Math.min(5, Math.ceil(total / take)) }).map((_, i) => {
+                                    const pageNum = i + 1;
+                                    // Optimization: only show 5 pages total around current page in a real app
+                                    return (
+                                        <button
+                                            key={pageNum}
+                                            onClick={() => setPage(pageNum)}
+                                            className={cn(
+                                                "w-8 h-8 rounded-lg text-[10px] font-black transition-all",
+                                                page === pageNum ? "bg-slate-900 text-white shadow-lg" : "bg-white border border-slate-100 text-slate-400 hover:border-emerald-200 hover:text-emerald-600"
+                                            )}
+                                        >
+                                            {pageNum}
+                                        </button>
+                                    );
+                                })}
+                                {Math.ceil(total / take) > 5 && <span className="text-slate-300">...</span>}
+                            </div>
+
+                            <button
+                                disabled={page >= Math.ceil(total / take)}
+                                onClick={() => setPage(page + 1)}
+                                className="p-2 bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-emerald-600 disabled:opacity-30 disabled:hover:text-slate-400 transition-all shadow-sm"
+                            >
+                                <ChevronRight size={16} />
+                            </button>
+                        </div>
+                    </footer>
+                ) : null}
             </div>
 
             {/* ── MODAL PRECISA (FLOATING & CENTERED) ───────────────── */}

@@ -9,6 +9,7 @@ export interface ICreateWorkDto {
     clientPhone?: string;
     vehicleLicensePlate?: string;
     images?: string[];
+    laborPrice?: number;
 }
 
 export interface IUpdateWorkDto {
@@ -19,4 +20,5 @@ export interface IUpdateWorkDto {
     clientPhone?: string;
     vehicleLicensePlate?: string;
     images?: string[];
+    laborPrice?: number;
 }

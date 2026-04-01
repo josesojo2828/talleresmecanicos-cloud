@@ -74,7 +74,7 @@ export default function PostDetailPage() {
         };
 
         if (id) fetchPost();
-    }, [id]);
+    }, [id, user?.id]);
 
     const handleLike = async () => {
         if (!isAuthenticated || !post) return router.push('/login');
@@ -191,14 +191,6 @@ export default function PostDetailPage() {
                                 <MessageSquare size={22} />
                                 <span>{post._count.comments} Comentarios</span>
                             </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <button className="p-3 rounded-2xl bg-slate-50 text-slate-400 hover:text-amber-500 transition-colors">
-                                <Bookmark size={22} />
-                            </button>
-                            <button className="p-3 rounded-2xl bg-slate-50 text-slate-400 hover:text-emerald-600 transition-colors">
-                                <Share2 size={22} />
-                            </button>
                         </div>
                     </div>
                 </article>

@@ -14,6 +14,7 @@ import {
 import apiClient from "@/utils/api/api.client";
 import { cn } from "@/utils/cn";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useAlertStore } from "@/store/useAlertStore";
 
 const DAYS = [
     { key: "monday", label: "Lunes" },
@@ -213,10 +214,10 @@ export default function MyWorkshopPage() {
             await apiClient.put(`/my-workshop/${workshop.id}`, body);
             await fetchWorkshop();
             setLogo(null);
-            alert("¡Cambios guardados con éxito!");
+            useAlertStore.getState().addAlert("¡Cambios guardados con éxito!", "success");
         } catch (error) {
             console.error("Error updating workshop:", error);
-            alert("Error al guardar los cambios.");
+            useAlertStore.getState().addAlert("Error al guardar los cambios.", "error");
         } finally {
             setIsSaving(false);
         }
@@ -232,7 +233,7 @@ export default function MyWorkshopPage() {
             const newImages = Array.from(files);
             const totalImages = showcaseImages.length + newImages.length;
             if (totalImages > 5) {
-                alert("Máximo 5 imágenes permitidas.");
+                useAlertStore.getState().addAlert("Máximo 5 imágenes permitidas.", "warning");
                 const available = 5 - showcaseImages.length;
                 setShowcaseImages([...showcaseImages, ...newImages.slice(0, available)]);
             } else {

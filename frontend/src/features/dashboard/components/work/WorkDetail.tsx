@@ -201,26 +201,30 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
     return (
         <div className="space-y-8 pb-20">
             {/* 0. Top Bar (Administrative Actions) */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/40 p-4 rounded-3xl border border-white/60 shadow-xl backdrop-blur-md sticky top-0 z-40">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-slate-900 rounded-2xl flex items-center justify-center text-white shadow-lg">
-                        <Zap size={20} />
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 bg-slate-950 p-6 rounded-[2.5rem] border border-white/5 shadow-2xl backdrop-blur-xl sticky top-4 z-40">
+                <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-emerald-500 rounded-[1.5rem] flex items-center justify-center text-slate-950 shadow-[0_0_30px_rgba(16,185,129,0.3)] animate-pulse">
+                        <Zap size={28} />
                     </div>
                     <div>
-                        <h2 className="text-xs font-black text-slate-900 uppercase tracking-widest leading-none mb-1">Centro de Administración</h2>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Orden {data.publicId}</p>
+                        <h2 className="text-sm font-black text-white uppercase tracking-[0.2em] leading-none mb-1.5">Consola de Control</h2>
+                        <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">Orden de Trabajo</span>
+                            <span className="w-1 h-1 bg-slate-700 rounded-full" />
+                            <span className="text-[10px] text-emerald-400 font-black uppercase tracking-widest">{data.publicId}</span>
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                    <button onClick={copyPublicLink} className="p-3 rounded-2xl bg-white border border-slate-100 text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2.5 text-[9px] font-black uppercase tracking-tight active:scale-95">
-                        <Copy size={15} className="text-slate-400" /> <span className="hidden md:inline">Copiar Enlace</span>
+                <div className="flex items-center gap-3">
+                    <button onClick={copyPublicLink} className="p-4 rounded-2xl bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-all shadow-sm flex items-center gap-2.5 text-[9px] font-black uppercase tracking-widest active:scale-95 group">
+                        <Copy size={16} className="text-slate-500 group-hover:text-emerald-400 transition-colors" /> <span className="hidden md:inline">Copiar Enlace</span>
                     </button>
-                    <button onClick={openPublicPage} className="p-3 rounded-2xl bg-white border border-slate-100 text-slate-600 hover:border-slate-300 hover:bg-slate-50 transition-all shadow-sm flex items-center gap-2.5 text-[9px] font-black uppercase tracking-tight active:scale-95">
-                        <ExternalLink size={15} className="text-slate-400" /> <span className="hidden md:inline">Página Pública</span>
+                    <button onClick={openPublicPage} className="p-4 rounded-2xl bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-all shadow-sm flex items-center gap-2.5 text-[9px] font-black uppercase tracking-widest active:scale-95 group">
+                        <ExternalLink size={16} className="text-slate-500 group-hover:text-emerald-400 transition-colors" /> <span className="hidden md:inline">Página Pública</span>
                     </button>
-                    <button onClick={exportPDF} className="p-3 px-5 rounded-2xl bg-emerald-500 text-white border border-emerald-400 hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2.5 text-[9px] font-black uppercase tracking-widest active:scale-95">
-                        <FileText size={15} /> <span>Reporte PDF</span>
+                    <button onClick={exportPDF} className="p-4 px-8 rounded-2xl bg-emerald-500 text-slate-950 border border-emerald-400 hover:bg-emerald-400 transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] flex items-center gap-3 text-[10px] font-black uppercase tracking-widest active:scale-95">
+                        <FileText size={18} /> <span>Exportar PDF</span>
                     </button>
                 </div>
             </div>
@@ -317,21 +321,37 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                 </div>
                             </div>
 
-                            {/* Stats & Quick Preview */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {/* Stats & Costs Summary */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                 <div className="bg-white/40 p-8 rounded-[2.5rem] border border-white shadow-xl">
-                                    <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2"><Eye size={16} /> Resumen de Repuestos</h4>
+                                    <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2"><Package size={16} /> Repuestos</h4>
                                     <div className="flex items-end justify-between font-black">
                                         <div className="space-y-1">
-                                            <p className="text-3xl tracking-tighter">${subtotalParts.toLocaleString()}</p>
-                                            <p className="text-[9px] text-slate-400 uppercase italic">Inversión en materiales</p>
+                                            <p className="text-3xl tracking-tighter text-slate-400 font-medium">${subtotalParts.toLocaleString()}</p>
+                                            <p className="text-[9px] text-slate-400 uppercase italic">Materiales</p>
                                         </div>
-                                        <button onClick={() => setActiveSection('parts')} className="p-3 bg-slate-900 text-white rounded-xl hover:scale-105 transition-all shadow-lg active:scale-95">
-                                            <Plus size={16} />
-                                        </button>
                                     </div>
                                 </div>
-                                <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden group">
+                                <div className="bg-white/40 p-8 rounded-[2.5rem] border border-white shadow-xl">
+                                    <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2"><Wrench size={16} /> Mano de Obra</h4>
+                                    <div className="flex items-end justify-between font-black">
+                                        <div className="space-y-1">
+                                            <p className="text-3xl tracking-tighter text-slate-400 font-medium">${(data.laborPrice || 0).toLocaleString()}</p>
+                                            <p className="text-[9px] text-slate-400 uppercase italic">Servicios técnicos</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="bg-emerald-500 p-8 rounded-[2.5rem] border border-emerald-400 text-white shadow-2xl shadow-emerald-500/20">
+                                    <h4 className="text-[10px] font-black text-white/50 uppercase tracking-widest mb-6 flex items-center gap-2"><Zap size={16} /> Total Presupuesto</h4>
+                                    <div className="flex items-end justify-between font-black">
+                                        <div className="space-y-1">
+                                            <p className="text-3xl tracking-tighter font-black">${(subtotalParts + (data.laborPrice || 0)).toLocaleString()}</p>
+                                            <p className="text-[9px] text-white/50 uppercase italic tracking-widest">Total acumulado</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden group md:col-span-3">
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/20 rounded-full blur-[60px] group-hover:bg-emerald-500/30 transition-all" />
                                     <div className="relative">
                                         <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Visibilidad para el Cliente</p>

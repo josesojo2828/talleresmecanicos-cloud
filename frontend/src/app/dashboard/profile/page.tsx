@@ -70,9 +70,9 @@ export default function ProfilePage() {
                     <InternalRecords 
                         title="Publicaciones que me gustan" 
                         records={(data?.forumLikes || []).map((l: any) => ({
-                            id: l.forumPost?.id,
-                            title: l.forumPost?.title || "Publicación",
-                            subtitle: "Likeado el " + new Date(l.createdAt).toLocaleDateString(),
+                            id: l.post?.id,
+                            title: l.post?.title || "Publicación",
+                            subtitle: "Likeado el " + new Date(l.createdAt || Date.now()).toLocaleDateString(),
                             slug: 'forum-post'
                         }))}
                         icon={<HeartFull size={16} fill="currentColor" />}
@@ -85,9 +85,9 @@ export default function ProfilePage() {
                     <InternalRecords 
                         title="Mis Comentarios" 
                         records={(data?.forumComments || []).map((c: any) => ({
-                            id: c.forumPost?.id || c.id,
+                            id: c.post?.id || c.id,
                             title: c.content?.substring(0, 60),
-                            subtitle: "Publicación: " + (c.forumPost?.title || 'General'),
+                            subtitle: "Publicación: " + (c.post?.title || 'General'),
                             slug: 'forum-post'
                         }))}
                         icon={<MessageSquare size={16} />}

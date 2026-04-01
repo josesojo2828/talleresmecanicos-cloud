@@ -263,7 +263,7 @@
         "register_vehicle": "Registrar Vehículo",
         "advertise": "Anunciar"
     },
-    "headers": {
+    "nav_legacy": {
         "name": "Nombre",
         "firstName": "Nombre",
         "lastName": "Apellido",
@@ -315,7 +315,8 @@
             "support-assignment": "Asignación de Soporte",
             "work": "Trabajo",
             "part": "Repuesto",
-            "part-category": "Categoría de Repuesto"
+            "part-category": "Categoría de Repuesto",
+            "appointment": "Cita"
         }
     },
     "ficha": {
@@ -708,7 +709,15 @@
         "date": "Fecha",
         "visible": "Visible",
         "sos": "Prioridad SOS",
-        "phone": "Teléfono"
+        "phone": "Teléfono",
+        "client": "Cliente",
+        "email": "Email",
+        "actions": "Acciones",
+        "created_at": "Creado el",
+        "author": "Autor",
+        "work": "Trabajo",
+        "part": "Repuesto",
+        "moderated": "Moderado"
     },
     "work": {
         "title": "Órdenes de Trabajo",

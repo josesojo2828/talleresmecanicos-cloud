@@ -75,19 +75,21 @@ export default function Dashboard() {
                 {/* Métricas Globales */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
                     {[
-                        { label: "Talleres", value: stats.totalWorkshops || 0, icon: <Layout />, bg: "bg-emerald-50 text-emerald-600" },
-                        { label: "Usuarios", value: stats.totalUsers || 0, icon: <Users />, bg: "bg-emerald-100 text-emerald-700" },
-                        { label: "Servicios", value: stats.totalWorks || 0, icon: <Wrench />, bg: "bg-emerald-50 text-emerald-500" },
-                        { label: "Citas Gest.", value: stats.totalAppointments || 0, icon: <Calendar />, bg: "bg-emerald-50 text-emerald-400" },
-                        { label: "Países", value: stats.totalCountries || 0, icon: <MapPin />, bg: "bg-emerald-50 text-emerald-600" },
-                        { label: "Ciudades", value: stats.totalCities || 0, icon: <Activity />, bg: "bg-emerald-50 text-emerald-700" },
+                        { label: "Talleres", value: stats.totalWorkshops || 0, icon: <Layout />, bg: "bg-slate-950 text-emerald-400" },
+                        { label: "Usuarios", value: stats.totalUsers || 0, icon: <Users />, bg: "bg-slate-950 text-blue-400" },
+                        { label: "Servicios", value: stats.totalWorks || 0, icon: <Wrench />, bg: "bg-slate-950 text-emerald-500" },
+                        { label: "Citas Gest.", value: stats.totalAppointments || 0, icon: <Calendar />, bg: "bg-slate-950 text-amber-400" },
+                        { label: "Países", value: stats.totalCountries || 0, icon: <MapPin />, bg: "bg-slate-950 text-purple-400" },
+                        { label: "Ciudades", value: stats.totalCities || 0, icon: <Activity />, bg: "bg-slate-950 text-emerald-600" },
                     ].map((s, i) => (
-                        <div key={i} className="bg-white p-6 border border-gray-100 rounded-2xl shadow-sm">
-                            <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center mb-4", s.bg)}>
+                        <div key={i} className="bg-white p-6 border border-slate-100 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col items-center text-center">
+                            <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-slate-200 transition-transform group-hover:rotate-6", s.bg)}>
                                 {s.icon}
                             </div>
-                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">{s.label}</p>
-                            <p className="text-2xl font-black text-gray-900">{s.value}</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-4">{s.label}</p>
+                            <div className="px-5 py-2 bg-slate-950 rounded-xl shadow-inner border border-white/5">
+                                <p className="text-3xl font-black text-white tabular-nums tracking-tighter italic">{s.value}</p>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -204,21 +206,23 @@ export default function Dashboard() {
             {/* Módulos de Estadística */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
-                    { label: "Trabajos", value: workshop?._count?.works || 0, icon: <Wrench />, color: "text-emerald-600", bg: "bg-emerald-50" },
-                    { label: "Citas", value: workshop?._count?.appointments || 0, icon: <Calendar />, color: "text-blue-600", bg: "bg-blue-50" },
-                    { label: "Clientes", value: "0", icon: <Users />, color: "text-purple-600", bg: "bg-purple-50" },
-                    { label: "Ingresos", value: "$0", icon: <TrendingUp />, color: "text-amber-600", bg: "bg-amber-50" },
+                    { label: "Trabajos", value: workshop?._count?.works || 0, icon: <Wrench />, color: "text-emerald-400", bg: "bg-slate-900" },
+                    { label: "Citas", value: workshop?._count?.appointments || 0, icon: <Calendar />, color: "text-blue-400", bg: "bg-slate-900" },
+                    { label: "Clientes", value: "0", icon: <Users />, color: "text-purple-400", bg: "bg-slate-900" },
+                    { label: "Ingresos", value: "$0", icon: <TrendingUp />, color: "text-amber-400", bg: "bg-slate-900" },
                 ].map((stat, i) => (
-                    <div key={i} className="p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                        <div className="flex justify-between items-start">
-                            <div className={cn("p-3 rounded-xl", stat.bg, stat.color)}>
-                                {stat.icon}
-                            </div>
-                            <Activity size={16} className="text-gray-200" />
+                    <div key={i} className="p-8 bg-white border border-slate-100 rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-300 group relative overflow-hidden flex flex-col items-center text-center">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50/50 rounded-full translate-x-16 -translate-y-16 transition-transform group-hover:scale-110" />
+                        
+                        <div className={cn("p-5 rounded-[1.5rem] shadow-2xl relative transition-all group-hover:scale-110 group-hover:rotate-3", stat.bg, stat.color)}>
+                            {stat.icon}
                         </div>
-                        <div className="mt-4">
-                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{stat.label}</p>
-                            <p className="text-3xl font-black text-gray-900 mt-1">{stat.value}</p>
+                        
+                        <div className="mt-8 relative space-y-4">
+                            <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">{stat.label}</p>
+                            <div className="bg-slate-950 px-8 py-3 rounded-2xl shadow-2xl border border-white/5 transform group-hover:-translate-y-1 transition-transform">
+                                <p className="text-4xl font-black text-white tracking-tighter italic tabular-nums">{stat.value}</p>
+                            </div>
                         </div>
                     </div>
                 ))}

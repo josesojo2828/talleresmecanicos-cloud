@@ -128,31 +128,6 @@ export function PublicationDetail({ data, updateRecord, refresh }: PublicationDe
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Stats Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="bg-white/60 p-6 rounded-[2rem] border border-white shadow-lg flex flex-col items-center text-center gap-2 group hover:scale-105 transition-all">
-                                    <div className="w-10 h-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center">
-                                        <Eye size={20} />
-                                    </div>
-                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-2">{t('ficha.stats.views')}</p>
-                                    <p className="text-xl font-black text-slate-900 tabular-nums">1,240</p>
-                                </div>
-                                <div className="bg-white/60 p-6 rounded-[2rem] border border-white shadow-lg flex flex-col items-center text-center gap-2 group hover:scale-105 transition-all">
-                                    <div className="w-10 h-10 bg-rose-50 text-rose-500 rounded-xl flex items-center justify-center">
-                                        <Heart size={20} />
-                                    </div>
-                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-2">Reacciones</p>
-                                    <p className="text-xl font-black text-slate-900 tabular-nums">48</p>
-                                </div>
-                                <div className="bg-white/60 p-6 rounded-[2rem] border border-white shadow-lg flex flex-col items-center text-center gap-2 group hover:scale-105 transition-all">
-                                    <div className="w-10 h-10 bg-purple-50 text-purple-500 rounded-xl flex items-center justify-center">
-                                        <MessageSquare size={20} />
-                                    </div>
-                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-2">Comentarios</p>
-                                    <p className="text-xl font-black text-slate-900 tabular-nums">12</p>
-                                </div>
-                            </div>
                         </div>
                     )}
 
@@ -212,35 +187,7 @@ export function PublicationDetail({ data, updateRecord, refresh }: PublicationDe
                                     <Star size={14} className="text-amber-400" />
                                     <p className="text-[10px] font-bold uppercase tracking-tight">Taller Verificado</p>
                                 </div>
-                                <button className="w-full py-3 bg-white text-slate-900 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-indigo-50 transition-all shadow-lg active:scale-95">
-                                    Ver Perfil del Taller
-                                </button>
                             </div>
-                        </div>
-                    </div>
-
-                    {/* Quick Tools */}
-                    <div className="bg-white/40 p-6 rounded-[2rem] border border-white shadow-xl space-y-4">
-                        <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest px-2">Herramientas Rápidas</h4>
-                        <div className="grid grid-cols-1 gap-2">
-                            <button className="flex items-center gap-3 p-4 rounded-2xl bg-white hover:bg-slate-50 transition-all text-left group">
-                                <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <Share2 size={14} />
-                                </div>
-                                <span className="text-[10px] font-black uppercase text-slate-600">Compartir</span>
-                            </button>
-                            <button className="flex items-center gap-3 p-4 rounded-2xl bg-white hover:bg-slate-50 transition-all text-left group">
-                                <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <Layers size={14} />
-                                </div>
-                                <span className="text-[10px] font-black uppercase text-slate-600">Duplicar</span>
-                            </button>
-                            <button className="flex items-center gap-3 p-4 rounded-2xl bg-white hover:bg-slate-50 transition-all text-left group">
-                                <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <Info size={14} />
-                                </div>
-                                <span className="text-[10px] font-black uppercase text-slate-600">Ver Tutorial</span>
-                            </button>
                         </div>
                     </div>
                 </div>

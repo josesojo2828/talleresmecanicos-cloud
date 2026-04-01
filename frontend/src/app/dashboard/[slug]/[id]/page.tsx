@@ -26,6 +26,8 @@ import { CityDetail } from '@/features/dashboard/components/city/CityDetail';
 
 const EmbeddedCrud = ({ slug, initialFilters, title }: { slug: string, initialFilters?: Record<string, any>, title: string }) => {
     const crud = useCrud(slug);
+    const { page, setPage, total, take } = crud;
+    
     return (
         <div className="space-y-4">
             <header className="flex items-center gap-2.5 px-6">
@@ -40,6 +42,10 @@ const EmbeddedCrud = ({ slug, initialFilters, title }: { slug: string, initialFi
                     embedded
                     hideHeader
                     hideFilters
+                    page={page}
+                    setPage={setPage}
+                    total={total}
+                    take={take}
                 />
             </div>
         </div>
@@ -147,8 +153,8 @@ export default function RecordDetailPage() {
 
     return (
         <FichaLayout
-            title={data.name || data.title || `${data.firstName} ${data.lastName}`}
-            subtitle={t('ficha.entity_type', { slug: t(`dashboard.detail.${slug}`) })}
+            title={slug === 'appointment' && data.client ? `${data.client.firstName} ${data.client.lastName}` : (data.name || data.title || `${data.firstName || ''} ${data.lastName || ''}`.trim() || t('ficha.detail.module_prefix'))}
+            subtitle={t('ficha.entity_type', { slug: t(`dashboard.detail.${slug}`, { defaultValue: slug }) })}
             icon={slug === 'country' ? <Globe /> : slug === 'user' ? <Users /> : <Database />}
             createdAt={data.createdAt}
             updatedAt={data.updatedAt}

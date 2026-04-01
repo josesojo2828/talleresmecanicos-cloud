@@ -15,6 +15,16 @@ export const IDefaultUserInclude: IUserIncludeType = {
     profile: true,
     workshop: true,
     supportAssignments: true,
+    forumLikes: {
+        include: {
+            post: true
+        }
+    },
+    forumComments: {
+        include: {
+            post: true
+        }
+    },
     _count: {
         select: {
             forumPosts: true,

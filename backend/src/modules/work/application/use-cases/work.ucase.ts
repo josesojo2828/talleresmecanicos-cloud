@@ -17,7 +17,7 @@ export class WorkUCase extends WorkModel {
     }
 
     async create(data: ICreateWorkDto) {
-        const { workshopId, clientId, title, description, images, clientName, clientPhone, vehicleLicensePlate } = data;
+        const { workshopId, clientId, title, description, images, clientName, clientPhone, vehicleLicensePlate, laborPrice } = data;
 
         const body: any = {
             title,
@@ -25,7 +25,8 @@ export class WorkUCase extends WorkModel {
             clientName,
             clientPhone,
             vehicleLicensePlate,
-            images: images || [],
+            laborPrice: laborPrice ? Number(laborPrice) : 0,
+            images: (images || []).filter(img => typeof img === 'string'),
             publicId: this.generatePublicId(),
             workshop: { connect: { id: workshopId } },
         };
@@ -43,16 +44,20 @@ export class WorkUCase extends WorkModel {
     async update(id: string, data: IUpdateWorkDto, user: any) {
         await this.findOne(id, user); // Permissions check
         
-        const { title, description, status, images, clientName, clientPhone, vehicleLicensePlate } = data;
+        const { title, description, status, images, clientName, clientPhone, vehicleLicensePlate, laborPrice } = data;
         const body: any = {};
         
         if (title) body.title = title;
         if (description !== undefined) body.description = description;
         if (status) body.status = status;
-        if (images) body.images = images;
         if (clientName !== undefined) body.clientName = clientName;
         if (clientPhone !== undefined) body.clientPhone = clientPhone;
         if (vehicleLicensePlate !== undefined) body.vehicleLicensePlate = vehicleLicensePlate;
+        if (laborPrice !== undefined) body.laborPrice = Number(laborPrice);
+        
+        if (images) {
+            body.images = (images as any[]).filter(img => typeof img === 'string');
+        }
 
         return {
             message: 'success.update',

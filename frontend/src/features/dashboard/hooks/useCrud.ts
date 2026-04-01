@@ -29,6 +29,11 @@ export const useCrud = (slug: string) => {
     const [debouncedSearch, setDebouncedSearch] = useState<string>("");
     const [filters, setFilters] = useState<Record<string, any>>({});
 
+    // Pagination state
+    const [page, setPage] = useState<number>(1);
+    const [take, setTake] = useState<number>(20);
+    const [total, setTotal] = useState<number>(0);
+
     // Debounce de 400ms para evitar peticiones por cada tecla
     useEffect(() => {
         const handler = setTimeout(() => setDebouncedSearch(search), 400);
@@ -44,18 +49,26 @@ export const useCrud = (slug: string) => {
                 search: debouncedSearch || undefined,
                 filters: Object.keys(filters).length > 0 ? JSON.stringify(filters) : undefined,
                 orderBy: orderBy.length > 0 ? JSON.stringify(orderBy.map(s => ({ [s.field]: s.order }))) : undefined,
-                take: 100,
-                skip: 0
+                take,
+                skip: (page - 1) * take
             };
 
             const response = await apiClient.get(`/${slug}`, { params });
             const result = response.data?.body || response.data?.data || response.data;
 
             // Ajustamos según la respuesta de tu persistence (getAll)
-            // Si getAll devuelve { data: [], meta: {} }
+            // Si getAll devuelve { data: [], meta: { total: 0 } }
             let finalData = Array.isArray(result.data)
                 ? result.data
                 : Array.isArray(result) ? result : [];
+
+            // Update total from meta if available
+            if (result.meta?.total !== undefined) {
+                setTotal(result.meta.total);
+            } else {
+                // If no meta, use result length but it's not ideal for pagination
+                setTotal(finalData.length);
+            }
 
             // Filter out admins from the list as per requirements
             if (slug === 'user') {
@@ -66,10 +79,11 @@ export const useCrud = (slug: string) => {
         } catch (error) {
             console.error(`[useCrud] Error fetching ${slug}:`, error);
             setData([]);
+            setTotal(0);
         } finally {
             setLoading(false);
         }
-    }, [slug, debouncedSearch, orderBy, filters]);
+    }, [slug, debouncedSearch, orderBy, filters, page, take]);
 
     // Cargar configuración y disparar reloadData
     useEffect(() => {
@@ -101,6 +115,7 @@ export const useCrud = (slug: string) => {
             if (existing.order === 'asc') return [{ field, order: 'desc' }];
             return [];
         });
+        setPage(1); // Reset page on sort change
     };
 
     const save = async (formData: Record<string, unknown>, id?: string | number): Promise<{ success: boolean; error?: Error }> => {
@@ -114,7 +129,7 @@ export const useCrud = (slug: string) => {
             const entries = Object.entries(body);
             for (const [key, val] of entries) {
                 const isFile = val instanceof File || (val && typeof val === 'object' && 'name' in (val as any) && 'size' in (val as any));
-                const isFileArray = Array.isArray(val) && val.some(v => v instanceof File || (v && typeof v === 'object' && 'name' in (v as any)));
+                const isFileArray = Array.isArray(val) && val.some(v => v instanceof File || (v && typeof v === 'object' && 'name' in (val as any)));
 
                 if (isFile && !Array.isArray(val)) {
                     const fileData = new FormData();
@@ -170,5 +185,9 @@ export const useCrud = (slug: string) => {
         }
     };
 
-    return { config, data, loading, isMutating, save, orderBy, toggleSort, search, setSearch, remove, filters, setFilters };
+    return { 
+        config, data, loading, isMutating, save, orderBy, toggleSort, 
+        search, setSearch, remove, filters, setFilters,
+        page, setPage, take, setTake, total 
+    };
 };

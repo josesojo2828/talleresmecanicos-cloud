@@ -66,6 +66,12 @@ export const SimpleStats: React.FC<{ slug: string; data: any }> = ({ slug, data 
                     { label: t('dashboard.detail.forum-comment'), value: data.forumComments?.length || 0, icon: <MessageSquare size={24} />, color: 'blue' },
                     { label: 'Likes', value: data.forumLikes?.length || 0, icon: <Heart size={24} />, color: 'rose' },
                 ];
+            case 'appointment':
+                return [
+                    { label: t('headers.client'), value: data.client?.firstName || '...', icon: <Users size={24} />, color: 'blue' },
+                    { label: t('headers.status'), value: data.status, icon: <Activity size={24} />, color: 'emerald' },
+                    { label: t('headers.date'), value: new Date(data.dateTime).toLocaleDateString(), icon: <TrendingUp size={24} />, color: 'amber' },
+                ];
             default:
                 return [
                     { label: t('ficha.stats.appearances'), value: '0', icon: <TrendingUp size={24} />, color: 'emerald' },

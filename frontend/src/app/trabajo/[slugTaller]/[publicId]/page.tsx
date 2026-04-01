@@ -6,7 +6,7 @@ import {
     Wrench, Clock,
     Images, FileText, MapPin,
     ShieldCheck, AlertTriangle, Car,
-    Check, PackageCheck
+    Check, PackageCheck, Zap, Package
 } from "lucide-react";
 import axios from "axios";
 import { cn } from "@/utils/cn";
@@ -211,7 +211,57 @@ export default function PublicWorkPage() {
                             )}
                         </section>
 
-                        {/* 3. Status History Log (Simple Mock if not in DB yet, but let's use the description) */}
+                        {/* 3. Budget & Total Summary (Transparency Step) */}
+                        <section className="bg-white rounded-[3rem] p-10 md:p-14 shadow-2xl shadow-slate-200/50 border border-white">
+                            <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-10 flex items-center gap-3">
+                                <Zap size={16} className="text-amber-500" /> Presupuesto Detallado
+                            </h2>
+
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-slate-400">
+                                            <Package size={18} />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Repuestos y Materiales</p>
+                                            <p className="text-xs font-black text-slate-600 uppercase tracking-tight">Total de insumos utilizados</p>
+                                        </div>
+                                    </div>
+                                    <span className="text-lg font-black text-slate-900">${(work.partsUsed?.reduce((acc: number, p: any) => acc + (p.quantity * (p.part.price || 0)), 0) || 0).toLocaleString()}</span>
+                                </div>
+
+                                <div className="flex items-center justify-between p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-slate-400">
+                                            <Wrench size={18} />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Mano de Obra / Servicio</p>
+                                            <p className="text-xs font-black text-slate-600 uppercase tracking-tight">Diagnóstico y especialidad técnica</p>
+                                        </div>
+                                    </div>
+                                    <span className="text-lg font-black text-slate-900">${(work.laborPrice || 0).toLocaleString()}</span>
+                                </div>
+
+                                <div className="flex items-center justify-between p-8 bg-slate-900 rounded-[2.5rem] border border-slate-800 shadow-xl relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-[40px]" />
+                                    <div className="relative">
+                                        <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] mb-1 italic">Total a Pagar</p>
+                                        <h3 className="text-4xl font-black text-white uppercase tracking-tighter">
+                                            ${((work.partsUsed?.reduce((acc: number, p: any) => acc + (p.quantity * (p.part.price || 0)), 0) || 0) + (work.laborPrice || 0)).toLocaleString()}
+                                        </h3>
+                                    </div>
+                                    <div className="relative text-right">
+                                        <div className="px-4 py-2 bg-emerald-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20">
+                                            Verificar Pago
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* 4. Status History Log */}
                         <section className="bg-slate-900 rounded-[3rem] p-10 md:p-14 text-white shadow-2xl relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full translate-x-20 -translate-y-20" />
                             <h2 className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] mb-10 flex items-center gap-3 italic">
