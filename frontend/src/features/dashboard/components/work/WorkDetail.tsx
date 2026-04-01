@@ -247,14 +247,14 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                         </button>
                     </div>
 
-                    {/* Status Card */}
-                    <div className="bg-slate-900/5 p-8 rounded-[2rem] border border-white shadow-xl space-y-6">
-                        <header className="text-center space-y-1">
-                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Estado Actual</p>
-                            <div className={cn("mx-auto w-fit px-4 py-1.5 rounded-full text-[9px] font-black text-white uppercase tracking-widest shadow-sm flex items-center gap-2", currentStatus.color)}>
-                                {currentStatus.icon} {currentStatus.label}
-                            </div>
-                        </header>
+                            {/* Status Card */}
+                            <div className="bg-slate-900/5 p-8 rounded-[2rem] border border-white shadow-xl space-y-6">
+                                <header className="text-center space-y-1">
+                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">ESTADO ACTUAL</p>
+                                    <div className={cn("mx-auto w-fit px-4 py-1.5 rounded-full text-[9px] font-black text-white uppercase tracking-widest shadow-sm flex items-center gap-2", currentStatus.color)}>
+                                        {currentStatus.icon} {currentStatus.label}
+                                    </div>
+                                </header>
                         <div className="grid grid-cols-2 gap-2.5">
                             {statuses.map(s => (
                                 <button
@@ -316,10 +316,14 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                                 <Phone size={14} className="text-emerald-500" />
                                                 <span className="text-[11px] font-black uppercase tracking-tight">{data.clientPhone || 'Sin teléfono'}</span>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                                 {/* Live Evidence Preview for Mechanic */}
                                 <div className="bg-white/40 p-8 rounded-[2.5rem] border border-white shadow-xl md:col-span-2">
-                                    <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2"><Images size={16} /> Evidencias Actuales</h4>
+                                    <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-6 flex items-center gap-2"><Images size={16} /> EVIDENCIAS ACTUALES</h4>
                                     <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
                                         {data.images?.map((img: string, i: number) => (
                                             <div key={i} className="aspect-square rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative group">
@@ -341,10 +345,9 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        )}
 
-                    {activeSection === 'parts' && (
+                        {activeSection === 'parts' && (
                         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                             {/* Inventory Search & Controls */}
                             <div className="bg-white/40 p-8 rounded-[3rem] border border-white shadow-xl space-y-8">
