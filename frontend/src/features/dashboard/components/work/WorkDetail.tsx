@@ -158,9 +158,19 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
         const partsData = data.partsUsed?.map((p: any) => [
             p.part.name,
             p.quantity,
-            `$${p.part.price?.toLocaleString() || 0}`,
-            `$${(p.quantity * (p.part.price || 0)).toLocaleString()}`
+            `${currencySymbol} ${p.part.price?.toLocaleString() || 0}`,
+            `${currencySymbol} ${(p.quantity * (p.part.price || 0)).toLocaleString()}`
         ]) || [];
+
+        // Add Labor to table data
+        if (data.laborPrice) {
+            partsData.push([
+                'MONO DE OBRA / SERVICIOS',
+                '1',
+                `${currencySymbol} ${data.laborPrice.toLocaleString()}`,
+                `${currencySymbol} ${data.laborPrice.toLocaleString()}`
+            ]);
+        }
 
         autoTable(doc, {
             startY: 145,
@@ -169,10 +179,10 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
             theme: 'grid',
             headStyles: { fillColor: [15, 23, 42], textColor: 255 },
             foot: [[
-                'TOTAL REPUESTOS',
+                'INVERSIÓN TOTAL',
                 '',
                 '',
-                `$${data.partsUsed?.reduce((acc: number, p: any) => acc + (p.quantity * (p.part.price || 0)), 0).toLocaleString()}`
+                `${currencySymbol} ${totalWork.toLocaleString()}`
             ]],
             footStyles: { fillColor: [240, 240, 240], textColor: 0, fontStyle: 'bold' }
         });
@@ -185,8 +195,24 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
     };
 
     const subtotalParts = useMemo(() => {
-        return data.partsUsed?.reduce((acc: number, p: any) => acc + (p.quantity * (p.part.price || 0)), 0) || 0;
+        return data.partsUsed?.reduce((acc: number, p: any) => acc + (p.quantity * (p.part?.price || 0)), 0) || 0;
     }, [data.partsUsed]);
+
+    const totalWork = useMemo(() => {
+        return subtotalParts + (data.laborPrice || 0);
+    }, [subtotalParts, data.laborPrice]);
+
+    const currencySymbol = useMemo(() => {
+        const c = data.currency || 'USD';
+        const symbols: Record<string, string> = {
+            'USD': '$',
+            'COP': 'COP$',
+            'ARS': 'ARS$',
+            'MXN': 'MXN$',
+            'JPY': '¥'
+        };
+        return symbols[c] || '$';
+    }, [data.currency]);
 
     const groupedParts = useMemo(() => {
         const groups: Record<string, any[]> = {};
@@ -295,7 +321,7 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                     </div>
                                     <p className="text-sm text-slate-500 font-medium max-w-2xl leading-relaxed bg-white/40 p-4 rounded-2xl border border-white/50">{data.description || 'Sin descripción detallada del trabajo.'}</p>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-10 border-t border-slate-100">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-10 border-t border-slate-100">
                                         <div className="p-4 bg-slate-50/50 rounded-2xl">
                                             <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Cliente</p>
                                             <div className="flex items-center gap-2 text-slate-900">
@@ -319,6 +345,13 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                                 <span className="text-[11px] font-black uppercase tracking-tight">
                                                     {data.clientPhone || data.client?.phone || t('status.waiting') }
                                                 </span>
+                                            </div>
+                                        </div>
+                                        <div className="p-4 bg-slate-900 rounded-2xl">
+                                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Inversión Actual</p>
+                                            <div className="flex items-center gap-2 text-white">
+                                                <Zap size={14} className="text-emerald-500" />
+                                                <span className="text-[14px] font-black uppercase tracking-tight">{currencySymbol} {totalWork.toLocaleString()}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -498,11 +531,11 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                                             </div>
                                                             <div>
                                                                 <p className="text-xs font-black text-slate-900 uppercase leading-none mb-1">{item.part.name}</p>
-                                                                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">${item.part.price?.toLocaleString() || 0} c/u</p>
+                                                                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{currencySymbol} {item.part.price?.toLocaleString() || 0} c/u</p>
                                                             </div>
                                                         </div>
                                                         <div className="flex items-center gap-4">
-                                                            <p className="text-[11px] font-black text-slate-900">${(item.quantity * (item.part.price || 0)).toLocaleString()}</p>
+                                                            <p className="text-[11px] font-black text-slate-900">{currencySymbol} {(item.quantity * (item.part.price || 0)).toLocaleString()}</p>
                                                             <button onClick={() => handleRemovePart(item.partId)} className="w-9 h-9 rounded-xl bg-rose-50 text-rose-500 opacity-0 group-hover:opacity-100 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-sm">
                                                                 <Trash2 size={16} />
                                                             </button>
@@ -522,17 +555,29 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                         </div>
                                     )}
 
-                                    {data.partsUsed?.length > 0 && (
-                                        <div className="pt-8 border-t border-slate-100 flex items-end justify-between px-6">
+                                    <div className="pt-8 border-t border-slate-100 px-6 space-y-3">
+                                        {data.laborPrice > 0 && (
+                                             <div className="flex justify-between items-center text-slate-400">
+                                                 <span className="text-[10px] font-black uppercase tracking-widest">{t('headers.price_labor')}</span>
+                                                 <span className="text-sm font-bold font-mono">{currencySymbol} {data.laborPrice.toLocaleString()}</span>
+                                             </div>
+                                        )}
+                                        {data.partsUsed?.length > 0 && (
+                                             <div className="flex justify-between items-center text-slate-400">
+                                                 <span className="text-[10px] font-black uppercase tracking-widest">SUBTOTAL REPUESTOS</span>
+                                                 <span className="text-sm font-bold font-mono">{currencySymbol} {subtotalParts.toLocaleString()}</span>
+                                             </div>
+                                        )}
+                                        <div className="flex items-end justify-between pt-4 border-t border-slate-50">
                                             <div className="space-y-1">
                                                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Inversión Total</p>
-                                                <p className="text-3xl font-black text-slate-900 tracking-tighter">${subtotalParts.toLocaleString()}</p>
+                                                <p className="text-3xl font-black text-slate-900 tracking-tighter">{currencySymbol} {totalWork.toLocaleString()}</p>
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest italic opacity-40 italic">Iva Incluido en sistema genérico*</p>
                                             </div>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                             </div>
                         </div>

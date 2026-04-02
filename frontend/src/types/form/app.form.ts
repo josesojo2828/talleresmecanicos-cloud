@@ -130,7 +130,21 @@ export const WorkForm: FormStructure = {
         { name: 'clientName', label: 'headers.name', type: 'text', gridCols: 2 },
         { name: 'clientPhone', label: 'headers.phone', type: 'text', gridCols: 2 },
         { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text', gridCols: 2 },
-        { name: 'laborPrice', label: 'headers.price', type: 'number', gridCols: 2 },
+        { name: 'laborPrice', label: 'headers.price_labor', type: 'number', gridCols: 1 },
+        {
+            name: 'currency',
+            label: 'currency.label',
+            type: 'select',
+            options: [
+                { label: 'currency.usd', value: 'USD' },
+                { label: 'currency.cop', value: 'COP' },
+                { label: 'currency.ars', value: 'ARS' },
+                { label: 'currency.mxn', value: 'MXN' },
+                { label: 'currency.jpy', value: 'JPY' }
+            ],
+            defaultValue: 'USD',
+            gridCols: 1
+        },
         { 
             name: 'status', 
             label: 'headers.status', 
@@ -152,7 +166,21 @@ export const PartForm: FormStructure = {
     fields: [
         { name: 'name', label: 'headers.name', type: 'text', validation: { required: true } },
         { name: 'sku', label: 'headers.sku', type: 'text', gridCols: 2 },
-        { name: 'price', label: 'headers.price', type: 'number', gridCols: 2 },
+        { name: 'price', label: 'headers.price', type: 'number', gridCols: 1 },
+        {
+            name: 'currency',
+            label: 'currency.label',
+            type: 'select',
+            options: [
+                { label: 'currency.usd', value: 'USD' },
+                { label: 'currency.cop', value: 'COP' },
+                { label: 'currency.ars', value: 'ARS' },
+                { label: 'currency.mxn', value: 'MXN' },
+                { label: 'currency.jpy', value: 'JPY' }
+            ],
+            defaultValue: 'USD',
+            gridCols: 1
+        },
         { name: 'quantity', label: 'headers.quantity', type: 'number', validation: { required: true }, defaultValue: 0 },
         { 
             name: 'categoryId', 

@@ -726,5 +726,13 @@
     },
     "update": {
         "update": "Actualizar"
+    },
+    "currency": {
+        "label": "Moneda",
+        "usd": "Dólar (USD)",
+        "cop": "Peso Colombiano (COP)",
+        "ars": "Peso Argentino (ARS)",
+        "mxn": "Peso Mexicano (MXN)",
+        "jpy": "Yen (JPY)"
     }
 }
