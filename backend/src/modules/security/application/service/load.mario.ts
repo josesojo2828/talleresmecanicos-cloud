@@ -96,10 +96,10 @@ export class LoadMarioService {
         });
 
         const partsData = [
-            { name: 'Filtro de Aceite Sintético', sku: 'MOT-001', price: 15.50, quantity: 50, categoryId: catMotor.id },
-            { name: 'Bujías de Iridio (Set 4)', sku: 'MOT-002', price: 45.00, quantity: 20, categoryId: catMotor.id },
-            { name: 'Kit de Distribución', sku: 'MOT-003', price: 120.00, quantity: 5, categoryId: catMotor.id },
-            { name: 'Bomba de Agua', sku: 'MOT-004', price: 85.00, quantity: 8, categoryId: catMotor.id }
+            { name: 'Filtro de Aceite Sintético', sku: 'MOT-001', price: 15.50, quantity: 50, categoryId: catMotor.id, currency: 'USD' },
+            { name: 'Bujías de Iridio (Set 4)', sku: 'MOT-002', price: 45.00, quantity: 20, categoryId: catMotor.id, currency: 'USD' },
+            { name: 'Kit de Distribución', sku: 'MOT-003', price: 120.00, quantity: 5, categoryId: catMotor.id, currency: 'USD' },
+            { name: 'Bomba de Agua', sku: 'MOT-004', price: 85.00, quantity: 8, categoryId: catMotor.id, currency: 'USD' }
         ];
 
         for (const p of partsData) {
@@ -156,7 +156,9 @@ export class LoadMarioService {
                 workshopId: workshop.id,
                 clientName: 'Juan Pérez',
                 clientPhone: '5511223344',
-                vehicleLicensePlate: 'MEX-123-A'
+                vehicleLicensePlate: 'MEX-123-A',
+                laborPrice: 250.00,
+                currency: 'USD'
             },
             {
                 publicId: 'MARIO-W-002',
@@ -166,7 +168,9 @@ export class LoadMarioService {
                 workshopId: workshop.id,
                 clientName: 'María García',
                 clientPhone: '5599887766',
-                vehicleLicensePlate: 'CDMX-998-Z'
+                vehicleLicensePlate: 'CDMX-998-Z',
+                laborPrice: 120.00,
+                currency: 'USD'
             },
             {
                 publicId: 'MARIO-W-003',
@@ -175,7 +179,9 @@ export class LoadMarioService {
                 status: WorkStatus.IN_PROGRESS,
                 workshopId: workshop.id,
                 clientName: 'Carlos Tapia',
-                vehicleLicensePlate: 'MEX-000-B'
+                vehicleLicensePlate: 'MEX-000-B',
+                laborPrice: 85.00,
+                currency: 'USD'
             }
         ];
 
