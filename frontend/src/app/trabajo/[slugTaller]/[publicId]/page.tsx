@@ -83,6 +83,21 @@ export default function PublicWorkPage() {
     // Determine current status index for the Stepper
     const currentStatusIndex = STATUS_STEPS.findIndex(step => step.id === work.status);
 
+    const currencySymbol = (() => {
+        const c = work.currency || 'USD';
+        const symbols: Record<string, string> = {
+            'USD': '$',
+            'COP': 'COP$',
+            'ARS': 'ARS$',
+            'MXN': 'MXN$',
+            'JPY': '¥'
+        };
+        return symbols[c] || '$';
+    })();
+
+    const partsSubtotal = work.partsUsed?.reduce((acc: number, p: any) => acc + (p.quantity * (p.part?.price || 0)), 0) || 0;
+    const totalCost = partsSubtotal + (work.laborPrice || 0);
+
     return (
         <div className="min-h-screen bg-slate-50 selection:bg-emerald-500 selection:text-white">
             <Header />
@@ -216,7 +231,7 @@ export default function PublicWorkPage() {
                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">MATERIALES</p>
                                         </div>
                                     </div>
-                                    <span className="text-lg font-black text-slate-900 font-mono italic">${(work.partsUsed?.reduce((acc: number, p: any) => acc + (p.quantity * (p.part.price || 0)), 0) || 0).toLocaleString()}</span>
+                                    <span className="text-lg font-black text-slate-900 font-mono italic">{currencySymbol} {partsSubtotal.toLocaleString()}</span>
                                 </div>
 
                                 <div className="flex items-center justify-between p-6 bg-slate-50 rounded-2xl border border-slate-100">
@@ -228,7 +243,7 @@ export default function PublicWorkPage() {
                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">MANO DE OBRA</p>
                                         </div>
                                     </div>
-                                    <span className="text-lg font-black text-slate-900 font-mono italic">${(work.laborPrice || 0).toLocaleString()}</span>
+                                    <span className="text-lg font-black text-slate-900 font-mono italic">{currencySymbol} {(work.laborPrice || 0).toLocaleString()}</span>
                                 </div>
 
                                 <div className="flex items-center justify-between p-8 bg-slate-950 rounded-[2.5rem] border border-slate-800 shadow-xl relative overflow-hidden group">
@@ -236,7 +251,7 @@ export default function PublicWorkPage() {
                                     <div className="relative">
                                         <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] mb-1 italic">TOTAL FINAL</p>
                                         <h3 className="text-4xl font-black text-white uppercase tracking-tighter italic">
-                                            ${((work.partsUsed?.reduce((acc: number, p: any) => acc + (p.quantity * (p.part.price || 0)), 0) || 0) + (work.laborPrice || 0)).toLocaleString()}
+                                            {currencySymbol} {totalCost.toLocaleString()}
                                         </h3>
                                     </div>
                                     <div className="relative text-right">

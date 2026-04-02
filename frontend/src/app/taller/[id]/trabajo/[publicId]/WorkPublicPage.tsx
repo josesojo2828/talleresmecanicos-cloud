@@ -22,6 +22,8 @@ interface WorkDetail {
     images: string[];
     createdAt: string;
     updatedAt?: string;
+    laborPrice?: number;
+    currency?: string;
     workshop: {
         name: string;
         address: string;
@@ -43,6 +45,19 @@ export default function WorkPublicPage() {
     const [work, setWork] = useState<WorkDetail | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const currencySymbol = (() => {
+        if (!work) return '$';
+        const c = work.currency || 'USD';
+        const symbols: Record<string, string> = {
+            'USD': '$',
+            'COP': 'COP$',
+            'ARS': 'ARS$',
+            'MXN': 'MXN$',
+            'JPY': '¥'
+        };
+        return symbols[c] || '$';
+    })();
 
     useEffect(() => {
         const fetchWork = async () => {
@@ -242,10 +257,25 @@ export default function WorkPublicPage() {
                                         <p className="text-xs font-black text-slate-900 uppercase tracking-tighter">{item.part.name}</p>
                                     </div>
                                     {item.part.price && (
-                                        <p className="text-xs font-black text-slate-500 font-mono italic">${item.part.price.toLocaleString()}</p>
+                                        <p className="text-xs font-black text-slate-500 font-mono italic">{currencySymbol} {item.part.price.toLocaleString()}</p>
                                     )}
                                 </div>
                             ))}
+
+                            <div className="pt-8 border-t border-slate-100 space-y-3">
+                                {work.laborPrice > 0 && (
+                                    <div className="flex justify-between items-center text-slate-400">
+                                        <span className="text-[10px] font-black uppercase tracking-widest italic">MANO DE OBRA</span>
+                                        <span className="text-sm font-bold font-mono">{currencySymbol} {work.laborPrice.toLocaleString()}</span>
+                                    </div>
+                                )}
+                                <div className="flex justify-between items-center pt-4 border-t border-slate-50">
+                                    <span className="text-sm font-black text-slate-900 uppercase tracking-widest italic">TOTAL INVERSIÓN</span>
+                                    <span className="text-2xl font-black text-slate-900 italic font-mono">
+                                        {currencySymbol} {( (work.partsUsed?.reduce((acc: number, p: any) => acc + (p.quantity * (p.part?.price || 0)), 0) || 0) + (work.laborPrice || 0) ).toLocaleString()}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
