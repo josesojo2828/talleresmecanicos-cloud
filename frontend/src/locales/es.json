@@ -746,5 +746,11 @@
         "running": "En Ejecución",
         "success": "Exitoso",
         "error": "Error"
+    },
+    "community": {
+        "technicalQuery": "CONSULTA TÉCNICA",
+        "emptyState": "Sé el primero en compartir con la comunidad",
+        "readMore": "Leer más",
+        "views": "Vistas"
     }
 }

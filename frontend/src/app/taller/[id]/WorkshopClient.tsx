@@ -63,7 +63,22 @@ export default function WorkshopClient() {
 
     // Helper: Parse schedule if it's JSON
     const formatSchedule = (hours: any) => {
-        if (!hours) return 'Lun a Vie 08:00 - 18:00';
+        if (!hours) return 'Consulte disponibilidad';
+
+        const formatTime = (time: string) => {
+            if (!time) return '';
+            // If it already has am/pm, return it
+            if (time.toLowerCase().includes('a.m.') || time.toLowerCase().includes('p.m.')) return time;
+            if (time.toLowerCase().includes('am') || time.toLowerCase().includes('pm')) return time;
+
+            // Simple 24h to 12h conversion
+            const [hours, minutes] = time.split(':');
+            let h = parseInt(hours);
+            const m = minutes || '00';
+            const suffix = h >= 12 ? 'p.m.' : 'a.m.';
+            h = h % 12 || 12;
+            return `${h}:${m} ${suffix}`;
+        };
 
         let parsed: Record<string, any> = {};
         if (typeof hours === 'string') {
@@ -97,7 +112,7 @@ export default function WorkshopClient() {
 
         activeDays.forEach((day, index) => {
             const dayData = parsed[day.key];
-            const timeStr = `${dayData.open} - ${dayData.close}`;
+            const timeStr = `${formatTime(dayData.open)} – ${formatTime(dayData.close)}`;
             const currentWeekPos = DAYS_ORDER.findIndex(d => d.key === day.key);
             const prevDayInActive = index > 0 ? activeDays[index - 1] : null;
             const prevWeekPos = prevDayInActive ? DAYS_ORDER.findIndex(d => d.key === prevDayInActive.key) : -1;
@@ -112,7 +127,7 @@ export default function WorkshopClient() {
 
         return groups.map(g => {
             if (g.start === g.end) return `${g.start}: ${g.time}`;
-            return `${g.start} a ${g.end}: ${g.time}`;
+            return `${g.start} – ${g.end}: ${g.time}`;
         }).join('\n');
     };
 
@@ -330,12 +345,6 @@ export default function WorkshopClient() {
                                     </div>
                                 )}
                                 
-                                <div className="absolute top-10 left-10 flex gap-4">
-                                    <div className="px-5 py-2.5 bg-black/40 backdrop-blur-3xl rounded-2xl border border-white/10 text-white flex items-center gap-3">
-                                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
-                                        <span className="text-[9px] font-black uppercase tracking-[0.2em]">LIVE_WORKSPACE</span>
-                                    </div>
-                                </div>
 
                                 <div className="absolute bottom-10 left-10 right-10 flex justify-between items-center bg-white/10 backdrop-blur-3xl rounded-[24px] p-6 border border-white/20">
                                     <div className="flex flex-col">

@@ -49,31 +49,34 @@ export const CommunityHighlights = () => {
 
     // removed early return to allow showing the section even if empty
 
+    const t = useTranslations();
+
     return (
         <section className="py-32 bg-slate-900 relative z-10 overflow-hidden">
-            {/* Structural Background Pattern */}
-            <div className="absolute inset-0 opacity-[0.05] pointer-events-none"
-                style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
-
-            <div className="max-w-7xl mx-auto px-6 relative z-10">
-                
-                <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-                    <div className="max-w-xl space-y-6">
-                        <h2 className="text-white text-4xl md:text-6xl font-black tracking-tighter leading-none uppercase italic">
-                            TENDENCIAS EN <br /> <span className="text-emerald-500 not-italic">LA COMUNIDAD.</span>
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+            
+            <div className="container mx-auto px-6 relative">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                            <div className="w-12 h-[2px] bg-emerald-500"></div>
+                            <span className="text-emerald-500 text-[10px] font-black uppercase tracking-[0.4em]">COMUNIDAD // OPEN_SOURCE</span>
+                        </div>
+                        <h2 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.8] italic">
+                            Foro de <br />
+                            <span className="text-transparent border-text">Expertos</span>
                         </h2>
                     </div>
-
-                    <Link href="/comunidad" className="group">
-                        <button className="px-10 py-5 border border-white/20 bg-transparent text-white text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-slate-950 transition-all flex items-center gap-4">
-                            VER TODOS LOS TEMAS <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </button>
+                    
+                    <Link href="/comunidad" className="group flex items-center gap-4 bg-white/5 hover:bg-white text-white hover:text-slate-950 px-10 py-6 rounded-2xl border border-white/10 hover:border-white transition-all duration-500 h-fit">
+                        <span className="text-[10px] font-black uppercase tracking-widest">{t('action.view').toUpperCase()} TODOS</span>
+                        <ArrowRight className="group-hover:translate-x-2 transition-transform" size={18} />
                     </Link>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                     {loading ? (
-                        [1, 2, 3].map(i => (
+                        [...Array(3)].map((_, i) => (
                             <div key={i} className="bg-white border border-slate-100 h-80 animate-pulse" />
                         ))
                     ) : (
@@ -84,7 +87,7 @@ export const CommunityHighlights = () => {
                                         <div className="space-y-6">
                                             <div className="flex items-center justify-between">
                                                 <span className="text-emerald-500 text-[10px] font-black uppercase tracking-widest">
-                                                    {post.categories?.[0]?.name || "CONSULTA TÉCNICA"}
+                                                    {post.categories?.[0]?.name || t('community.technicalQuery')}
                                                 </span>
                                                 <div className="flex items-center gap-2 text-slate-300">
                                                     <Clock size={12} />
@@ -119,7 +122,7 @@ export const CommunityHighlights = () => {
                             ))
                         ) : (
                             <div className="col-span-3 py-20 text-center border border-white/10 rounded-2xl bg-white/5 backdrop-blur-sm">
-                                <p className="text-white/40 text-sm font-bold uppercase tracking-[0.2em]">Sé el primero en publicar en la comunidad</p>
+                                <p className="text-white/40 text-sm font-bold uppercase tracking-[0.2em]">{t('community.emptyState')}</p>
                             </div>
                         )
                     )}
