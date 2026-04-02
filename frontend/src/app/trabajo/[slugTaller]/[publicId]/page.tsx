@@ -346,7 +346,7 @@ export default function PublicWorkPage() {
                                     Al retirar tu vehículo, este historial quedará disponible para futuras consultas, protegiendo el valor de reventa de tu auto.
                                 </p>
                                 <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white border-none text-[9px] font-black p-6 rounded-2xl">
-                                    DESCUBRIR MÁS SOBRE RINDE+
+                                    DESCUBRIR MÁS SOBRE Talleres Mecánicos
                                 </Button>
                             </div>
                         </div>

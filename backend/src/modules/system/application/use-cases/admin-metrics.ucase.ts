@@ -5,6 +5,20 @@ import { PrismaService } from "src/config/prisma.service";
 export class AdminMetricsUCase {
     constructor(private readonly prisma: PrismaService) {}
 
+    async getPublicStats() {
+        const [workshops, publications, countries] = await Promise.all([
+            this.prisma.workshop.count({ where: { enabled: true, deletedAt: null } }),
+            this.prisma.publication.count({ where: { enabled: true, deletedAt: null } }),
+            this.prisma.country.count({ where: { enabled: true, deletedAt: null } })
+        ]);
+
+        return {
+            workshops: workshops || 0,
+            publications: publications || 0,
+            countries: countries || 0
+        };
+    }
+
     async getDashboardSummary() {
         const [
             totalWorkshops,
