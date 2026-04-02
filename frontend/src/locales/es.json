@@ -740,6 +740,11 @@
         "cancelled": "Cancelado",
         "open": "Abierto",
         "in_progress": "En Progreso",
-        "delivered": "Entregado"
+        "finished": "Finalizado",
+        "delivered": "Entregado",
+        "waiting": "En Espera",
+        "running": "En Ejecución",
+        "success": "Exitoso",
+        "error": "Error"
     }
 }

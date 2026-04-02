@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import apiClient from "@/utils/api/api.client";
+import { useTranslations } from "next-intl";
 import { Wrench, Users, TrendingUp, Calendar, ArrowRight, Plus, Package, Activity, ShieldCheck, Mail, Phone, MapPin, Layout } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
 import { Map } from "@/components/molecules/Map";
 
 export default function Dashboard() {
+    const t = useTranslations();
     const { user } = useAuthStore();
     const [workshop, setWorkshop] = useState<any>(null);
     const [adminStats, setAdminStats] = useState<any>(null);
@@ -145,23 +147,28 @@ export default function Dashboard() {
                             Últimos Trabajos
                         </h2>
                         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm divide-y divide-gray-50">
-                            {adminStats?.recentWorks?.map((wk: any) => (
-                                <div key={wk.id} className="p-5 flex items-center justify-between hover:bg-gray-50/50 transition-colors">
-                                    <div>
-                                        <p className="font-bold text-sm text-gray-900">{wk.title}</p>
-                                        <p className="text-[10px] text-gray-500 font-medium">Taller: <span className="font-bold">{wk.workshop?.name}</span></p>
+                            {adminStats?.recentWorks?.map((wk: any) => {
+                                const statusKey = wk.status.toLowerCase();
+                                return (
+                                    <div key={wk.id} className="p-5 flex items-center justify-between hover:bg-gray-50/50 transition-colors">
+                                        <div>
+                                            <p className="font-bold text-sm text-gray-900">{wk.title}</p>
+                                            <p className="text-[10px] text-gray-500 font-medium">Taller: <span className="font-bold">{wk.workshop?.name}</span></p>
+                                        </div>
+                                        <div className="text-right">
+                                            <span className={cn(
+                                                "text-[9px] font-bold px-3 py-1 rounded-full uppercase border",
+                                                statusKey === 'completed' || statusKey === 'finished' || statusKey === 'delivered' ? "bg-emerald-50 text-emerald-700 border-emerald-100" : 
+                                                statusKey === 'in_progress' ? "bg-blue-50 text-blue-700 border-blue-100" :
+                                                "bg-amber-50 text-amber-700 border-amber-100"
+                                            )}>
+                                                {t(`status.${statusKey}`)}
+                                            </span>
+                                            <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-tighter">{wk.publicId}</p>
+                                        </div>
                                     </div>
-                                    <div className="text-right">
-                                        <span className={cn(
-                                            "text-[9px] font-bold px-2 py-0.5 rounded-full uppercase",
-                                            wk.status === 'FINISHED' ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
-                                        )}>
-                                            {wk.status}
-                                        </span>
-                                        <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-tighter">{wk.publicId}</p>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
@@ -258,15 +265,19 @@ export default function Dashboard() {
                                                 </div>
                                             </td>
                                             <td className="px-6">
-                                                <div className={cn(
-                                                    "badge badge-sm font-bold uppercase text-[9px] py-3 px-3",
-                                                    work.status === 'COMPLETED' || work.status === 'FINISHED' ? "bg-green-100 text-green-700 border-green-200" :
-                                                        work.status === 'IN_PROGRESS' ? "bg-blue-100 text-blue-700 border-blue-200" :
-                                                            work.status === 'DELIVERED' ? "bg-emerald-100 text-emerald-700 border-emerald-200" :
-                                                                "bg-amber-100 text-amber-700 border-amber-200"
-                                                )}>
-                                                    {work.status}
-                                                </div>
+                                                {(() => {
+                                                    const statusKey = work.status.toLowerCase();
+                                                    return (
+                                                        <div className={cn(
+                                                            "badge badge-sm font-bold uppercase text-[9px] py-3 px-4 border shadow-sm",
+                                                            statusKey === 'completed' || statusKey === 'finished' || statusKey === 'delivered' ? "bg-emerald-50 text-emerald-700 border-emerald-100" :
+                                                                statusKey === 'in_progress' ? "bg-blue-50 text-blue-700 border-blue-100" :
+                                                                    "bg-amber-50 text-amber-700 border-amber-100"
+                                                        )}>
+                                                            {t(`status.${statusKey}`)}
+                                                        </div>
+                                                    );
+                                                })()}
                                             </td>
                                             <td className="px-6 text-right">
                                                 <Link href={`/dashboard/work/${work.id}`} className="text-xs font-black text-primary hover:text-primary-focus p-2 rounded-lg transition-all">

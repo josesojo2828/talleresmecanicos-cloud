@@ -47,7 +47,7 @@ export const CommunityHighlights = () => {
         fetchTopPosts();
     }, []);
 
-    if (!loading && posts.length === 0) return null;
+    // removed early return to allow showing the section even if empty
 
     return (
         <section className="py-32 bg-slate-900 relative z-10 overflow-hidden">
@@ -77,45 +77,51 @@ export const CommunityHighlights = () => {
                             <div key={i} className="bg-white border border-slate-100 h-80 animate-pulse" />
                         ))
                     ) : (
-                        posts.slice(0, 3).map((post) => (
-                            <Link href={`/comunidad/${post.id}`} key={post.id} className="block group">
-                                <article className="h-full bg-white border border-white/10 p-10 hover:border-emerald-500 transition-all duration-500 relative flex flex-col justify-between group">
-                                    <div className="space-y-6">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-emerald-500 text-[10px] font-black uppercase tracking-widest">
-                                                {post.categories?.[0]?.name || "CONSULTA TÉCNICA"}
-                                            </span>
-                                            <div className="flex items-center gap-2 text-slate-300">
-                                                <Clock size={12} />
-                                                <span className="text-[9px] font-black">{new Date(post.createdAt).toLocaleDateString()}</span>
+                        posts.length > 0 ? (
+                            posts.slice(0, 3).map((post) => (
+                                <Link href={`/comunidad/${post.id}`} key={post.id} className="block group">
+                                    <article className="h-full bg-white border border-white/10 p-10 hover:border-emerald-500 transition-all duration-500 relative flex flex-col justify-between group">
+                                        <div className="space-y-6">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-emerald-500 text-[10px] font-black uppercase tracking-widest">
+                                                    {post.categories?.[0]?.name || "CONSULTA TÉCNICA"}
+                                                </span>
+                                                <div className="flex items-center gap-2 text-slate-300">
+                                                    <Clock size={12} />
+                                                    <span className="text-[9px] font-black">{new Date(post.createdAt).toLocaleDateString()}</span>
+                                                </div>
                                             </div>
+                                            
+                                            <h3 className="text-2xl font-black text-slate-950 uppercase tracking-tighter leading-[1.1] italic">
+                                                {post.title}
+                                            </h3>
+                                            
+                                            <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 font-medium">
+                                                {post.content}
+                                            </p>
                                         </div>
-                                        
-                                        <h3 className="text-2xl font-black text-slate-950 uppercase tracking-tighter leading-[1.1] italic">
-                                            {post.title}
-                                        </h3>
-                                        
-                                        <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 font-medium">
-                                            {post.content}
-                                        </p>
-                                    </div>
 
-                                    <div className="pt-8 mt-8 border-t border-slate-50 flex items-center justify-between">
-                                        <div className="flex items-center gap-6">
-                                            <div className="flex items-center gap-2 text-slate-400">
-                                                <MessageSquare size={14} />
-                                                <span className="text-[10px] font-black">{post._count.comments}</span>
+                                        <div className="pt-8 mt-8 border-t border-slate-50 flex items-center justify-between">
+                                            <div className="flex items-center gap-6">
+                                                <div className="flex items-center gap-2 text-slate-400">
+                                                    <MessageSquare size={14} />
+                                                    <span className="text-[10px] font-black">{post._count.comments}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-slate-400">
+                                                    <Heart size={14} />
+                                                    <span className="text-[10px] font-black">{post._count.likes}</span>
+                                                </div>
                                             </div>
-                                            <div className="flex items-center gap-2 text-slate-400">
-                                                <Heart size={14} />
-                                                <span className="text-[10px] font-black">{post._count.likes}</span>
-                                            </div>
+                                            <ArrowRight className="text-emerald-500 group-hover:translate-x-1 transition-transform" size={16} />
                                         </div>
-                                        <ArrowRight className="text-emerald-500 group-hover:translate-x-1 transition-transform" size={16} />
-                                    </div>
-                                </article>
-                            </Link>
-                        ))
+                                    </article>
+                                </Link>
+                            ))
+                        ) : (
+                            <div className="col-span-3 py-20 text-center border border-white/10 rounded-2xl bg-white/5 backdrop-blur-sm">
+                                <p className="text-white/40 text-sm font-bold uppercase tracking-[0.2em]">Sé el primero en publicar en la comunidad</p>
+                            </div>
+                        )
                     )}
                 </div>
             </div>

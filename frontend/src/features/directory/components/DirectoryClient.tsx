@@ -442,11 +442,15 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
                         onClick={() => setShowCountryModal(true)}
                         className="relative group/country text-left"
                       >
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center">
                           {selectedCountry?.flag ? (
-                            <img src={selectedCountry.flag} className="w-full h-full object-cover shadow-sm" />
+                            selectedCountry.flag.startsWith('http') || selectedCountry.flag.startsWith('/') ? (
+                                <img src={selectedCountry.flag} className="w-full h-full object-cover rounded-full shadow-sm" />
+                            ) : (
+                                <span className="text-sm">{selectedCountry.flag}</span>
+                            )
                           ) : (
-                            <Globe size={10} className="text-slate-400" />
+                            <Globe size={14} className="text-slate-400" />
                           )}
                         </div>
                         <div className="w-full bg-white border border-slate-100 rounded-2xl pl-10 pr-4 py-3 text-[10px] font-black uppercase tracking-widest text-slate-800 group-hover/country:border-emerald-500 transition-colors shadow-sm truncate">
@@ -836,7 +840,11 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
                 >
                   <div className="w-14 h-14 mb-3">
                     {country.flag ? (
-                      <p className='h-full text-4xl'>{country.flag}</p>
+                      country.flag.startsWith('http') || country.flag.startsWith('/') ? (
+                        <img src={country.flag} className="w-full h-full object-cover rounded-xl" />
+                      ) : (
+                        <p className='h-full text-4xl'>{country.flag}</p>
+                      )
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-slate-100">
                         <Globe size={24} />

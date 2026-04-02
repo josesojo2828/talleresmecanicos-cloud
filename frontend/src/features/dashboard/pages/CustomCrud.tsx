@@ -107,10 +107,19 @@ const DataCell: React.FC<{
                 );
             }
             return <div className={cn("inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase border", realValue ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-slate-50 text-slate-400 border-slate-100")}>{realValue ? t('status.active') : t('status.inactive')}</div>;
-        case 'avatar':
+        case 'badge':
+            const statusKey = String(realValue).toLowerCase();
             return (
-                <div className="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-lg shadow-sm">
-                    {String(realValue)}
+                <div className={cn(
+                    "inline-flex items-center px-4 py-1.5 rounded-2xl text-[9px] font-black uppercase border shadow-sm transition-all",
+                    statusKey === 'completed' || statusKey === 'finished' || statusKey === 'delivered' || statusKey === 'success' ? "bg-emerald-50 text-emerald-700 border-emerald-100/50" :
+                    statusKey === 'pending' || statusKey === 'waiting' ? "bg-amber-50 text-amber-700 border-amber-100/50" :
+                    statusKey === 'in_progress' || statusKey === 'running' ? "bg-blue-50 text-blue-700 border-blue-100/50" :
+                    statusKey === 'rejected' || statusKey === 'cancelled' || statusKey === 'error' ? "bg-rose-50 text-rose-700 border-rose-100/50" :
+                    "bg-slate-50 text-slate-500 border-slate-100"
+                )}>
+                    <span className="w-1.5 h-1.5 rounded-full mr-2 bg-current opacity-50 animate-pulse" />
+                    {t(`status.${statusKey}`)}
                 </div>
             );
         default:
