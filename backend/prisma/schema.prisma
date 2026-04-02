@@ -340,6 +340,7 @@ model Work {
   vehicleLicensePlate String? @map("vehicle_license_plate")
   images      String[]
   laborPrice  Float?     @default(0) @map("labor_price")
+  currency    String?    @default("USD")
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime?  @updatedAt @map("updated_at")
   deletedAt   DateTime?  @map("deleted_at")
@@ -375,6 +376,7 @@ model Part {
   description String?
   quantity    Int           @default(0)
   price       Float?
+  currency    String?       @default("USD")
   workshopId  String        @map("workshop_id")
   categoryId  String?       @map("category_id")
   workshop    Workshop      @relation(fields: [workshopId], references: [id], onDelete: Cascade)
