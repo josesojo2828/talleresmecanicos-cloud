@@ -12,7 +12,7 @@ import { Footer } from "@/components/organisms/Footer";
 
 export default function HomeClient() {
   return (
-    <div className="min-h-screen relative overflow-hidden bg-white selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen relative overflow-hidden bg-white selection:bg-emerald-100 selection:text-emerald-900" suppressHydrationWarning={true}>
       {/* Background Architectural Grid Pattern */}
       <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none"
         style={{ backgroundImage: `linear-gradient(#475569 1px, transparent 1px), linear-gradient(90deg, #475569 1px, transparent 1px)`, backgroundSize: '100px 100px' }} />

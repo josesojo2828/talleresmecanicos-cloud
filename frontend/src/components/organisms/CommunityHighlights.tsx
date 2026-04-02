@@ -5,6 +5,7 @@ import { MessageSquare, Heart, ArrowRight, ChevronRight, Clock } from "lucide-re
 import Link from "next/link";
 import apiClient from "@/utils/api/api.client";
 import { cn } from "@/utils/cn";
+import { useTranslations } from "next-intl";
 
 interface ForumPost {
     id: string;
@@ -33,8 +34,8 @@ export const CommunityHighlights = () => {
         const fetchTopPosts = async () => {
             try {
                 // Fetching recommended/top posts
-                const response = await apiClient.get('/forum-post/recommended', { 
-                    params: { take: 3 } 
+                const response = await apiClient.get('/forum-post/recommended', {
+                    params: { take: 3 }
                 });
                 const result = response.data?.body || response.data;
                 setPosts(result?.data || result || []);
@@ -54,7 +55,7 @@ export const CommunityHighlights = () => {
     return (
         <section className="py-32 bg-slate-900 relative z-10 overflow-hidden">
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
-            
+
             <div className="container mx-auto px-6 relative">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
                     <div className="space-y-4">
@@ -67,7 +68,7 @@ export const CommunityHighlights = () => {
                             <span className="text-transparent border-text">Expertos</span>
                         </h2>
                     </div>
-                    
+
                     <Link href="/comunidad" className="group flex items-center gap-4 bg-white/5 hover:bg-white text-white hover:text-slate-950 px-10 py-6 rounded-2xl border border-white/10 hover:border-white transition-all duration-500 h-fit">
                         <span className="text-[10px] font-black uppercase tracking-widest">{t('action.view').toUpperCase()} TODOS</span>
                         <ArrowRight className="group-hover:translate-x-2 transition-transform" size={18} />
@@ -94,11 +95,11 @@ export const CommunityHighlights = () => {
                                                     <span className="text-[9px] font-black">{new Date(post.createdAt).toLocaleDateString()}</span>
                                                 </div>
                                             </div>
-                                            
+
                                             <h3 className="text-2xl font-black text-slate-950 uppercase tracking-tighter leading-[1.1] italic">
                                                 {post.title}
                                             </h3>
-                                            
+
                                             <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 font-medium">
                                                 {post.content}
                                             </p>
