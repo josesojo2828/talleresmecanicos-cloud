@@ -115,57 +115,95 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
         window.open(url, '_blank');
     };
 
-    const exportPDF = () => {
+    const exportPDF = async () => {
         const doc = new jsPDF() as any;
+        const pageWidth = doc.internal.pageSize.width;
+        const margin = 14;
 
-        // Workshop Header
-        doc.setFontSize(22);
-        doc.text(data.workshop?.name?.toUpperCase() || 'REPORTE DE TRABAJO', 14, 25);
-        doc.setFontSize(10);
-        doc.setTextColor(100);
-        doc.text(`${data.workshop?.address || 'Taller verificado'}`, 14, 32);
-        doc.text(`Tel: ${data.workshop?.phone || '-'}`, 14, 37);
+        // 1. Header & Workshop Identity
+        doc.setFillColor(15, 23, 42); // slate-900
+        doc.rect(0, 0, pageWidth, 45, 'F');
 
-        // Divider
-        doc.setLineWidth(0.5);
-        doc.line(14, 45, 196, 45);
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(24);
+        doc.setFont('helvetica', 'bold');
+        doc.text(data.workshop?.name?.toUpperCase() || 'REPORTE DE TRABAJO', margin, 25);
 
-        // Work Info
-        doc.setFontSize(14);
-        doc.setTextColor(0);
-        doc.text(`ORDEN: ${data.publicId}`, 14, 55);
-        doc.setFontSize(10);
-        doc.text(`FECHA: ${new Date(data.createdAt).toLocaleDateString()}`, 14, 62);
-        doc.text(`ESTADO: ${t(`status.${data.status.toLowerCase()}`)}`, 14, 67);
-
-        // Client & Vehicle Card
-        doc.setFillColor(245, 245, 245);
-        doc.rect(14, 75, 182, 35, 'F');
-        doc.setFontSize(11);
-        doc.text('INFORMACIÓN DEL VEHÍCULO Y CLIENTE', 20, 85);
-        doc.setFontSize(10);
-        doc.text(`CLIENTE: ${data.clientName || 'S/N'}`, 20, 93);
-        doc.text(`TELÉFONO: ${data.clientPhone || data.client?.phone || 'S/N'}`, 20, 98);
-        doc.text(`PLACA/VIN: ${data.vehicleLicensePlate?.toUpperCase() || 'S/N'}`, 100, 93);
-
-        // Description
-        doc.text('TRABAJO A REALIZAR:', 14, 120);
         doc.setFontSize(9);
-        const splitDesc = doc.splitTextToSize(data.description || 'Sin descripción detallada.', 180);
-        doc.text(splitDesc, 14, 127);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(200, 200, 200);
+        doc.text(`DIRECCIÓN: ${data.workshop?.address?.toUpperCase() || 'DIRECCIÓN NO REGISTRADA'}`, margin, 33);
+        doc.text(`TELÉFONO: ${data.workshop?.phone || data.workshop?.whatsapp || 'SIN TELÉFONO'}`, margin, 38);
 
-        // Parts Table
-        const partsData = data.partsUsed?.map((p: any) => [
-            p.part.name,
+        // 2. Document Identification (Right side of header)
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('ORDEN DE SERVICIO', pageWidth - margin - 40, 20, { align: 'right' });
+        doc.setFontSize(14);
+        doc.text(`#${data.publicId}`, pageWidth - margin, 20, { align: 'right' });
+
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`FECHA: ${new Date(data.createdAt).toLocaleDateString()}`, pageWidth - margin, 33, { align: 'right' });
+        doc.text(`ESTADO: ${t(`status.${data.status.toLowerCase()}`).toUpperCase()}`, pageWidth - margin, 38, { align: 'right' });
+
+        // 3. Client & Vehicle Section
+        let currentY = 60;
+        doc.setTextColor(15, 23, 42);
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'bold');
+        doc.text('DETALLES DEL CLIENTE Y VEHÍCULO', margin, currentY);
+
+        currentY += 5;
+        doc.setDrawColor(226, 232, 240); // slate-200
+        doc.setLineWidth(0.5);
+        doc.line(margin, currentY, pageWidth - margin, currentY);
+
+        currentY += 10;
+        doc.setFillColor(248, 250, 252); // slate-50
+        doc.roundedRect(margin, currentY - 5, pageWidth - (margin * 2), 30, 3, 3, 'F');
+
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.text('CLIENTE:', margin + 5, currentY + 5);
+        doc.text('TELÉFONO:', margin + 5, currentY + 12);
+        doc.text('PLACA/VIN:', pageWidth / 2, currentY + 5);
+        doc.text('TICKET ID:', pageWidth / 2, currentY + 12);
+
+        doc.setFont('helvetica', 'normal');
+        doc.text(data.clientName || data.client?.firstName + ' ' + data.client?.lastName || 'S/N', margin + 35, currentY + 5);
+        doc.text(data.clientPhone || data.client?.phone || 'S/N', margin + 35, currentY + 12);
+        doc.text(data.vehicleLicensePlate?.toUpperCase() || 'S/N', (pageWidth / 2) + 30, currentY + 5);
+        doc.text(data.id.substring(0, 8).toUpperCase(), (pageWidth / 2) + 30, currentY + 12);
+
+        // 4. Job Description
+        currentY += 45;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text('TRABAJO SOLICITADO / DIAGNÓSTICO', margin, currentY);
+
+        currentY += 5;
+        doc.line(margin, currentY, pageWidth - margin, currentY);
+
+        currentY += 10;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        const splitDesc = doc.splitTextToSize(data.description || 'Sin descripción detallada registrada.', pageWidth - (margin * 2));
+        doc.text(splitDesc, margin, currentY);
+        currentY += (splitDesc.length * 5) + 10;
+
+        // 5. Financial Breakdown Table
+        const tableData = data.partsUsed?.map((p: any) => [
+            p.part.name.toUpperCase(),
             p.quantity,
             `${currencySymbol} ${p.part.price?.toLocaleString() || 0}`,
             `${currencySymbol} ${(p.quantity * (p.part.price || 0)).toLocaleString()}`
         ]) || [];
 
-        // Add Labor to table data
         if (data.laborPrice) {
-            partsData.push([
-                'MONO DE OBRA / SERVICIOS',
+            tableData.push([
+                'MANO DE OBRA Y SERVICIOS PROFESIONALES',
                 '1',
                 `${currencySymbol} ${data.laborPrice.toLocaleString()}`,
                 `${currencySymbol} ${data.laborPrice.toLocaleString()}`
@@ -173,25 +211,53 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
         }
 
         autoTable(doc, {
-            startY: 145,
-            head: [['Repuesto / Material', 'Cant', 'Precio Unit', 'Subtotal']],
-            body: partsData,
-            theme: 'grid',
-            headStyles: { fillColor: [15, 23, 42], textColor: 255 },
-            foot: [[
-                'INVERSIÓN TOTAL',
-                '',
-                '',
-                `${currencySymbol} ${totalWork.toLocaleString()}`
-            ]],
-            footStyles: { fillColor: [240, 240, 240], textColor: 0, fontStyle: 'bold' }
+            startY: currentY,
+            head: [['DESCRIPCIÓN DE CARGOS', 'CANT', 'PRECIO UNIT.', 'SUBTOTAL']],
+            body: tableData,
+            theme: 'striped',
+            headStyles: {
+                fillColor: [15, 23, 42],
+                textColor: 255,
+                fontSize: 10,
+                fontStyle: 'bold',
+                halign: 'left'
+            },
+            columnStyles: {
+                0: { cellWidth: 100 },
+                1: { halign: 'center' },
+                2: { halign: 'right' },
+                3: { halign: 'right', fontStyle: 'bold' }
+            },
+            margin: { left: margin, right: margin },
+            styles: { fontSize: 9, cellPadding: 4 }
         });
 
-        // Footer
-        doc.setFontSize(8);
-        doc.text('Documento generado automáticamente por talleresmecanicos.com', 14, doc.internal.pageSize.height - 10);
+        const finalY = (doc as any).lastAutoTable.finalY + 15;
 
-        doc.save(`Recibo_Trabajo_${data.publicId}.pdf`);
+        // 6. Totals & Footer
+        doc.setFillColor(15, 23, 42);
+        doc.rect(pageWidth - margin - 80, finalY - 5, 80, 25, 'F');
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(8);
+        doc.text('TOTAL A INVERTIR', pageWidth - margin - 75, finalY + 5);
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${currencySymbol} ${totalWork.toLocaleString()}`, pageWidth - margin - 5, finalY + 15, { align: 'right' });
+
+        doc.setTextColor(100);
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        doc.text('NOTAS IMPORTANTES:', margin, finalY + 5);
+        doc.text('- Este documento es un comprobante de servicio generado por el sistema administrativo.', margin, finalY + 12);
+        doc.text('- Los precios incluyen impuestos según la normativa vigente en la región del taller.', margin, finalY + 17);
+
+        // Branding
+        doc.setFontSize(7);
+        doc.setTextColor(180);
+        doc.text(`Impreso el ${new Date().toLocaleString()} - Sistema de gestión para Talleres Mecánicos (RINDE+)`, pageWidth / 2, doc.internal.pageSize.height - 10, { align: 'center' });
+
+        doc.save(`Ticket_Servicio_${data.publicId}.pdf`);
     };
 
     const subtotalParts = useMemo(() => {
