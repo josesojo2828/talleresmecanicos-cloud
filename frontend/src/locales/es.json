@@ -18,12 +18,23 @@
         "register_vehicle": "Registrar Vehículo",
         "new_request": "Nueva Solicitud",
         "view_details": "Ver Detalles",
-        "cancel": "Cancelar"
+        "cancel": "Cancelar",
+        "discard": "Descartar",
+        "update": "Actualizar",
+        "modify_record": "Modificar Registro",
+        "create_entry": "Crear Entrada",
+        "terminate_record": "Eliminar Registro",
+        "save": "Guardar",
+        "upload_file": "Subir Archivo",
+        "upload_files": "Subir Archivos",
+        "back": "Volver atrás",
+        "processing": "Procesando...",
+        "createdAt": "Creado el",
+        "updatedAt": "Actualizado el"
     },
     "dialog": {
         "delete_confirm": "¿Estás seguro de que deseas eliminar permanentemente este registro de {slug}? Esta acción no se puede deshacer."
     },
-
     "error": {
         "default": "Ocurrió un error inesperado",
         "generic": "Ocurrió un error inesperado en el servidor",
@@ -33,6 +44,7 @@
         "forbidden": "Acceso denegado",
         "exists": "El registro ya existe en el sistema",
         "not_found": "No se encontró el recurso solicitado",
+        "no_results": "No se encontraron resultados",
         "db": {
             "relation_not_found": "No se encontró uno de los registros relacionados (Ej: El Usuario o Plan no existen)",
             "unique_constraint": "No se pudo procesar: El registro ya existe (Dato duplicado)",
@@ -73,10 +85,15 @@
         "referralCode": "Código de Referido",
         "referredBy": "Referido por",
         "status": "Estado de Cuenta",
+        "2fa": "Autenticación de dos factores (2FA)",
         "kyc": {
             "default": "Verificación (KYC)",
             "none": "No Verificado",
             "verified": "Verificado"
+        },
+        "status_labels": {
+            "active": "Activo",
+            "inactive": "Inactivo"
         }
     },
     "profile": {
@@ -166,12 +183,38 @@
         "country": "País Perteneciente",
         "enabled": "Habilitado"
     },
-    "category": { "name": "Nombre", "description": "Descripción", "icon": "Icono", "color": "Color" },
-    "resource": { "name": "Nombre", "description": "Descripción", "category": "Categoría", "enabled": "Habilitado" },
-    "question": { "question": "Pregunta", "answer": "Respuesta", "enabled": "Habilitado" },
-    "messages": { "name": "Nombre", "email": "Correo Electrónico", "message": "Mensaje", "read": "Leído" },
-    "testimonial": { "name": "Nombre", "message": "Mensaje" },
-
+    "category": { 
+        "title": "Categorías",
+        "name": "Nombre", 
+        "description": "Descripción", 
+        "icon": "Icono", 
+        "color": "Color" 
+    },
+    "resource": { 
+        "title": "Recursos",
+        "name": "Nombre", 
+        "description": "Descripción", 
+        "category": "Categoría", 
+        "enabled": "Habilitado" 
+    },
+    "question": { 
+        "title": "Preguntas Frecuentes",
+        "question": "Pregunta", 
+        "answer": "Respuesta", 
+        "enabled": "Habilitado" 
+    },
+    "messages": { 
+        "title": "Mensajes",
+        "name": "Nombre", 
+        "email": "Correo Electrónico", 
+        "message": "Mensaje", 
+        "read": "Leído" 
+    },
+    "testimonial": { 
+        "title": "Testimonios",
+        "name": "Nombre", 
+        "message": "Mensaje" 
+    },
     "about": {
         "title": "Sobre Nosotros",
         "subtitle": "Misión, visión y trayectoria corporativa",
@@ -199,13 +242,6 @@
         "subtitle": "Metas estratégicas de la plataforma",
         "objective": "Objetivo",
         "description": "Descripción",
-        "icon": "Icono"
-    },
-    "social-media": {
-        "title": "Redes Sociales",
-        "subtitle": "Gestión de enlaces y presencia digital",
-        "name": "Nombre",
-        "url": "Enlace (URL)",
         "icon": "Icono"
     },
     "social_media": {
@@ -237,63 +273,41 @@
         "title": "Órdenes de Trabajo",
         "description": "Seguimiento técnico de reparaciones y mantenimientos",
         "client": "Cliente Asignado",
+        "client_registered": "Cliente en la Plataforma (Vincular)",
         "status": "Estado del Trabajo",
         "publicId": "ID Público",
         "images": "Evidencia Visual"
     },
-    "action": {
-        "discard": "Descartar",
-        "update": "Actualizar",
-        "add": "Agregar",
-        "edit": "Editar",
-        "delete": "Borrar",
-        "view": "Ver",
-        "back": "Volver atrás",
-        "createdAt": "Creado el",
-        "updatedAt": "Actualizado el",
-        "processing": "Procesando...",
-        "modify_record": "Modificar Registro",
-        "create_entry": "Crear Entrada",
-        "terminate_record": "Eliminar Registro",
-        "save": "Guardar",
-        "upload_file": "Subir Archivo",
-        "cancel": "Cancelar",
-        "view_details": "Ver Detalles",
-        "new_request": "Nueva Solicitud",
-        "register_vehicle": "Registrar Vehículo",
-        "advertise": "Anunciar"
-    },
-    "nav_legacy": {
+    "headers": {
         "name": "Nombre",
-        "firstName": "Nombre",
-        "lastName": "Apellido",
-        "description": "Descripción",
-        "status": "Estado",
-        "email": "Email",
-        "role": "Rol",
-        "date": "Fecha",
-        "actions": "Acciones",
-        "created_at": "Creado el",
-        "author": "Autor",
-        "sos": "SOS",
-        "brand": "Marca",
-        "model": "Modelo",
-        "licensePlate": "Placa",
-        "year": "Año",
-        "city": "Ciudad",
-        "country": "País",
-        "moderated": "Moderado",
-        "visible": "Visible",
-        "images": "Imágenes",
-        "title": "Título",
-        "phone": "Teléfono",
-        "sku": "SKU",
+        "sku": "SKU / Código",
         "price": "Precio",
         "quantity": "Cantidad",
         "category": "Categoría",
+        "description": "Descripción",
+        "title": "Título",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "role": "Rol",
+        "status": "Estado",
+        "brand": "Marca",
+        "model": "Modelo",
+        "year": "Año",
+        "licensePlate": "Placa/Matrícula",
+        "images": "Imágenes",
+        "date": "Fecha",
+        "visible": "Visible",
+        "sos": "Prioridad SOS",
+        "phone": "Teléfono",
+        "client": "Cliente",
+        "email": "Email",
+        "actions": "Acciones",
+        "created_at": "Creado el",
+        "author": "Autor",
         "work": "Trabajo",
         "part": "Repuesto",
-        "client": "Cliente"
+        "moderated": "Moderado",
+        "price_labor": "Mano de Obra"
     },
     "dashboard": {
         "search": "Buscar en base de datos...",
@@ -346,9 +360,6 @@
         "es": "🇪🇸 Español",
         "en": "🇺🇸 Inglés",
         "ja": "🇯🇵 Japonés"
-    },
-    "dialog": {
-        "delete_confirm": "Estás a punto de eliminar permanentemente esta entrada de {slug}. Esta acción es irreversible."
     },
     "nav": {
         "home": "Inicio",
@@ -678,7 +689,11 @@
             "title": "¿Quieres colaborar?",
             "description": "Nuestra comunidad crece gracias al aporte de personas como tú. Si tienes recursos que compartir o quieres ser parte del equipo, contáctanos.",
             "button": "Contactar con el Equipo"
-        }
+        },
+        "technicalQuery": "CONSULTA TÉCNICA",
+        "emptyState": "Sé el primero en compartir con la comunidad",
+        "readMore": "Leer más",
+        "views": "Vistas"
     },
     "inventory": {
         "title": "Inventario de Repuestos",
@@ -688,44 +703,6 @@
             "title": "Categorías de Repuestos",
             "subtitle": "Organiza tus piezas por categorías"
         }
-    },
-    "headers": {
-        "name": "Nombre",
-        "sku": "SKU / Código",
-        "price": "Precio",
-        "quantity": "Cantidad",
-        "category": "Categoría",
-        "description": "Descripción",
-        "title": "Título",
-        "firstName": "Nombre",
-        "lastName": "Apellido",
-        "role": "Rol",
-        "status": "Estado",
-        "brand": "Marca",
-        "model": "Modelo",
-        "year": "Año",
-        "licensePlate": "Placa/Matrícula",
-        "images": "Imágenes",
-        "date": "Fecha",
-        "visible": "Visible",
-        "sos": "Prioridad SOS",
-        "phone": "Teléfono",
-        "client": "Cliente",
-        "email": "Email",
-        "actions": "Acciones",
-        "created_at": "Creado el",
-        "author": "Autor",
-        "work": "Trabajo",
-        "part": "Repuesto",
-        "moderated": "Moderado"
-    },
-    "work": {
-        "title": "Órdenes de Trabajo",
-        "description": "Control detallado de cada reparación y servicio",
-        "publicId": "ID Público",
-        "status": "Estado del Trabajo",
-        "client": "Cliente Asignado",
-        "client_registered": "Cliente en la Plataforma (Vincular)"
     },
     "status": {
         "all": "Todos",
@@ -747,10 +724,7 @@
         "success": "Exitoso",
         "error": "Error"
     },
-    "community": {
-        "technicalQuery": "CONSULTA TÉCNICA",
-        "emptyState": "Sé el primero en compartir con la comunidad",
-        "readMore": "Leer más",
-        "views": "Vistas"
+    "update": {
+        "update": "Actualizar"
     }
 }

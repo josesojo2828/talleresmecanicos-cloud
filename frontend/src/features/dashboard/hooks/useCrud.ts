@@ -45,9 +45,21 @@ export const useCrud = (slug: string) => {
         try {
             setLoading(true);
 
+            const user = useAuthStore.getState().user;
+            const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPPORT';
+            
+            // Construimos los filtros base
+            let activeFilters = { ...filters };
+
+            // REQUERIMIENTO #2: Si no es admin y estamos en publicaciones, 
+            // solo mostramos lo de su taller
+            if (!isAdmin && slug === 'publication' && user?.workshop?.id) {
+                activeFilters = { ...activeFilters, workshopId: user.workshop.id };
+            }
+
             const params = {
                 search: debouncedSearch || undefined,
-                filters: Object.keys(filters).length > 0 ? JSON.stringify(filters) : undefined,
+                filters: Object.keys(activeFilters).length > 0 ? JSON.stringify(activeFilters) : undefined,
                 orderBy: orderBy.length > 0 ? JSON.stringify(orderBy.map(s => ({ [s.field]: s.order }))) : undefined,
                 take,
                 skip: (page - 1) * take
