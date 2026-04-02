@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Typography } from "@/components/atoms/Typography";
 import { Button } from "@/components/atoms/Button";
-import { ArrowRight, Settings2, Sparkles } from "lucide-react";
+import { ArrowRight, ChevronRight, Settings2, Sparkles } from "lucide-react";
 import { CategoryCard } from "@/components/molecules/CategoryCard";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -49,61 +49,60 @@ export const CategoryShowcase = () => {
     if (!loading && categories.length === 0) return null;
 
     return (
-        <section className="py-24 px-6 relative z-10 overflow-hidden bg-white">
-            {/* Patrón de fondo técnico (Grid de ingeniería sutil) */}
+        <section className="py-32 px-6 relative z-10 bg-white border-b border-slate-100">
+            {/* Engineering Grid Pattern */}
             <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
-                style={{ backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`, backgroundSize: '50px 50px' }} />
+                style={{ backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
 
             <div className="max-w-7xl mx-auto relative z-10">
 
-                {/* Header de Sección */}
-                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
-                    <div className="space-y-4 max-w-2xl">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">
-                            <Settings2 size={14} />
-                            {t("subtitle")}
-                        </div>
-                        <h2 className="text-slate-900 text-4xl md:text-5xl font-black tracking-tight leading-[1.1]">
+                <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
+                    <div className="space-y-6">
+                        <h2 className="text-slate-950 text-4xl md:text-6xl font-black tracking-tighter leading-none uppercase italic">
                             {t.rich("title", {
-                                span: (chunks) => <span className="text-emerald-600">{chunks}</span>
+                                span: (chunks) => <span className="text-emerald-600 not-italic">{chunks}</span>
                             })}
                         </h2>
                     </div>
-                    <Link href="/directorio">
-                        <Button className="group bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl px-8 py-6 text-sm font-bold shadow-lg shadow-emerald-100 transition-all">
-                            {t("cta")} <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                    </Link>
                 </div>
 
-                {/* Grid de Categorías */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 bg-slate-100 border border-slate-100">
                     {loading ? (
-                        // Skeleton simple
                         [...Array(6)].map((_, i) => (
-                            <div key={i} className="h-48 rounded-[2rem] bg-slate-50 animate-pulse border border-slate-100" />
+                            <div key={i} className="h-64 bg-white animate-pulse" />
                         ))
                     ) : (
                         categories.map((cat) => (
-                            <div key={cat.id} className="group relative">
-                                {/* Decoración de fondo al hacer hover */}
-                                <div className="absolute -inset-2 bg-emerald-50 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-all duration-500 scale-95 group-hover:scale-100" />
-
-                                <div className="relative bg-white border border-slate-100 p-8 rounded-[2rem] shadow-sm transition-all duration-500 group-hover:border-emerald-200 group-hover:-translate-y-1">
-                                    <CategoryCard
-                                        icon={cat.icon || 'cat-professional'}
-                                        title={getTranslation(cat.name)}
-                                        description={getTranslation(cat.description)}
-                                        // Forzamos el color a la paleta emerald si no viene definido, 
-                                        // o lo usamos como un acento muy suave.
-                                        color={cat.color || "#10b981"}
-                                    />
-
-                                    {/* Indicador de "Ver más" que aparece en hover */}
-                                    <div className="mt-4 flex items-center text-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-black uppercase tracking-widest">
-                                        Explorar especialidad <Sparkles className="ml-2 w-3 h-3" />
+                            <div key={cat.id} className="group bg-white p-12 transition-all hover:bg-slate-50 relative overflow-hidden">
+                                <div className="space-y-10 relative z-10">
+                                    <div className="flex items-start justify-between">
+                                        <div className="w-14 h-14 bg-slate-50 border border-slate-200 flex items-center justify-center group-hover:border-emerald-500 transition-all duration-500">
+                                            {/* We use a simplified icon or the first letter if it's a string, or an icon-font component if available */}
+                                            <span className="text-slate-950 font-black text-xl uppercase tracking-tighter italic">{getTranslation(cat.name).charAt(0)}</span>
+                                        </div>
+                                        <ArrowRight className="text-slate-200 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" size={20} />
                                     </div>
+
+                                    <div className="space-y-4">
+                                        <h3 className="text-2xl font-black text-slate-950 uppercase tracking-tight italic leading-none group-hover:text-emerald-600 transition-colors">
+                                            {getTranslation(cat.name)}
+                                        </h3>
+                                        <p className="text-slate-500 text-[11px] font-bold uppercase tracking-tight leading-relaxed line-clamp-3">
+                                            {getTranslation(cat.description)}
+                                        </p>
+                                    </div>
+
+                                    <Link
+                                        href={`/directorio?category=${cat.id}`}
+                                        className="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 group-hover:text-emerald-600 transition-colors"
+                                    >
+                                        EXPLORAR REGISTROS <ChevronRight size={12} />
+                                    </Link>
                                 </div>
+
+                                {/* Technical Accent */}
+                                <div className="absolute top-0 right-0 w-16 h-px bg-slate-100 group-hover:bg-emerald-500 transition-colors" />
+                                <div className="absolute top-0 right-0 w-px h-16 bg-slate-100 group-hover:bg-emerald-500 transition-colors" />
                             </div>
                         ))
                     )}

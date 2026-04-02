@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/atoms/Button";
 import {
     Home,
@@ -50,13 +51,13 @@ export const Header = () => {
                     : "bg-white/40 backdrop-blur-sm border border-white/20"
                 }`}>
 
-                {/* Logo con el nuevo color verde */}
+                {/* Logo con logo.svg */}
                 <Link href="/" className="flex items-center cursor-pointer group">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center mr-3 shadow-emerald-200 shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3">
-                        <Wrench className="text-white w-5 h-5" />
+                    <div className="w-16 h-16 flex items-center justify-center mr-4 transition-transform group-hover:scale-105">
+                        <Image src="/logo.svg" alt="Talleres Mecánicos Logo" width={40} height={40} />
                     </div>
-                    <span className="text-slate-900 font-black text-xl tracking-tight leading-none">
-                        Talleres<span className="text-emerald-600">Mecanicos</span>
+                    <span className="text-slate-950 font-black text-2xl tracking-tighter leading-none uppercase italic">
+                        RINDE <span className="text-emerald-600 not-italic">+</span>
                     </span>
                 </Link>
 

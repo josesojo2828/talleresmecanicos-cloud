@@ -18,8 +18,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Red de Talleres Mecánicos | Encuentra tu taller de confianza",
-    template: "%s | Red de Talleres Mecánicos"
+    default: "Talleres Mecánicos | Red de Talleres Mecánicos de Alta Precisión",
+    template: "%s | Talleres Mecánicos"
   },
   description: "La red más grande de talleres mecánicos verificados en México, Argentina, Chile y más. Encuentra, compara y agenda tu cita con los mejores expertos de tu zona.",
   keywords: "taller mecanico, mecanica automotriz, reparacion autos, mantenimiento preventivo, taller mecanico en mexico, taller mecanico cerca de mi, mejores talleres mecanicos",
@@ -29,7 +29,11 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-  }
+  },
+  icons: {
+    icon: "/logo.svg",
+    apple: "/logo.svg",
+  },
 };
 
 export default function RootLayout({

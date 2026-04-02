@@ -1,74 +1,79 @@
 "use client";
 
-import React from "react";
-import { Typography } from "@/components/atoms/Typography";
-import { Button } from "@/components/atoms/Button";
-import { ArrowRight, CheckCircle2, Star, Wrench } from "lucide-react";
+import { ArrowRight, CheckCircle2, Shield, Settings, Database, Server } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import apiClient from "@/utils/api/api.client";
 
 export const Hero = () => {
     const t = useTranslations("hero");
+    const [stats, setStats] = useState({ workshops: 0, publications: 0, countries: 0 });
+
+    useEffect(() => {
+        apiClient.get('/public/stats')
+            .then(res => setStats(res.data))
+            .catch(err => console.error("Error fetching stats", err));
+    }, []);
 
     return (
-        // Fondo gris muy claro (bg-slate-50) para dar contraste suave
-        <section className="relative pt-32 pb-24 px-4 flex flex-col items-center overflow-hidden bg-slate-50 min-h-[90vh]">
+        <section className="relative pt-40 pb-32 px-6 flex flex-col items-center overflow-hidden bg-transparent min-h-[95vh] border-b border-slate-200/60">
+            {/* Absolute Architectural Grid Pattern */}
+            <div className="absolute inset-0 z-0 opacity-[0.02] pointer-events-none"
+                style={{ backgroundImage: `radial-gradient(#059669 1.5px, transparent 1.5px)`, backgroundSize: '48px 48px' }} />
 
-            {/* Patrón sutil de puntos en un gris apenas perceptible */}
-            <div className="absolute inset-0 z-0 opacity-[0.05] pointer-events-none"
-                style={{ backgroundImage: `radial-gradient(#64748b 1px, transparent 1px)`, backgroundSize: '32px 32px' }} />
-
-            {/* Orbes decorativos en verde suave */}
-            <div className="absolute top-[-5%] left-[-5%] w-[45%] h-[45%] bg-emerald-200/30 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-10 right-[5%] w-[30%] h-[30%] bg-emerald-100/50 rounded-full blur-[100px] pointer-events-none" />
-
-            <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 w-full">
-
-                {/* Contenido Izquierdo */}
-                <div className="flex-[1.2] text-center lg:text-left space-y-8">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100/50 border border-emerald-200 text-emerald-700 text-[11px] font-bold uppercase tracking-wider">
-                        <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        {t("badge")}
+            <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row items-stretch gap-20 w-full">
+                
+                {/* Left Side: Content & Typography */}
+                <div className="flex-[1.1] space-y-16">
+                    <div className="space-y-10">
+                        <div className="space-y-8">
+                            <h1 className="text-6xl md:text-8xl font-black leading-[0.85] tracking-tighter text-slate-950 uppercase italic">
+                                EL ESTÁNDAR<br />
+                                <span className="text-emerald-600 not-italic">DEL TALLER</span><br />
+                                MODERNO.
+                            </h1>
+                            <p className="text-slate-500 max-w-xl text-lg leading-relaxed font-bold uppercase tracking-tight">
+                                {t("description") || "Gestionamos la complejidad mecánica con precisión. Conectamos dueños de vehículos con los mejores talleres mecánicos en un solo lugar."}
+                            </p>
+                        </div>
                     </div>
 
-                    <div className="space-y-4">
-                        <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.05] tracking-tight text-slate-900">
-                            {t.rich("title", {
-                                br: () => <br className="hidden md:block" />,
-                                span: (chunks) => <span className="text-emerald-600">{chunks}</span>
-                            })}
-                        </h1>
-                        <p className="text-slate-500 max-w-xl mx-auto lg:mx-0 text-lg leading-relaxed font-medium">
-                            {t("description")}
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <div className="flex flex-col sm:flex-row items-center gap-6">
                         <Link href="/registro" className="w-full sm:w-auto">
-                            <Button className="w-full px-10 py-7 text-lg rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-200 transition-all hover:scale-[1.02]">
-                                {t("cta_primary")} <ArrowRight className="ml-2 w-5 h-5" />
-                            </Button>
+                            <button className="w-full group px-12 py-6 bg-slate-950 text-white text-[11px] font-black uppercase tracking-[.25em] hover:bg-emerald-600 transition-all duration-300 flex items-center justify-center gap-4">
+                                {t("cta_primary") || "SOY DUEÑO DE TALLER"}
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </button>
                         </Link>
+                    </div>
+
+                    {/* Updated Stats with Real Data */}
+                    <div className="grid grid-cols-3 gap-8 pt-8 border-t border-slate-200/50">
+                        {[
+                            { label: "TALLERES", val: stats.workshops },
+                            { label: "PUBLICACIONES", val: stats.publications > 0 ? `+${stats.publications}` : "0" },
+                            { label: "PAÍSES", val: stats.countries }
+                        ].map(stat => (
+                            <div key={stat.label}>
+                                <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">{stat.label}</p>
+                                <p className="text-4xl font-black text-slate-900 tracking-tighter">{stat.val}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Lado Derecho: Composición Visual */}
-                <div className="flex-1 relative w-full">
-                    <div className="relative w-full aspect-square max-w-[520px] mx-auto">
-
-                        {/* Contenedor de Imagen con bordes suaves y fondo gris claro */}
-                        <div className="relative z-20 w-full h-full rounded-[2.5rem] overflow-hidden border-8 border-white shadow-2xl shadow-slate-200">
-                            <Image
-                                src="/images/1.jpg"
-                                alt="Workshop Management"
-                                fill
-                                className="object-cover"
-                                unoptimized
-                            />
-                        </div>
-
-
+                {/* Right Side: Visual Metaphor */}
+                <div className="flex-1 relative hidden lg:block">
+                    <div className="relative h-full aspect-[4/5] bg-white border-[1px] border-slate-200 shadow-[20px_20px_60px_-15px_rgba(0,0,0,0.15)] overflow-hidden">
+                        <Image
+                            src="/images/1.jpg"
+                            alt="Workshop Interface"
+                            fill
+                            className="object-cover transition-all duration-1000"
+                            unoptimized
+                        />
                     </div>
                 </div>
             </div>
