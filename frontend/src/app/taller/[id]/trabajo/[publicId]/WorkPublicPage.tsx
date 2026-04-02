@@ -263,10 +263,10 @@ export default function WorkPublicPage() {
                             ))}
 
                             <div className="pt-8 border-t border-slate-100 space-y-3">
-                                {work.laborPrice > 0 && (
+                                {((work.laborPrice ?? 0) > 0) && (
                                     <div className="flex justify-between items-center text-slate-400">
                                         <span className="text-[10px] font-black uppercase tracking-widest italic">MANO DE OBRA</span>
-                                        <span className="text-sm font-bold font-mono">{currencySymbol} {work.laborPrice.toLocaleString()}</span>
+                                        <span className="text-sm font-bold font-mono">{currencySymbol} {work.laborPrice?.toLocaleString() || 0}</span>
                                     </div>
                                 )}
                                 <div className="flex justify-between items-center pt-4 border-t border-slate-50">

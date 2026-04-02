@@ -556,10 +556,10 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                     )}
 
                                     <div className="pt-8 border-t border-slate-100 px-6 space-y-3">
-                                        {data.laborPrice > 0 && (
+                                        {((data.laborPrice ?? 0) > 0) && (
                                              <div className="flex justify-between items-center text-slate-400">
                                                  <span className="text-[10px] font-black uppercase tracking-widest">{t('headers.price_labor')}</span>
-                                                 <span className="text-sm font-bold font-mono">{currencySymbol} {data.laborPrice.toLocaleString()}</span>
+                                                 <span className="text-sm font-bold font-mono">{currencySymbol} {data.laborPrice?.toLocaleString() || 0}</span>
                                              </div>
                                         )}
                                         {data.partsUsed?.length > 0 && (
