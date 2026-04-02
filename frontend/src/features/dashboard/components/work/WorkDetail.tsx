@@ -145,7 +145,7 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
         doc.text('INFORMACIÓN DEL VEHÍCULO Y CLIENTE', 20, 85);
         doc.setFontSize(10);
         doc.text(`CLIENTE: ${data.clientName || 'S/N'}`, 20, 93);
-        doc.text(`TELÉFONO: ${data.clientPhone || 'S/N'}`, 20, 98);
+        doc.text(`TELÉFONO: ${data.clientPhone || data.client?.phone || 'S/N'}`, 20, 98);
         doc.text(`PLACA/VIN: ${data.vehicleLicensePlate?.toUpperCase() || 'S/N'}`, 100, 93);
 
         // Description
@@ -300,7 +300,9 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                             <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Cliente</p>
                                             <div className="flex items-center gap-2 text-slate-900">
                                                 <User size={14} className="text-emerald-500" />
-                                                <span className="text-[11px] font-black uppercase tracking-tight">{data.clientName || 'Sin asignar'}</span>
+                                                <span className="text-[11px] font-black uppercase tracking-tight">
+                                                    {data.clientName || (data.client ? `${data.client.firstName} ${data.client.lastName}` : 'Sin asignar')}
+                                                </span>
                                             </div>
                                         </div>
                                         <div className="p-4 bg-slate-50/50 rounded-2xl">
@@ -311,10 +313,12 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                             </div>
                                         </div>
                                         <div className="p-4 bg-slate-50/50 rounded-2xl">
-                                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Teléfono</p>
+                                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{t('headers.phone')}</p>
                                             <div className="flex items-center gap-2 text-slate-900">
                                                 <Phone size={14} className="text-emerald-500" />
-                                                <span className="text-[11px] font-black uppercase tracking-tight">{data.clientPhone || 'Sin teléfono'}</span>
+                                                <span className="text-[11px] font-black uppercase tracking-tight">
+                                                    {data.clientPhone || data.client?.phone || t('status.waiting') }
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
