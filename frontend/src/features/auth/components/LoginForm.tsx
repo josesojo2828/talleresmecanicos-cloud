@@ -99,7 +99,7 @@ export const LoginForm = () => {
                 <Typography variant="P" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
                     {t("no_account")}{" "}
                     <Link
-                        href="/registro"
+                        href="/register"
                         className="text-primary hover:text-primary-600 transition-colors font-black"
                     >
                         {t("register")}

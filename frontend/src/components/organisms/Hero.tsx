@@ -44,7 +44,7 @@ export const Hero = () => {
                     </div>
 
                     <div className="flex flex-col sm:flex-row items-center gap-6">
-                        <Link href="/registro" className="w-full sm:w-auto">
+                        <Link href="/register" className="w-full sm:w-auto">
                             <button className="w-full group px-12 py-6 bg-slate-950 text-white text-[11px] font-black uppercase tracking-[.25em] hover:bg-emerald-600 transition-all duration-300 flex items-center justify-center gap-4">
                                 {t("cta_primary") || "SOY DUEÑO DE TALLER"}
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

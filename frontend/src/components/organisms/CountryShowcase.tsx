@@ -16,7 +16,7 @@ export const CountryShowcase = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        apiClient.get(`/regions/country`, {
+        apiClient.get(`/country`, {
             params: { filters: JSON.stringify({ enabled: true }) }
         })
             .then(res => {

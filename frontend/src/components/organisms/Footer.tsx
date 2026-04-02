@@ -69,8 +69,8 @@ export const Footer = () => {
                             {[
                                 { label: "DIRECTORIO", href: "/directorio" },
                                 { label: "COMUNIDAD", href: "/comunidad" },
-                                { label: "REGISTRO", href: "/registro" },
-                                { label: "SOPORTE", href: "/soporte" }
+                                { label: "REGISTRO", href: "/register" },
+                                { label: "SOPORTE", href: "#" }
                             ].map(item => (
                                 <li key={item.label}>
                                     <Link href={item.href} className="text-slate-400 hover:text-emerald-600 transition-colors text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
@@ -86,9 +86,9 @@ export const Footer = () => {
                         <h4 className="text-slate-950 font-black text-xs uppercase tracking-[0.2em] pb-4 border-b border-slate-100">LEGAL</h4>
                         <ul className="space-y-4">
                             {[
-                                { label: "TERMINOS", href: "/terminos" },
-                                { label: "PRIVACIDAD", href: "/privacidad" },
-                                { label: "LICENCIAS", href: "/blog" }
+                                { label: "TERMINOS", href: "#" },
+                                { label: "PRIVACIDAD", href: "#" },
+                                { label: "LICENCIAS", href: "#" }
                             ].map(item => (
                                 <li key={item.label}>
                                     <Link href={item.href} className="text-slate-400 hover:text-emerald-600 transition-colors text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
@@ -106,7 +106,7 @@ export const Footer = () => {
                                 ÚNETE AL <br /> <span className="text-emerald-500 not-italic">FUTURO.</span>
                             </p>
                         </div>
-                        <Link href="/registro" className="w-full">
+                        <Link href="/register" className="w-full">
                             <button className="w-full bg-white text-slate-950 px-6 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 transition-all">
                                 EMPEZAR AHORA
                             </button>
