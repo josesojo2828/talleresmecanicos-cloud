@@ -53,14 +53,8 @@ export const CountryShowcase = () => {
                                 className="group relative flex flex-col items-center justify-center p-12 bg-white hover:bg-emerald-600 transition-all duration-300 hover:-translate-y-1 cursor-crosshair overflow-hidden"
                             >
                                 <div className="space-y-6 flex flex-col items-center relative z-10">
-                                    <div className="w-14 h-9 overflow-hidden border border-slate-200 group-hover:border-white transition-all transform scale-100 group-hover:scale-110 shadow-sm relative">
-                                        <Image
-                                            src={country.flag || "/images/placeholder-flag.png"}
-                                            alt={country.name}
-                                            fill
-                                            className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                                            unoptimized
-                                        />
+                                    <div className="flex items-center justify-center text-5xl group-hover:scale-110 transition-transform duration-500">
+                                        {country.flag}
                                     </div>
 
                                     <div className="text-center space-y-1">

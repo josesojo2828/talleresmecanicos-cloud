@@ -105,7 +105,7 @@ export class ForumUCase extends ForumPostModel {
         }
 
         const result: any = await this.postPersistence.getAll({
-            where: { ...where, enabled: true },
+            where: where,
             skip: skip ? Number(skip) : 0,
             take: take ? Number(take) : 10,
             orderBy: order as any,

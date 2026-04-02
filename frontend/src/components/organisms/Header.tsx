@@ -14,7 +14,8 @@ import {
     X,
     Wrench,
     LayoutDashboard,
-    MessageSquare
+    MessageSquare,
+    ChevronDown
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -61,18 +62,51 @@ export const Header = () => {
                     </span>
                 </Link>
 
-                {/* Desktop Nav: Centrada y minimalista */}
+                {/* Desktop Nav: Centrada y minimalista con Dropdown */}
                 <div className="hidden md:flex items-center gap-1 bg-slate-200/20 p-1 rounded-xl border border-white/50">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.href}
-                            href={link.href}
-                            className="flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 text-slate-600 hover:text-emerald-600 hover:bg-white/80 group"
-                        >
-                            <link.icon className="w-4 h-4 mr-2 opacity-70 group-hover:opacity-100 transition-all" />
-                            {link.label}
-                        </Link>
-                    ))}
+                    <Link
+                        href="/"
+                        className="flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 text-slate-600 hover:text-emerald-600 hover:bg-white/80 group"
+                    >
+                        <Home className="w-4 h-4 mr-2" />
+                        {t("home")}
+                    </Link>
+
+                    <div className="relative group">
+                        <button className="flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 text-slate-600 hover:text-emerald-600 hover:bg-white/80 group">
+                            <Search className="w-4 h-4 mr-2" />
+                            {t("directory")}
+                            <ChevronDown className="w-3.5 h-3.5 ml-2 opacity-50 group-hover:rotate-180 transition-transform duration-300" />
+                        </button>
+
+                        <div className="absolute top-full left-0 mt-1 w-64 p-2 bg-white/95 backdrop-blur-xl border border-slate-100 rounded-2xl shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 z-[60]">
+                            {[
+                                { href: "/explorar-red", label: t("workshops_list"), icon: Wrench },
+                                { href: "/directorio", label: t("map"), icon: Search },
+                                { href: "/comunidad", label: t("community"), icon: Users2 },
+                                ...(isAuthenticated ? [{ href: "/chat", label: "Chat General", icon: MessageSquare }] : [])
+                            ].map((link) => (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className="flex items-center px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition-all gap-4"
+                                >
+                                    <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-white">
+                                        <link.icon className="w-4 h-4" />
+                                    </div>
+                                    {link.label}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    <Link
+                        href="/nosotros"
+                        className="flex items-center px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 text-slate-600 hover:text-emerald-600 hover:bg-white/80 group"
+                    >
+                        <Info className="w-4 h-4 mr-2" />
+                        {t("about")}
+                    </Link>
                 </div>
 
                 {/* Acciones: Botón prominente */}

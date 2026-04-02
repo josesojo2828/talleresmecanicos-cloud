@@ -8,7 +8,7 @@ export class AdminMetricsUCase {
     async getPublicStats() {
         const [workshops, publications, countries] = await Promise.all([
             this.prisma.workshop.count({ where: { enabled: true, deletedAt: null } }),
-            this.prisma.publication.count({ where: { enabled: true, deletedAt: null } }),
+            this.prisma.forumPost.count({ where: { enabled: true, deletedAt: null } }),
             this.prisma.country.count({ where: { enabled: true, deletedAt: null } })
         ]);
 

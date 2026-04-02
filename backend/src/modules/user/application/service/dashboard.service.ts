@@ -108,52 +108,45 @@ export default class DashboardService {
             slug: 'exit'
         });
 
-        // 1. GESTIÓN DE USUARIOS (ADMIN & SUPPORT)
-        if (isAdmin) {
-            const userSidebar: ObjectSidebar = {
-                icon: 'user',
-                label: 'nav.user_management',
-                path: '/dashboard/user',
-                slug: 'user',
-                childs: [
-                    { icon: 'user', label: 'user.management', path: '/dashboard/user', slug: 'user' }
-                ]
-            };
-            sidebar.push(userSidebar);
-
-            pages.push({
-                slug: 'user',
-                title: 'user.management',
-                subtitle: 'user.subtitle.default',
-                actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
-                actionsRows: [
-                    { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
-                    { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' }
-                ],
-                columns: [
-                    { key: 'firstName', label: 'headers.firstName', type: 'text' },
-                    { key: 'lastName', label: 'headers.lastName', type: 'text' },
-                    { key: 'email', label: 'headers.email', type: 'text' },
-                    { key: 'role', label: 'headers.role', type: 'badge' },
-                    { key: 'enabled', label: 'headers.status', type: 'boolean' }
-                ],
-                form: UserForms.UserCreateForm
-            });
-        }
-
-        // 2. REGIONES (ADMIN & SUPPORT)
+        // 1 & 2. ADMINISTRACIÓN (ADMIN & SUPPORT)
         if (isAdmin || isSupport) {
-            const regionSidebar: ObjectSidebar = {
-                icon: 'globe',
-                label: 'nav.regions',
-                path: '/dashboard/region',
-                slug: 'region',
-                childs: [
-                    { icon: 'flag', label: 'nav.countries', path: '/dashboard/country', slug: 'country' },
-                    { icon: 'map', label: 'nav.cities', path: '/dashboard/city', slug: 'city' }
-                ]
+            const adminSidebar: ObjectSidebar = {
+                icon: 'settings',
+                label: 'nav.administration',
+                path: '/dashboard/admin',
+                slug: 'administration',
+                childs: []
             };
-            sidebar.push(regionSidebar);
+
+            if (isAdmin) {
+                adminSidebar.childs?.push({ icon: 'user', label: 'user.management', path: '/dashboard/user', slug: 'user' });
+            }
+            
+            adminSidebar.childs?.push({ icon: 'flag', label: 'nav.countries', path: '/dashboard/country', slug: 'country' });
+            adminSidebar.childs?.push({ icon: 'map', label: 'nav.cities', path: '/dashboard/city', slug: 'city' });
+
+            sidebar.push(adminSidebar);
+
+            if (isAdmin) {
+                pages.push({
+                    slug: 'user',
+                    title: 'user.management',
+                    subtitle: 'user.subtitle.default',
+                    actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
+                    actionsRows: [
+                        { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
+                        { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' }
+                    ],
+                    columns: [
+                        { key: 'firstName', label: 'headers.firstName', type: 'text' },
+                        { key: 'lastName', label: 'headers.lastName', type: 'text' },
+                        { key: 'email', label: 'headers.email', type: 'text' },
+                        { key: 'role', label: 'headers.role', type: 'badge' },
+                        { key: 'enabled', label: 'headers.status', type: 'boolean' }
+                    ],
+                    form: UserForms.UserCreateForm
+                });
+            }
 
             pages.push({
                 slug: 'country',
