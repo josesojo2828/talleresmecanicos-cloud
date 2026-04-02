@@ -176,19 +176,19 @@ export default function ComunidadPage() {
             <div className="bg-slate-950 border-b border-emerald-500/20 py-12 px-6">
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
                     <div className="max-w-4xl space-y-6">
-                        <h1 className="text-white text-5xl md:text-9xl font-black italic tracking-tighter leading-[0.85] uppercase">
+                        <h1 className="!text-white text-5xl md:text-9xl font-black italic tracking-tighter leading-[0.85] uppercase">
                             DIÁLOGOS <br />
-                            <span className="text-emerald-500 not-italic">TÉCNICOS.</span>
+                            <span className="text-emerald-400 not-italic">TÉCNICOS.</span>
                         </h1>
                     </div>
                     <div className="flex items-center gap-12 border-l border-white/10 pl-12 h-fit mb-1">
                         <div>
                             <p className="text-white text-2xl font-black">{stats?.totalPosts || 0}</p>
-                            <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest">TEMAS_ACTIVOS</p>
+                            <p className="text-slate-200 text-[9px] font-black uppercase tracking-widest">TEMAS_ACTIVOS</p>
                         </div>
                         <div>
                             <p className="text-white text-2xl font-black">{stats?.totalComments || 0}</p>
-                            <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest">RESPUESTAS</p>
+                            <p className="text-slate-200 text-[9px] font-black uppercase tracking-widest">RESPUESTAS</p>
                         </div>
                     </div>
                 </div>

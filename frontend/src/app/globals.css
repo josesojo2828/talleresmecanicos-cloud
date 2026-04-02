@@ -117,7 +117,7 @@ body {
   @apply bg-slate-50 border-slate-200 focus:border-brand-green focus:ring-1 focus:ring-brand-green/20 transition-all;
 }
 
-h1 { @apply text-4xl font-extrabold tracking-tight text-slate-900; }
+h1 { @apply text-4xl font-extrabold tracking-tight; }
 h2 { @apply text-3xl font-bold tracking-tight text-slate-800; }
 h3 { @apply text-2xl font-bold text-slate-800; }
 p { @apply leading-relaxed text-slate-600; }
