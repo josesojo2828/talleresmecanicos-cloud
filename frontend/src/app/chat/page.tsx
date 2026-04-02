@@ -186,7 +186,7 @@ export default function ChatPage() {
                                 <span>WS_AUTH_TOKEN_VALIDATED</span>
                             </p>
                             <p className="flex gap-4 leading-relaxed italic">
-                                > Esta es una zona de comunicación técnica verificada. 
+                                <span>{">"}</span> Esta es una zona de comunicación técnica verificada. 
                                 Respete los protocolos de interoperabilidad mecánica.
                             </p>
                             {messages.slice(-5).map((m, i) => (

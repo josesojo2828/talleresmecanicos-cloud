@@ -88,7 +88,7 @@ export const GalleryManager = ({ images = [], onUpdate }: GalleryManagerProps) =
                     {images.map((url, index) => {
                         const displayUrl = url.startsWith('http') || url.startsWith('/') 
                             ? url 
-                            : `/talleres-mecanicos/${url}`;
+                            : `/explorar-red/${url}`;
                         
                         return (
                             <div key={index} className="group relative aspect-square rounded-[2rem] overflow-hidden border-4 border-white shadow-xl bg-slate-100">

@@ -561,7 +561,7 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
                           {shop.logoUrl ? (
                             <Image
                               unoptimized
-                              src={shop.logoUrl.startsWith('http') || shop.logoUrl.startsWith('/') ? shop.logoUrl : `/talleres-mecanicos/${shop.logoUrl}`}
+                              src={shop.logoUrl.startsWith('http') || shop.logoUrl.startsWith('/') ? shop.logoUrl : `/explorar-red/${shop.logoUrl}`}
                               alt={shop.name}
                               fill
                               className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -626,7 +626,7 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
                 title: w.name,
                 address: w.address,
                 phone: w.phone,
-                logoUrl: w.logoUrl ? (w.logoUrl.startsWith('http') || w.logoUrl.startsWith('/') ? w.logoUrl : `/talleres-mecanicos/${w.logoUrl}`) : undefined
+                logoUrl: w.logoUrl ? (w.logoUrl.startsWith('http') || w.logoUrl.startsWith('/') ? w.logoUrl : `/explorar-red/${w.logoUrl}`) : undefined
               }))}
             />
 
@@ -776,7 +776,7 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
                    <div className="flex items-start gap-5">
                       <div className="w-20 h-20 bg-slate-50 rounded-2xl overflow-hidden shadow-inner shrink-0 relative">
                         {shop.logoUrl ? (
-                           <Image unoptimized src={shop.logoUrl.startsWith('http') || shop.logoUrl.startsWith('/') ? shop.logoUrl : `/talleres-mecanicos/${shop.logoUrl}`} alt={shop.name} fill className="object-cover" />
+                           <Image unoptimized src={shop.logoUrl.startsWith('http') || shop.logoUrl.startsWith('/') ? shop.logoUrl : `/explorar-red/${shop.logoUrl}`} alt={shop.name} fill className="object-cover" />
                         ) : <div className="w-full h-full flex items-center justify-center text-slate-200"><Wrench size={24} /></div>}
                       </div>
                       <div className="flex-1 min-w-0">

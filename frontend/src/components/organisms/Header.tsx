@@ -36,7 +36,7 @@ export const Header = () => {
 
     const navLinks = [
         { href: "/", label: t("home"), icon: Home },
-        { href: "/talleres-mecanicos", label: t("workshops_list"), icon: Wrench },
+        { href: "/explorar-red", label: t("workshops_list"), icon: Wrench },
         { href: "/directorio", label: t("map"), icon: Search },
         { href: "/comunidad", label: t("community"), icon: Users2 },
         ...(isAuthenticated ? [{ href: "/chat", label: "Chat General", icon: MessageSquare }] : []),
@@ -57,7 +57,7 @@ export const Header = () => {
                         <Image src="/logo.svg" alt="Talleres Mecánicos Logo" width={40} height={40} />
                     </div>
                     <span className="text-slate-950 font-black text-2xl tracking-tighter leading-none uppercase italic">
-                        RINDE <span className="text-emerald-600 not-italic">+</span>
+                        Talleres <span className="text-emerald-600 not-italic">Mecánicos</span>
                     </span>
                 </Link>
 

@@ -125,7 +125,7 @@ export default function WorkshopClient() {
         if (path.startsWith('http') || path.startsWith('/')) {
             return path;
         }
-        return `/talleres-mecanicos/${path}`;
+        return `/explorar-red/${path}`;
     };
 
     const localImages = workshop?.images || [];

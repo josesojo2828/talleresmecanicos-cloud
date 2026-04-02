@@ -442,7 +442,7 @@ export default function MyWorkshopPage() {
                                         <img src={URL.createObjectURL(logo)} className="w-full h-full object-cover" />
                                     ) : workshop.logoUrl ? (
                                         <img 
-                                            src={workshop.logoUrl.startsWith('http') ? workshop.logoUrl : `/talleres-mecanicos/${workshop.logoUrl}`} 
+                                            src={workshop.logoUrl.startsWith('http') ? workshop.logoUrl : `/explorar-red/${workshop.logoUrl}`} 
                                             className="w-full h-full object-cover" 
                                         />
                                     ) : (
@@ -469,7 +469,7 @@ export default function MyWorkshopPage() {
                                             src={
                                                 typeof img !== 'string' 
                                                     ? URL.createObjectURL(img) 
-                                                    : (img.startsWith('http') ? img : `/talleres-mecanicos/${img}`)
+                                                    : (img.startsWith('http') ? img : `/explorar-red/${img}`)
                                             }
                                             className="w-full h-full object-cover"
                                         />

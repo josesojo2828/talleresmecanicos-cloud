@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
             title: workshop.name,
             description: workshop.description,
             images: workshop.logoUrl
-                ? [workshop.logoUrl.startsWith('http') ? workshop.logoUrl : `/talleres-mecanicos/${workshop.logoUrl}`]
+                ? [workshop.logoUrl.startsWith('http') ? workshop.logoUrl : `/explorar-red/${workshop.logoUrl}`]
                 : [],
         },
     };

@@ -13,7 +13,10 @@ export const Hero = () => {
 
     useEffect(() => {
         apiClient.get('/public/stats')
-            .then(res => setStats(res.data))
+            .then(res => {
+                const data = res.data?.body || res.data;
+                setStats(data || { workshops: 0, publications: 0, countries: 0 });
+            })
             .catch(err => console.error("Error fetching stats", err));
     }, []);
 

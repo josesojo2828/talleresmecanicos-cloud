@@ -71,7 +71,7 @@ export default function WorkPublicPage() {
     const getFullImagePath = (path?: string | null) => {
         if (!path) return null;
         if (path.startsWith('http') || path.startsWith('/')) return path;
-        return `/talleres-mecanicos/${path}`;
+        return `/explorar-red/${path}`;
     };
 
     if (loading) return (
