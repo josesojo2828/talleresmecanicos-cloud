@@ -159,9 +159,9 @@ export default function ListDirectoryClient() {
             <div className="max-w-7xl mx-auto relative z-10">
                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
                   <div className="space-y-6 max-w-4xl">
-                     <h1 className="text-5xl md:text-8xl font-black text-white uppercase italic tracking-tighter leading-[0.85]">
+                     <h1 className="text-5xl md:text-8xl font-black !text-white uppercase italic tracking-tighter leading-[0.85]">
                         LOCALIZA TU <br />
-                        <span className="text-emerald-500 not-italic pointer-events-none">NODO DE</span> <br />
+                        <span className="text-emerald-400 not-italic pointer-events-none">NODO DE</span> <br />
                         SERVICIO.
                      </h1>
                   </div>
@@ -290,7 +290,7 @@ export default function ListDirectoryClient() {
                               <div className="relative w-full h-full">
                                  <Image
                                     unoptimized
-                                    src={shop.logoUrl || shop.images[0]}
+                                    src={shop.images?.[0] || shop.logoUrl || 'https://placehold.co/800x600/020617/ffffff?text=TALLER'}
                                     alt={shop.name}
                                     fill
                                     className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
@@ -310,9 +310,6 @@ export default function ListDirectoryClient() {
 
                         <div className="p-8 space-y-6 flex-1 flex flex-col justify-between">
                            <div className="space-y-3">
-                              <div className="flex items-center gap-2 text-emerald-600 text-[9px] font-black uppercase tracking-widest">
-                                 <div className="w-1.5 h-1.5 bg-emerald-500" /> VERIFICADO
-                              </div>
                               <h3 className="text-2xl font-black text-slate-950 uppercase tracking-tighter leading-none group-hover:text-emerald-600 transition-colors">
                                  {shop.name}
                               </h3>
@@ -321,17 +318,7 @@ export default function ListDirectoryClient() {
                               </p>
                            </div>
 
-                           <div className="pt-6 border-t border-slate-50 flex items-center justify-between">
-                              <div className="flex gap-4">
-                                 {shop.whatsapp && (
-                                    <div className="w-10 h-10 border border-slate-100 flex items-center justify-center text-slate-400 hover:text-emerald-500 hover:border-emerald-500 transition-all">
-                                       <Phone size={16} />
-                                    </div>
-                                 )}
-                                 <div className="w-10 h-10 border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-950 hover:border-slate-950 transition-all">
-                                    <Share2 size={16} />
-                                 </div>
-                              </div>
+                           <div className="pt-6 border-t border-slate-50 flex items-center justify-end">
                               <div className="text-[10px] font-black uppercase tracking-widest text-slate-950 group-hover:translate-x-2 transition-transform italic flex items-center gap-2">
                                  CONECTAR_AHORA <ArrowRight size={14} />
                               </div>
