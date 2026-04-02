@@ -36,7 +36,7 @@ export const useChat = () => {
     }
 
     // Clean the URL from trailing slashes
-    const rawUrl = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:9999';
+    const rawUrl = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:3001';
     const apiUrl = rawUrl.replace(/\/$/, "");
     
     // Connect to the 'chat' namespace
@@ -44,7 +44,7 @@ export const useChat = () => {
       auth: {
         token: token,
       },
-      // Remove transport restriction to allow polling fallback if websocket is blocked
+      transports: ['websocket', 'polling'], // Allow both
     });
 
     socketRef.current = socket;

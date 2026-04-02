@@ -1,77 +1,102 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Header } from '@/components/organisms/Header';
-import Link from 'next/link';
 import { Footer } from '@/components/organisms/Footer';
 import { 
-    Send, 
-    MessageSquare, 
-    Users, 
-    Search,
-    MoreVertical,
-    Terminal,
-    ChevronRight,
-    Lock,
-    Clock,
-    Activity,
-    Shield
+    Command,
+    ArrowUpRight
 } from 'lucide-react';
 import { useChat, ChatMessage } from '@/hooks/useChat';
 import { useAuthStore } from '@/store/useAuthStore';
 import { cn } from '@/utils/cn';
+import Link from 'next/link';
 
-const formatTime = (dateString: string) => {
-    const d = new Date(dateString);
-    return d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false });
-};
+// --- CSS Animations for Industrial Movement ---
+const style = `
+@keyframes industrialFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes industrialSlideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes industrialSlideInLeft {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+.animate-industrial {
+    animation: industrialFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.animate-slide-me {
+    animation: industrialSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.animate-slide-node {
+    animation: industrialSlideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+`;
 
-const MessageBubble = ({ msg, isMe }: { msg: ChatMessage, isMe: boolean }) => {
-    const name = `${msg.user.firstName} ${msg.user.lastName}`;
+// --- Components ---
+
+const DataBlock = ({ msg, isMe, index }: { msg: ChatMessage, isMe: boolean, index: number }) => {
+    const timestamp = useMemo(() => {
+        const d = new Date(msg.createdAt);
+        return d.toLocaleTimeString("en-US", { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }, [msg.createdAt]);
 
     return (
-        <div className={cn("flex flex-col mb-8", isMe ? "items-end" : "items-start")}>
-            <div className={cn("flex items-center gap-3 mb-2 px-1", isMe ? "flex-row-reverse" : "flex-row")}>
+        <div 
+            className={cn(
+                "flex flex-col mb-10 w-full max-w-2xl opacity-0", 
+                isMe ? "ml-auto items-end animate-slide-me" : "mr-auto items-start animate-slide-node"
+            )}
+            style={{ animationDelay: `${index * 0.05}s` }}
+        >
+            {/* Header Metadata */}
+            <div className={cn("flex items-center gap-4 mb-3", isMe ? "flex-row-reverse" : "flex-row")}>
                 <div className="flex flex-col">
-                    <span className={cn(
-                        "text-[10px] font-black uppercase tracking-widest leading-none",
-                        isMe ? "text-slate-950 text-right" : "text-emerald-600"
-                    )}>
-                        {isMe ? "OPERATOR.ID" : name.toUpperCase()}
-                    </span>
-                    <span className={cn("text-[8px] font-bold text-slate-400 font-mono tracking-tight", isMe ? "text-right" : "")}>
-                        {formatTime(msg.createdAt)} // TX_RELAY_{msg.id?.slice(0, 4) || 'NULL'}
+                    <div className="flex items-center gap-2">
+                        <span className={cn("text-[9px] font-black uppercase tracking-tighter", isMe ? "text-slate-950" : "text-emerald-500")}>
+                            {isMe ? "SRC::SELF_NODE" : `SRC::${msg.user.firstName.toUpperCase()}`}
+                        </span>
+                        <div className={cn("w-2 h-2 rotate-45", isMe ? "bg-slate-950" : "bg-emerald-500")} />
+                    </div>
+                    <span className="text-[8px] font-mono font-bold text-slate-400 mt-0.5">
+                        TIMESTAMP // {timestamp}
                     </span>
                 </div>
-                {!isMe && (
-                    <div className="w-8 h-8 bg-slate-100 border border-slate-200 flex items-center justify-center text-[10px] font-black text-slate-400 uppercase italic">
-                        {msg.user.firstName[0]}
-                    </div>
-                )}
             </div>
-            
+
+            {/* Main Content Area */}
             <div className={cn(
-                "p-6 text-sm leading-relaxed border transition-all relative max-w-[85%]",
+                "relative p-6 border transition-all duration-500 w-full group",
                 isMe 
-                    ? "bg-slate-950 text-white border-slate-950" 
-                    : "bg-white text-slate-900 border-slate-200"
+                    ? "bg-slate-950 border-slate-950 text-white" 
+                    : "bg-white border-slate-200 text-slate-950"
             )}>
-                {/* Visual Accent */}
-                <div className={cn(
-                    "absolute top-0 w-8 h-[2px]",
-                    isMe ? "right-0 bg-emerald-500" : "left-0 bg-emerald-500"
-                )} />
+                {/* Decorative Grid on Card */}
+                <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none" 
+                     style={{ backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`, backgroundSize: '10px 10px' }} />
                 
-                <p className={cn(isMe ? "font-medium" : "font-semibold")}>
+                {/* Corner Accents */}
+                <div className={cn("absolute -top-px -left-px w-2 h-2 border-t border-l", isMe ? "border-emerald-500" : "border-slate-950")} />
+                <div className={cn("absolute -bottom-px -right-px w-2 h-2 border-b border-r", isMe ? "border-emerald-500" : "border-slate-950")} />
+
+                <p className="text-sm font-semibold leading-relaxed relative z-10 antialiased">
                     {msg.content}
                 </p>
 
-                {/* Sub-label */}
-                <div className={cn(
-                    "mt-4 pt-4 border-t border-dashed text-[8px] font-black uppercase tracking-[0.2em] opacity-40",
-                    isMe ? "border-white/10 text-white" : "border-slate-200 text-slate-400"
-                )}>
-                    {isMe ? "TRANSMISSION_SECURE" : `ROLE :: ${msg.user.role || 'GUEST'}`}
+                {/* Footer Data */}
+                <div className="mt-6 flex items-center justify-between opacity-40">
+                    <div className="flex items-center gap-4">
+                        <span className="text-[7px] font-mono tracking-widest uppercase">{isMe ? "ENCRYPTED_OUT" : "ENCRYPTED_IN"}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <div className="w-[3px] h-[3px] bg-current rounded-full" />
+                        <div className="w-[3px] h-[3px] bg-current rounded-full" />
+                        <div className="w-[3px] h-[3px] bg-current rounded-full" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,48 +116,58 @@ export default function ChatPage() {
     const handleSend = (e?: React.FormEvent) => {
         e?.preventDefault();
         const text = input.trim();
-        if (!text || !isConnected) return;
+        if (!text) return;
+        
+        if (!isConnected) {
+            import('sonner').then(({ toast }) => {
+                toast.error("ERROR DE CONEXIÓN", {
+                    description: "Esperando señal del servidor. Reintentando..."
+                });
+            });
+            return;
+        }
+
         sendMessage(text);
         setInput("");
     };
 
-    if (!_hasHydrated) return (
-        <div className="h-screen bg-white flex items-center justify-center p-6">
-            <div className="flex flex-col items-center gap-6">
-                <div className="w-12 h-12 border border-slate-200 flex items-center justify-center">
-                    <Activity className="text-emerald-500 animate-pulse" size={24} />
-                </div>
-                <span className="text-[10px] font-black text-slate-950 uppercase tracking-[0.5em] italic">BOOT_SEQUENCE_INITIALIZING</span>
-            </div>
-        </div>
-    );
+    if (!_hasHydrated) return null;
 
     if (!isAuthenticated || !user) {
         return (
-            <div className="min-h-screen bg-slate-50 flex flex-col pt-32">
+            <div className="h-screen bg-white flex flex-col overflow-hidden font-sans">
+                <style dangerouslySetInnerHTML={{ __html: style }} />
                 <Header />
-                <main className="flex-1 flex items-center justify-center p-6 bg-white relative">
-                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                <main className="flex-1 flex items-center justify-center p-6 relative">
+                    {/* Background Texture */}
+                    <div className="absolute inset-0 opacity-[0.03]"
                          style={{ backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
                     
-                    <div className="max-w-2xl w-full border border-slate-950 p-16 md:p-24 bg-white relative z-10 space-y-12">
-                        <div className="space-y-6">
-                            <div className="w-16 h-16 bg-slate-950 flex items-center justify-center text-white">
-                                <Lock size={32} />
+                    <div className="max-w-xl w-full border-2 border-slate-950 p-20 bg-white relative z-10 animate-industrial">
+                        {/* Brackets */}
+                        <div className="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-slate-950" />
+                        <div className="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-slate-950" />
+                        
+                        <div className="space-y-12">
+                            <div className="inline-flex py-2 px-4 bg-slate-950 text-white text-[10px] font-black uppercase tracking-[.4em] italic leading-none">
+                                SEC_FAILURE // UNKNOWN_ORIGIN
                             </div>
-                            <h2 className="text-5xl md:text-7xl font-black text-slate-950 uppercase italic tracking-tighter leading-none">
-                                ACCESO <br /> <span className="text-emerald-600 not-italic">RESTRINGIDO.</span>
-                            </h2>
-                            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest leading-relaxed max-w-sm">
-                                SE REQUIERE AUTENTICACIÓN NIVEL_01 PARA ACCEDER AL PROTOCOLO DE COMUNICACIÓN EN VIVO.
-                            </p>
-                        </div>
+                            
+                            <div className="space-y-4">
+                                <h1 className="text-6xl font-black text-slate-950 uppercase italic tracking-tighter leading-[0.85]">
+                                    ACCESO <br /> <span className="text-emerald-500 not-italic">RESTRINGIDO.</span>
+                                </h1>
+                                <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[.25em] leading-relaxed max-w-sm">
+                                    EL PROTOCOLO DE TRANSMISIÓN REQUIERE AUTENTICACIÓN. POR FAVOR VALIDAR CREDENCIALES.
+                                </p>
+                            </div>
 
-                        <Link href="/login" className="block">
-                            <button className="w-full bg-slate-950 text-white px-10 py-6 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-emerald-600 transition-all flex items-center justify-center gap-4">
-                                VALIDAR CREDENCIALES <ChevronRight size={16} />
-                            </button>
-                        </Link>
+                            <Link href="/login" className="block">
+                                <button className="w-full bg-slate-950 text-white h-20 text-[11px] font-black uppercase tracking-[.4em] hover:bg-emerald-600 transition-all flex items-center justify-center gap-4 group">
+                                    INICIALIZAR LOGIN <ArrowUpRight className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 </main>
                 <Footer />
@@ -141,142 +176,79 @@ export default function ChatPage() {
     }
 
     return (
-        <div className="h-screen bg-white flex flex-col overflow-hidden">
+        <div className="h-screen bg-slate-50 flex flex-col overflow-hidden selection:bg-emerald-500 selection:text-white">
+            <style dangerouslySetInnerHTML={{ __html: style }} />
             <Header />
             
             <main className="flex-1 flex flex-col pt-32 h-full overflow-hidden">
-                
-                {/* Structural Grid Interface */}
-                <div className="flex-1 grid grid-cols-1 lg:grid-cols-[350px,1fr] border-y border-slate-950">
+                <div className="flex-1 flex flex-col bg-white relative overflow-hidden">
                     
-                    {/* Left Panel: Status & Logs */}
-                    <aside className="hidden lg:flex flex-col border-r border-slate-950 bg-slate-50 overflow-hidden">
-                        <div className="p-10 border-b border-slate-200 space-y-8">
-                            <div className="space-y-2">
-                                <h3 className="text-2xl font-black text-slate-950 uppercase italic tracking-tighter leading-none">
-                                    ESTADO DEL <br /> <span className="text-emerald-600 not-italic">SISTEMA.</span>
-                                </h3>
-                                <div className="flex items-center gap-2 mt-4">
-                                    <div className={cn("w-2 h-2", isConnected ? "bg-emerald-500 animate-pulse" : "bg-rose-500")} />
-                                    <span className="text-[10px] font-black text-slate-950 uppercase tracking-widest">
-                                        {isConnected ? "NETWORK_VERIFIED" : "LINK_FAILURE"}
-                                    </span>
+                    {/* Area de Mensajes */}
+                    <div className="flex-1 overflow-y-auto p-10 md:p-16 space-y-4 scrollbar-hide relative">
+                        {/* CRT Grain Overlay Effect */}
+                        <div className="absolute inset-0 opacity-[0.015] pointer-events-none mix-blend-multiply z-50 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+                        
+                        {messages.length === 0 ? (
+                            <div className="h-full flex flex-col items-center justify-center text-center p-12 space-y-8 animate-industrial">
+                                <div className="space-y-2">
+                                    <h3 className="text-5xl font-black text-slate-950 uppercase italic tracking-tighter">SIN MENSAJES</h3>
+                                    <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em] max-w-xs mx-auto">ESPERANDO TRANSMISIÓN DE DATOS...</p>
                                 </div>
                             </div>
-                            
-                            <div className="space-y-4 pt-4 border-t border-slate-200">
-                                <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                    <span>USUARIO_ACTUAL</span>
-                                    <span className="text-slate-950 italic">{user.firstName}</span>
+                        ) : (
+                            <div className="max-w-4xl mx-auto w-full">
+                                <div className="flex items-center gap-6 mb-20 relative px-4">
+                                    <div className="h-px flex-1 bg-slate-100" />
+                                    <div className="text-[10px] font-black text-slate-950 uppercase tracking-[0.5em] italic bg-white px-6">
+                                        CHAT_GENERAL // {new Date().toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase()}
+                                    </div>
+                                    <div className="h-px flex-1 bg-slate-100" />
                                 </div>
-                                <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                    <span>NIVEL_ACCESO</span>
-                                    <span className="text-emerald-600 italic">SECURE_LEVEL_1</span>
-                                </div>
+                                
+                                {messages.map((msg, i) => (
+                                    <DataBlock 
+                                        key={msg.id || i}
+                                        msg={msg}
+                                        isMe={msg.userId === user?.id}
+                                        index={i}
+                                    />
+                                ))}
+                                <div ref={messagesEndRef} />
                             </div>
-                        </div>
+                        )}
+                    </div>
 
-                        <div className="flex-1 p-10 font-mono text-[10px] text-slate-400 space-y-4 overflow-y-auto">
-                            <p className="flex gap-4">
-                                <span className="text-emerald-500">[SYS]</span>
-                                <span>INITIALIZING_CHAT_RELAY_v4.2</span>
-                            </p>
-                            <p className="flex gap-4">
-                                <span className="text-emerald-500">[LOG]</span>
-                                <span>WS_AUTH_TOKEN_VALIDATED</span>
-                            </p>
-                            <p className="flex gap-4 leading-relaxed italic">
-                                <span>{">"}</span> Esta es una zona de comunicación técnica verificada. 
-                                Respete los protocolos de interoperabilidad mecánica.
-                            </p>
-                            {messages.slice(-5).map((m, i) => (
-                                <p key={i} className="flex gap-4 opacity-50">
-                                    <span className="text-slate-300">[{formatTime(m.createdAt)}]</span>
-                                    <span>NEW_MSG_FROM_{m.user.firstName.toUpperCase()}</span>
-                                </p>
-                            ))}
-                        </div>
-                    </aside>
-
-                    {/* Right Panel: Chat Terminal */}
-                    <section className="flex flex-col bg-white overflow-hidden relative">
-                        {/* Area de Mensajes */}
-                        <div className="flex-1 overflow-y-auto p-10 md:p-16 scrollbar-hide">
-                            {messages.length === 0 ? (
-                                <div className="h-full flex flex-col items-center justify-center text-center p-12 space-y-8">
-                                    <div className="w-20 h-20 border-2 border-slate-100 flex items-center justify-center text-slate-100">
-                                        <Terminal size={40} />
-                                    </div>
-                                    <div className="space-y-4">
-                                        <h3 className="text-4xl font-black text-slate-950 uppercase italic tracking-tighter">BUZÓN_VACÍO</h3>
-                                        <p className="text-slate-400 text-xs font-bold uppercase tracking-widest max-w-xs mx-auto">ESPERANDO INICIO DE TRANSMISIÓN DE DATOS EN LA RED.</p>
-                                    </div>
+                    {/* Input Area */}
+                    <div className="p-10 bg-white border-t border-slate-950/10">
+                        <form onSubmit={handleSend} className="max-w-4xl mx-auto w-full">
+                            <div className="relative flex flex-col md:flex-row gap-4 p-2 bg-slate-100 border border-slate-200 animate-industrial">
+                                <div className="absolute -top-3 left-4 px-3 bg-white text-[9px] font-black text-slate-950 uppercase tracking-widest italic border border-slate-950">
+                                    TRANSMISIÓN
                                 </div>
-                            ) : (
-                                <div className="max-w-4xl mx-auto w-full">
-                                    <div className="flex justify-center mb-20 relative before:w-full before:h-px before:bg-slate-100 before:absolute before:top-1/2 before:z-0">
-                                        <div className="bg-white px-8 py-2 text-[10px] font-black text-slate-950 uppercase tracking-[0.4em] italic border border-slate-950 relative z-10">
-                                            INDEXING_DATE :: {new Date().toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase()}
-                                        </div>
-                                    </div>
-                                    {messages.map((msg, i) => (
-                                        <MessageBubble 
-                                            key={msg.id || i}
-                                            msg={msg}
-                                            isMe={msg.userId === user?.id}
-                                        />
-                                    ))}
-                                    <div ref={messagesEndRef} />
+                                
+                                <div className="flex-1 relative">
+                                    <input 
+                                        type="text"
+                                        value={input}
+                                        onChange={(e) => setInput(e.target.value)}
+                                        placeholder="ESCRIBE UN MENSAJE..."
+                                        className="w-full bg-transparent p-6 text-xs font-mono font-black uppercase tracking-widest outline-none placeholder:text-slate-300"
+                                    />
                                 </div>
-                            )}
-                        </div>
-
-                        {/* Input Area: Console Style */}
-                        <div className="p-10 border-t border-slate-950 bg-slate-50 relative z-20">
-                            <form onSubmit={handleSend} className="max-w-4xl mx-auto w-full">
-                                <div className="flex flex-col md:flex-row gap-4">
-                                    <div className="flex-1 relative">
-                                        <div className="absolute left-6 top-1/2 -translate-y-1/2 text-emerald-500 font-mono text-sm font-black italic select-none">
-                                            {">_"}
-                                        </div>
-                                        <input 
-                                            type="text"
-                                            value={input}
-                                            onChange={(e) => setInput(e.target.value)}
-                                            placeholder="REDACTAR TRANSMISIÓN..."
-                                            className="w-full bg-white border border-slate-950 pl-16 pr-6 py-6 text-xs font-black uppercase tracking-widest focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all placeholder:text-slate-300"
-                                            disabled={!isConnected}
-                                        />
-                                    </div>
-                                    <button 
-                                        type="submit"
-                                        disabled={!input.trim() || !isConnected}
-                                        className={cn(
-                                            "px-12 py-6 text-[10px] font-black uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-4",
-                                            input.trim() && isConnected 
-                                                ? "bg-slate-950 text-white hover:bg-emerald-600" 
-                                                : "bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200"
-                                        )}
-                                    >
-                                        ENVIAR.CMD <Send size={14} />
-                                    </button>
-                                </div>
-                                <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-6">
-                                    <div className="flex items-center gap-8">
-                                        <div className="flex items-center gap-2 text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                                            <Shield size={10} className="text-emerald-500" /> ENCRYPTED_CHANNEL
-                                        </div>
-                                        <div className="flex items-center gap-2 text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                                            <Activity size={10} className="text-emerald-500" /> LATENCY: 2.4MS
-                                        </div>
-                                    </div>
-                                    <div className="text-[9px] font-black text-slate-300 uppercase tracking-tighter italic">
-                                        PROTOCOL_TM_v4.2 // RED_TALLERES_MECANICOS
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </section>
+                                <button 
+                                    type="submit"
+                                    className={cn(
+                                        "px-10 h-16 text-[10px] font-black uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-4",
+                                        input.trim() 
+                                            ? "bg-slate-950 text-white hover:bg-emerald-600" 
+                                            : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                                    )}
+                                >
+                                    ENVIAR <Command size={14} />
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </main>
         </div>
