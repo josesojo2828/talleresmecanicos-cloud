@@ -19,6 +19,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import apiClient from '@/utils/api/api.client';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { getFullImagePath } from '@/utils/image';
 
 interface ForumComment {
     id: string;
@@ -172,7 +173,7 @@ export default function PostDetailPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
                             {post.images.map((img, idx) => (
                                 <div key={idx} className="aspect-video bg-slate-100 rounded-3xl overflow-hidden relative">
-                                    <img src={img} alt={`imagen-${idx}`} className="w-full h-full object-cover" />
+                                    <img src={getFullImagePath(img)} alt={`imagen-${idx}`} className="w-full h-full object-cover" />
                                 </div>
                             ))}
                         </div>

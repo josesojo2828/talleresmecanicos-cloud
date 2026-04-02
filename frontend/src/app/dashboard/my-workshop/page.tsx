@@ -15,6 +15,7 @@ import apiClient from "@/utils/api/api.client";
 import { cn } from "@/utils/cn";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useAlertStore } from "@/store/useAlertStore";
+import { getFullImagePath } from "@/utils/image";
 
 const DAYS = [
     { key: "monday", label: "Lunes" },
@@ -442,7 +443,7 @@ export default function MyWorkshopPage() {
                                         <img src={URL.createObjectURL(logo)} className="w-full h-full object-cover" />
                                     ) : workshop.logoUrl ? (
                                         <img 
-                                            src={workshop.logoUrl.startsWith('http') ? workshop.logoUrl : `/explorar-red/${workshop.logoUrl}`} 
+                                            src={getFullImagePath(workshop.logoUrl)} 
                                             className="w-full h-full object-cover" 
                                         />
                                     ) : (
@@ -469,7 +470,7 @@ export default function MyWorkshopPage() {
                                             src={
                                                 typeof img !== 'string' 
                                                     ? URL.createObjectURL(img) 
-                                                    : (img.startsWith('http') ? img : `/explorar-red/${img}`)
+                                                    : getFullImagePath(img)
                                             }
                                             className="w-full h-full object-cover"
                                         />

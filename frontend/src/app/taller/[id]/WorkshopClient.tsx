@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import apiClient from "@/utils/api/api.client";
 import { cn } from "@/utils/cn";
+import { getFullImagePath } from "@/utils/image";
 import { Map } from "@/components/molecules/Map";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
@@ -120,13 +121,6 @@ export default function WorkshopClient() {
         }).join('\n');
     };
 
-    const getFullImagePath = (path?: string | null) => {
-        if (!path) return null;
-        if (path.startsWith('http') || path.startsWith('/')) {
-            return path;
-        }
-        return `/explorar-red/${path}`;
-    };
 
     const localImages = workshop?.images || [];
 

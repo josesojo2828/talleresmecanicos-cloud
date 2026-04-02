@@ -10,6 +10,7 @@ import {
    ArrowRight
 } from 'lucide-react';
 import apiClient from "@/utils/api/api.client";
+import { getFullImagePath } from '@/utils/image';
 import { cn } from "@/utils/cn";
 import { WorkshopSkeleton } from '@/components/atoms/Skeleton';
 import { SEO } from '@/components/atoms/SEO';
@@ -290,7 +291,7 @@ export default function ListDirectoryClient() {
                               <div className="relative w-full h-full">
                                  <Image
                                     unoptimized
-                                    src={shop.images?.[0] || shop.logoUrl || 'https://placehold.co/800x600/020617/ffffff?text=TALLER'}
+                                    src={getFullImagePath(shop.images?.[0] || shop.logoUrl) || 'https://placehold.co/800x600/020617/ffffff?text=TALLER'}
                                     alt={shop.name}
                                     fill
                                     className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
