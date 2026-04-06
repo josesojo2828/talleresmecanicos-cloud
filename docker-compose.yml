@@ -75,6 +75,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
     container_name: backend_dev
+    ports:
+      - "3001:9999"
     depends_on:
       - postgres
       - redis
@@ -108,6 +110,8 @@ services:
     depends_on:
       - postgres
       - redis
+    ports:
+      - "3001:9999"
     environment:
       <<: *backend-env
       NODE_ENV: production

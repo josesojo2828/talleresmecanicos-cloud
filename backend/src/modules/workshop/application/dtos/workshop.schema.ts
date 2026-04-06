@@ -43,6 +43,7 @@ export const IDefaultWorkshopInclude: IWorkshopIncludeType = {
 
 export interface IWorkshopQueryFilter {
     name?: string;
+    slug?: string;
     countryId?: string;
     cityId?: string;
     enabled?: boolean;

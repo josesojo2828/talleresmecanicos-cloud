@@ -16,6 +16,7 @@ export default class WorkshopModel {
 
         if (param.countryId) wh.push({ countryId: param.countryId });
         if (param.cityId) wh.push({ cityId: param.cityId });
+        if (param.slug) wh.push({ slug: param.slug });
         if (param.enabled !== undefined) {
             const isEnabled = String(param.enabled) === 'true';
             wh.push({ enabled: isEnabled });

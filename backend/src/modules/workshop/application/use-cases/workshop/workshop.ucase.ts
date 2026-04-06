@@ -115,16 +115,20 @@ export class WorkshopUCase extends WorkshopModel {
     }
 
     async pagination(q: QueryOptions<Workshop, IWorkshopQueryFilter>, user: any) {
-        const { search, filters, skip, take, orderBy } = q as any;
+        console.log('📬 RECIBIDO EN USECASE (RAW q):', JSON.stringify(q, null, 2));
+        const { search, filters, skip, take, orderBy, ...others } = q as any;
         const parsedFilters = typeof filters === 'string' ? JSON.parse(filters) : filters;
+        // Mezclamos los filtros explícitos con los parámetros que vengan en el root (como el slug)
+        const combinedFilters = { ...(parsedFilters || {}), ...others };
         const scope = getScopeFilter(user);
         
         const where = {
             AND: [
-                this.getWhere(parsedFilters || {}, search),
+                this.getWhere(combinedFilters, search),
                 user ? scope : { enabled: true }
             ]
         };
+        console.log('🏗️ CLAUSULA WHERE (PRISMA):', JSON.stringify(where, null, 2));
 
         return await this.persistence.getAll({
             where,
