@@ -59,17 +59,19 @@ export const RegisterForm = () => {
     const passwordStrength = password ? getPasswordStrength(password) : null;
 
     // --- MANEJADOR DE ENVÍO (SUBMIT) ---
-    // handleSubmit de react-hook-form nos provee los datos ya recolectados
     const onSubmit = async (data: any) => {
-        if (!data.role) return; // Validación extra de seguridad
-        // Enviamos todo el objeto data (incluyendo country y city) a tu hook de registro
+        console.log("🚀 Submit Iniciado con datos:", data);
+        if (!data.role) return; 
         await handleRegister(data);
+    };
+
+    const onError = (errors: any) => {
+        console.error("❌ Errores de validación en el Formulario:", errors);
     };
 
     // --- RENDERIZADO: PASO 1 (FORMULARIO DETALLADO) ---
     return (
-        // Usamos handleSubmit para envolver tu onSubmit
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-6 animation-fade-in">
+        <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-6 mt-6 animation-fade-in">
 
             {/* Error Global (Backend) */}
             {error && (
