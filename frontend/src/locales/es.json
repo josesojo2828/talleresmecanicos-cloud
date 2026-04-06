@@ -1,9 +1,14 @@
 {
     "success": {
+        "success": "Operación exitosa",
         "create": "Creación exitosa",
         "update": "Actualización exitosa",
         "delete": "Eliminación completada",
         "process": "Operación procesada correctamente",
+        "copy_clipboard": "Copiado al portapapeles",
+        "info_updated": "Información actualizada",
+        "category_created": "Categoría creada",
+        "part_added": "Repuesto añadido al inventario",
         "default": "Solicitud exitosa",
         "login": "Inicio de sesión exitoso",
         "logout": "Cerrar sesión"
@@ -395,6 +400,9 @@
         "badge": "La red más grande de talleres en Latinoamérica",
         "title": "Encuentra el taller ideal en segundos.",
         "description": "Conectamos dueños de vehículos con los mejores talleres mecánicos. Calidad, confianza y rapidez en un solo lugar.",
+        "cta_login": "Acceso para Talleres",
+        "cta_map": "Mapa Interactivo",
+        "cta_directory": "Directorio",
         "cta_primary": "Soy Dueño de Taller",
         "cta_secondary": "Busco un Taller",
         "trust": {

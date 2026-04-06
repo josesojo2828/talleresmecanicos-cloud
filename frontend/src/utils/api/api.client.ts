@@ -43,7 +43,7 @@ apiClient.interceptors.response.use(
         } else {
             // SILENCIAR alertas en GET para evitar errores acumulados en búsqueda
             if (config?.method?.toLowerCase() !== 'get') {
-                const errorMessage = error.response?.data?.message || "common.error.generic";
+                const errorMessage = error.response?.data?.message || "error.default";
                 addAlert(errorMessage, 'error');
             }
         }

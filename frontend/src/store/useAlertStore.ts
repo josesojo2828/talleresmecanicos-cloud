@@ -21,12 +21,6 @@ export const useAlertStore = create<AlertState>((set) => ({
     addAlert: (message, type = 'info', duration = 3000) => {
         const id = Math.random().toString(36).substring(7);
         
-        // Disparar toast de Sonner
-        if (type === 'success') toast.success(message, { duration });
-        else if (type === 'error') toast.error(message, { duration });
-        else if (type === 'warning') toast.warning(message, { duration });
-        else toast.info(message, { duration });
-
         set((state) => ({
             alerts: [...state.alerts, { id, message, type, duration }],
         }));
