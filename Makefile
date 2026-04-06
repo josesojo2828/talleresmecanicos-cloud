@@ -1,22 +1,28 @@
-.PHONY: up down build logs install
+.PHONY: up down build logs install qa
 
+# Levanta en producción
 up:
-	docker compose -f docker-compose.prod.yml up -d --build
+	docker compose --profile prod up -d --build
 
+# Levanta en desarrollo con logs (Hot-reload activo)
 qa:
-	docker compose -f docker-compose.dev.yml up --build
+	docker compose --profile dev up --build
 
+# Levanta en desarrollo de fondo (Hot-reload activo)
 dev:
-	docker compose -f docker-compose.dev.yml up --build -d
+	docker compose --profile dev up -d --build
 
+# Baja TODO (Cualquier perfil)
 down:
-	docker compose -f docker-compose.dev.yml down && docker compose -f docker-compose.prod.yml down
+	docker compose --profile dev --profile prod down
 
+# Build de producción
 build:
-	docker compose -f docker-compose.prod.yml build
+	docker compose --profile prod build
 
+# Logs de producción
 logs:
-	docker compose -f docker-compose.prod.yml logs -f
+	docker compose --profile prod logs -f
 
 install:
 	cd backend && npm install

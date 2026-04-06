@@ -1,4 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { PrismaService } from './config/prisma.service'
 import { DataFixtures } from './fixtures/data.fixtures'
 import { TimerMiddleware } from './shared/middleware/timer.middleware';
@@ -61,10 +63,20 @@ import { SystemModule } from './modules/system/system.module';
 
     // STORAGE
     StorageModule,
+
+    // RATE LIMITING
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 60,
+    }]),
   ],
   providers: [
     PrismaService,
     DataFixtures,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule implements NestModule {
