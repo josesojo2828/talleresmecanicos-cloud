@@ -325,7 +325,8 @@
         "login_mobile": "Login to my account",
         "garage": "My Garage",
         "my_vehicles": "My Vehicles",
-        "my_requests": "My Requests"
+        "my_requests": "My Requests",
+        "finance": "Finance"
     },
     "hero": {
         "badge": "Connecting Latino talent in Japan",
