@@ -10,6 +10,7 @@ export interface ICreateWorkDto {
     vehicleLicensePlate?: string;
     images?: string[];
     laborPrice?: number;
+    currency?: string;
 }
 
 export interface IUpdateWorkDto {
@@ -21,4 +22,5 @@ export interface IUpdateWorkDto {
     vehicleLicensePlate?: string;
     images?: string[];
     laborPrice?: number;
+    currency?: string;
 }

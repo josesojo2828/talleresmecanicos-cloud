@@ -11,7 +11,7 @@ export default class WorkPersistence {
     }
 
     async update(id: string, data: IWorkUpdateType) {
-        return await this.prisma.work.update({ where: { id }, data });
+        return await this.prisma.work.update({ where: { id }, data, include: IDefaultWorkInclude });
     }
 
     async delete(id: string) {

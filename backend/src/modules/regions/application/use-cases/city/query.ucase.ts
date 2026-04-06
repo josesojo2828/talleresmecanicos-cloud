@@ -17,12 +17,12 @@ export default class QueryCityUCase extends CityModel {
 
     public async findOne({ id, user }: { id: string, user: any }) {
         const where: any = { id };
-        const scope = getScopeFilter(user);
+        const scope = getScopeFilter(user) as any;
         
         if (user && user.role === UserRole.SUPPORT) {
             // Map cityId to id for City model
-            if (scope.OR) {
-                const cityFilters = scope.OR.map(f => f.cityId ? { id: f.cityId } : f);
+            if (scope && scope.OR) {
+                const cityFilters = scope.OR.map((f: any) => f.cityId ? { id: f.cityId } : f);
                 where.AND = [{ OR: cityFilters }];
             }
         } else if (!user) {
@@ -39,13 +39,13 @@ export default class QueryCityUCase extends CityModel {
 
         const parsedFilters = typeof filters === 'string' ? JSON.parse(filters) : filters;
         const baseWhere = this.getWhere(parsedFilters || {}, search);
-        const scope = getScopeFilter(user);
+        const scope = getScopeFilter(user) as any;
         
         const finalWhere: any = { AND: [baseWhere] };
 
         if (user && user.role === UserRole.SUPPORT) {
-             if (scope.OR) {
-                const cityFilters = scope.OR.map(f => f.cityId ? { id: f.cityId } : f);
+             if (scope && scope.OR) {
+                const cityFilters = scope.OR.map((f: any) => f.cityId ? { id: f.cityId } : f);
                 finalWhere.AND.push({ OR: cityFilters });
             }
         } else if (!user) {

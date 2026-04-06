@@ -4,6 +4,7 @@ export interface ICreatePartDto {
     description?: string;
     quantity?: number;
     price?: number;
+    currency?: string;
     workshopId?: string;
     categoryId?: string;
 }
@@ -14,6 +15,7 @@ export interface IUpdatePartDto {
     description?: string;
     quantity?: number;
     price?: number;
+    currency?: string;
     workshopId?: string;
     categoryId?: string;
 }
