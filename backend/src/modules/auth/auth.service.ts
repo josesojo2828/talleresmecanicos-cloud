@@ -2,7 +2,8 @@ import {
     BadRequestException,
     Injectable,
     UnauthorizedException,
-    NotFoundException
+    NotFoundException,
+    Logger
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -16,6 +17,8 @@ import FindUserPersistence from '../user/infrastructure/persistence/user/find.pe
 
 @Injectable()
 export class AuthService {
+    private readonly logger = new Logger(AuthService.name);
+
     constructor(
         private prisma: PrismaService,
         private jwtService: JwtService,
@@ -111,31 +114,40 @@ export class AuthService {
                 .replace(/ /g, '-') // Cambiar espacios por guiones
                 + '-' + Math.random().toString(36).substring(2, 6);
             
-            const user = await this.prisma.user.create({
-                data: {
-                    email: emailLower,
-                    passwordHash,
-                    firstName: registerDto.firstName,
-                    lastName: registerDto.lastName,
-                    role: registerDto.role as any,
-                    enabled: true,
-                    workshop: {
-                        create: {
-                            name: workshopName,
-                            slug,
-                            images: [],
-                            address: address,
-                            country: { connect: { id: registerDto.country } },
-                            city: { connect: { id: registerDto.city } },
-                            enabled: true,
-                            openingHours: 'Lun-Sáb 8:00 - 18:00',
-                            socialMedia: {},
-                        }
-                    }
-                },
-            });
+            this.logger.log(`Intentando registrar TALLER: ${emailLower} | Workshop: ${workshopName}`);
+            this.logger.debug(`Registro DTO: ${JSON.stringify(registerDto)}`);
 
-            userId = user.id;
+            try {
+                const user = await this.prisma.user.create({
+                    data: {
+                        email: emailLower,
+                        passwordHash,
+                        firstName: registerDto.firstName,
+                        lastName: registerDto.lastName,
+                        role: registerDto.role as any,
+                        enabled: true,
+                        workshop: {
+                            create: {
+                                name: workshopName,
+                                slug,
+                                images: [],
+                                address: address,
+                                country: { connect: { id: registerDto.country } },
+                                city: { connect: { id: registerDto.city } },
+                                enabled: true,
+                                openingHours: 'Lun-Sáb 8:00 - 18:00',
+                                socialMedia: {},
+                            }
+                        }
+                    },
+                });
+
+                userId = user.id;
+                this.logger.log(`TALLER registrado con éxito: ${user.id}`);
+            } catch (error) {
+                this.logger.error(`Error fatal al registrar TALLER: ${error.message}`, error.stack);
+                throw new BadRequestException('Error al crear el taller. Verifique que el país y la ciudad sean válidos.');
+            }
         } else {
 
             const user = await this.prisma.user.create({

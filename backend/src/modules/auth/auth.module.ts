@@ -8,6 +8,8 @@ import { JwtStrategy } from './jwt.strategy';
 import { PrismaService } from '../../config/prisma.service';
 import DashboardService from '../user/application/service/dashboard.service';
 
+import { OptionalAuthGuard } from './guards/optional-auth.guard';
+
 const jwtConstants = {
     secret: process.env.JWT_SECRET || 'secretKey', // Fallback for dev only
 };
@@ -21,8 +23,8 @@ const jwtConstants = {
             signOptions: { expiresIn: '60d' }, // User requested stored token, giving long expiry or as needed
         }),
     ],
-    providers: [AuthService, JwtStrategy, PrismaService, DashboardService],
+    providers: [AuthService, JwtStrategy, OptionalAuthGuard, PrismaService, DashboardService],
     controllers: [AuthController],
-    exports: [AuthService],
+    exports: [AuthService, OptionalAuthGuard],
 })
 export class AuthModule { }
