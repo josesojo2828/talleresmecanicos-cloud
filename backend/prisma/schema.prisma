@@ -199,10 +199,10 @@ model Workshop {
   WorkshopToCategory WorkshopToCategory[]
   appointments       Appointment[]
   forumPosts         ForumPost[]
+  partCategories     PartCategory[]
+  parts              Part[]
   publications       Publication[]
   works              Work[]
-  parts              Part[]
-  partCategories     PartCategory[]
   city               City                 @relation(fields: [cityId], references: [id])
   country            Country              @relation(fields: [countryId], references: [id])
   user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -328,25 +328,25 @@ model Appointment {
 }
 
 model Work {
-  id          String     @id @default(uuid())
-  publicId    String     @unique @default(cuid()) @map("public_id")
-  workshopId  String     @map("workshop_id")
-  clientId    String?    @map("client_id")
-  title       String
-  description String?
-  status      WorkStatus @default(OPEN)
-  clientName  String?    @map("client_name")
-  clientPhone String?    @map("client_phone")
-  vehicleLicensePlate String? @map("vehicle_license_plate")
-  images      String[]
-  laborPrice  Float?     @default(0) @map("labor_price")
-  currency    String?    @default("USD")
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime?  @updatedAt @map("updated_at")
-  deletedAt   DateTime?  @map("deleted_at")
-  client      User?      @relation(fields: [clientId], references: [id])
-  workshop    Workshop   @relation(fields: [workshopId], references: [id], onDelete: Cascade)
-  partsUsed   WorkPart[]
+  id                  String     @id @default(uuid())
+  publicId            String     @unique @default(cuid()) @map("public_id")
+  workshopId          String     @map("workshop_id")
+  clientId            String?    @map("client_id")
+  title               String
+  description         String?
+  status              WorkStatus @default(OPEN)
+  images              String[]
+  createdAt           DateTime   @default(now()) @map("created_at")
+  updatedAt           DateTime?  @updatedAt @map("updated_at")
+  deletedAt           DateTime?  @map("deleted_at")
+  clientName          String?    @map("client_name")
+  clientPhone         String?    @map("client_phone")
+  vehicleLicensePlate String?    @map("vehicle_license_plate")
+  laborPrice          Float?     @default(0) @map("labor_price")
+  currency            String?    @default("USD")
+  partsUsed           WorkPart[]
+  client              User?      @relation(fields: [clientId], references: [id])
+  workshop            Workshop   @relation(fields: [workshopId], references: [id], onDelete: Cascade)
 
   @@index([workshopId])
   @@index([clientId])
@@ -359,11 +359,11 @@ model PartCategory {
   name        String
   description String?
   workshopId  String    @map("workshop_id")
-  workshop    Workshop  @relation(fields: [workshopId], references: [id], onDelete: Cascade)
-  parts       Part[]
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
+  workshop    Workshop  @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  parts       Part[]
 
   @@unique([name, workshopId])
   @@map("part_categories")
@@ -376,15 +376,15 @@ model Part {
   description String?
   quantity    Int           @default(0)
   price       Float?
-  currency    String?       @default("USD")
   workshopId  String        @map("workshop_id")
   categoryId  String?       @map("category_id")
-  workshop    Workshop      @relation(fields: [workshopId], references: [id], onDelete: Cascade)
-  category    PartCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  worksUsedIn WorkPart[]
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime?     @updatedAt @map("updated_at")
   deletedAt   DateTime?     @map("deleted_at")
+  currency    String?       @default("USD")
+  category    PartCategory? @relation(fields: [categoryId], references: [id])
+  workshop    Workshop      @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  worksUsedIn WorkPart[]
 
   @@map("parts")
 }
@@ -394,9 +394,9 @@ model WorkPart {
   workId    String   @map("work_id")
   partId    String   @map("part_id")
   quantity  Int      @default(1)
-  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
-  part      Part     @relation(fields: [partId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
+  part      Part     @relation(fields: [partId], references: [id])
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
 
   @@unique([workId, partId], name: "workPartId")
   @@map("work_parts")

@@ -200,6 +200,10 @@ export default class DashboardService {
             }
         }
 
+        if (isTaller || isAdmin) {
+            workshopSidebar.childs.push({ icon: 'chart', label: 'nav.finance', path: '/dashboard/finance', slug: 'finance' });
+        }
+
         if (isTaller) {
             workshopSidebar.childs.push({ icon: 'info', label: 'nav.my_workshop', path: '/dashboard/my-workshop', slug: 'my-workshop' });
             workshopSidebar.childs.push({ icon: 'calendar', label: 'appointment.title', path: '/dashboard/appointment', slug: 'appointment' });
@@ -209,6 +213,16 @@ export default class DashboardService {
         }
 
         sidebar.push(workshopSidebar);
+
+        pages.push({
+            slug: 'finance',
+            title: 'Finanzas y Rendimiento',
+            subtitle: 'Análisis de ingresos, inventario y balance operativo',
+            actions: [],
+            actionsRows: [],
+            columns: [],
+            form: null as any
+        });
 
         pages.push({
             slug: 'workshop',
