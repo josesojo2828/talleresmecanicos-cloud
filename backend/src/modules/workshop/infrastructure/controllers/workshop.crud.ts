@@ -8,6 +8,7 @@ import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "src/modules/auth/guards/roles.guard";
 import { Roles } from "src/modules/auth/decorators/roles.decorator";
 import { CurrentUser } from "src/modules/auth/decorators/current-user.decorator";
+import { OptionalAuthGuard } from "src/modules/auth/guards/optional-auth.guard";
 
 @Controller('workshop')
 export class WorkshopCrudController {
@@ -51,6 +52,7 @@ export class WorkshopCrudController {
     }
 
     @Get('')
+    @UseGuards(OptionalAuthGuard)
     async getPaginate(@Query() q: QueryOptions<Workshop, IWorkshopQueryFilter>, @CurrentUser() user: any) {
         return await this.useCase.pagination(q, user || { role: 'PUBLIC' });
     }

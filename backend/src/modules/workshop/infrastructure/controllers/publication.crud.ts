@@ -40,7 +40,9 @@ export class PublicationCrudController {
     }
 
     @Get('')
+    @UseGuards(JwtAuthGuard)
     async getPaginate(@Query() q: QueryOptions<Publication, IPublicationQueryFilter>, @CurrentUser() user: any) {
-        return await this.useCase.pagination(q, user || { role: 'PUBLIC' });
+        return await this.useCase.pagination(q, user);
     }
+
 }

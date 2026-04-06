@@ -14,37 +14,52 @@ export class PublicationUCase extends PublicationModel {
     }
 
     async create(data: ICreatePublicationDto, user: any) {
+        console.log('[PublicationUCase] Create Request by user:', user.email, 'Role:', user.role);
         const { workshopId, categoryIds, ...rest } = data;
         
+        // Determinar el workshopId si no viene en el body
+        const effectiveWorkshopId = (user.role === UserRole.TALLER) ? (user.workshop?.id || workshopId) : workshopId;
+        console.log('[PublicationUCase] Effective Workshop ID assigned:', effectiveWorkshopId);
+
+
         const body: any = {
             ...rest,
             enabled: true,
             user: { connect: { id: user.id } }
         };
 
-        if (workshopId) {
-            body.workshop = { connect: { id: workshopId } };
+        if (effectiveWorkshopId) {
+            body.workshop = { connect: { id: effectiveWorkshopId } };
         }
 
         if (categoryIds && categoryIds.length > 0) {
             body.categories = { connect: categoryIds.map(id => ({ id })) };
         }
 
+        const result = await this.persistence.create(body);
+        console.log('[PublicationUCase] Creation Successful. Publication ID:', result.id);
+        
         return {
             message: 'success.create',
-            data: await this.persistence.create(body)
+            data: result
         };
     }
 
     async update(id: string, data: IUpdatePublicationDto, user: any) {
+        console.log('[PublicationUCase] Update Request for ID:', id, 'by User:', user.email);
         await this.findOne(id, user, true); 
 
-        const { title, content, images, enabled, categoryIds } = data;
+        const { title, content, images, enabled, categoryIds, workshopId } = data;
         const updateData: any = {};
         if (title !== undefined) updateData.title = title;
         if (content !== undefined) updateData.content = content;
         if (images !== undefined) updateData.images = images;
         if (enabled !== undefined) updateData.enabled = enabled;
+        
+        if (workshopId !== undefined) {
+             updateData.workshop = { connect: { id: workshopId } };
+        }
+
         if (categoryIds !== undefined) {
             updateData.categories = {
                 set: categoryIds.map(id => ({ id }))
@@ -58,6 +73,7 @@ export class PublicationUCase extends PublicationModel {
     }
 
     async delete(id: string, user: any) {
+        console.log('[PublicationUCase] Delete Request for ID:', id, 'by User:', user.email);
         await this.findOne(id, user); 
         return {
             message: 'success.delete',
@@ -66,54 +82,59 @@ export class PublicationUCase extends PublicationModel {
     }
 
     async findOne(id: string, user: any, ignore?: boolean) {
-        const scope = getScopeFilter(user);
-        const where: any = { id };
+        const where: any = { id, ...getScopeFilter(user, 'workshop') };
         
-        if (user && !ignore) {
-            if (user.role === UserRole.SUPPORT) {
-                where.workshop = scope;
-            } else if (user.role === UserRole.TALLER || user.role === UserRole.CLIENT) {
+        if (user && !ignore && user.role !== UserRole.ADMIN) {
+            if (user.role === UserRole.TALLER) {
+                where.workshopId = user.workshop?.id;
+                delete where.workshop; // Override geographic filter
+            } else if (user.role === UserRole.CLIENT) {
                 where.userId = user.id;
+                delete where.workshop; // Override geographic filter
             }
-        } else {
-            where.enabled = true;
         }
 
         const entity = await this.persistence.find(where);
-        if (!entity && (!user || user.role !== UserRole.ADMIN)) throw new ForbiddenException("No tienes permiso o no existe");
+        if (!entity) throw new ForbiddenException("No tienes permiso o el registro no existe");
         
         return entity;
     }
 
+
+
     async pagination(q: QueryOptions<Publication, IPublicationQueryFilter>, user: any) {
         const { search, filters, skip, take, orderBy } = q as any;
         const parsedFilters = typeof filters === 'string' ? JSON.parse(filters) : filters;
-        const scope = getScopeFilter(user);
         
-        const scopeWhere: any = {};
-        if (user) {
-            if (user.role === UserRole.SUPPORT) {
-                scopeWhere.workshop = scope;
-            } else if (user.role === UserRole.TALLER || user.role === UserRole.CLIENT) {
+        const scopeWhere: any = getScopeFilter(user, 'workshop');
+        
+        if (user && user.role !== UserRole.ADMIN) {
+            if (user.role === UserRole.TALLER) {
+                scopeWhere.workshopId = user.workshop?.id;
+                delete scopeWhere.workshop; // Override geographic filter with specific workshop ownership
+            } else if (user.role === UserRole.CLIENT) {
                 scopeWhere.userId = user.id;
+                delete scopeWhere.workshop; // Override geographic filter with user ownership
             }
-        } else {
-            // Public user
-            scopeWhere.enabled = true;
         }
+
 
         const where = {
             AND: [
                 this.getWhere(parsedFilters || {}, search),
                 scopeWhere
-            ]
+            ].filter(p => Object.keys(p).length > 0)
         };
 
-        return await this.persistence.getAll({
-            where,
+        const result = await this.persistence.getAll({
+            where: where as any,
             skip: skip ? Number(skip) : 0,
             take: take ? Number(take) : 10,
             orderBy: orderBy as any
         });
+
+        return result;
     }
+
+
 }

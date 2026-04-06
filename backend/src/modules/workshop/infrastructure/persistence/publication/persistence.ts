@@ -7,7 +7,10 @@ export default class PublicationPersistence {
     constructor(private readonly prisma: PrismaService) {}
 
     async create(data: IPublicationCreateType) {
-        return await this.prisma.publication.create({ data });
+        console.log('[PublicationPersistence] Creating publication with data:', JSON.stringify(data, null, 2));
+        const result = await this.prisma.publication.create({ data });
+        console.log('[PublicationPersistence] Created correctly:', result.id);
+        return result;
     }
 
     async update(id: string, data: IPublicationUpdateType) {
@@ -18,9 +21,10 @@ export default class PublicationPersistence {
         return await this.prisma.publication.delete({ where: { id } });
     }
 
-    async find(where: IPublicationWhereUniqueType, include?: IPublicationIncludeType) {
-        return await this.prisma.publication.findUnique({ where, include: include || IDefaultPublicationInclude });
+    async find(where: any, include?: IPublicationIncludeType) {
+        return await this.prisma.publication.findFirst({ where, include: include || IDefaultPublicationInclude });
     }
+
 
     async getAll({ where, orderBy, skip, take, include }: { where?: IPublicationWhereType, orderBy?: IPublicationOrderByType, skip?: number, take?: number, include?: IPublicationIncludeType }) {
         const [total, data] = await Promise.all([

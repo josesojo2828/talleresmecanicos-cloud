@@ -133,4 +133,110 @@ export class WorkshopUCase extends WorkshopModel {
             orderBy: orderBy as any
         });
     }
+
+    async getDashboardStats(user: any) {
+        const workshop = await this.persistence.find({ userId: user.id });
+        if (!workshop) throw new ForbiddenException("No taller asociado");
+
+        const workshopId = workshop.id;
+
+        // 1. Stats and Lists
+        const [
+            statusCounts,
+            lastAppointment,
+            inventoryCount,
+            recentAppointments,
+            recentWorks,
+            recentPublications,
+            worksTimeline
+        ] = await Promise.all([
+            // Status breakdown
+            (this.persistence as any).prisma.work.groupBy({
+                by: ['status'],
+                where: { workshopId, deletedAt: null },
+                _count: true
+            }),
+            // Last appointment
+            (this.persistence as any).prisma.appointment.findFirst({
+                where: { workshopId, deletedAt: null },
+                orderBy: { dateTime: 'desc' },
+                include: { client: true }
+            }),
+            // Inventory count
+            (this.persistence as any).prisma.part.count({
+                where: { workshopId, deletedAt: null }
+            }),
+            // Recent Lists
+            (this.persistence as any).prisma.appointment.findMany({
+                where: { workshopId, deletedAt: null },
+                take: 3,
+                orderBy: { createdAt: 'desc' },
+                include: { client: true }
+            }),
+            (this.persistence as any).prisma.work.findMany({
+                where: { workshopId, deletedAt: null },
+                take: 3,
+                orderBy: { createdAt: 'desc' }
+            }),
+            (this.persistence as any).prisma.publication.findMany({
+                where: { workshopId, deletedAt: null },
+                take: 3,
+                orderBy: { createdAt: 'desc' }
+            }),
+            // Timeline for Chart (last 30 days)
+            (this.persistence as any).prisma.work.findMany({
+                where: { 
+                    workshopId, 
+                    deletedAt: null,
+                    createdAt: { gte: new Date(new Date().setDate(new Date().getDate() - 30)) }
+                },
+                select: { createdAt: true },
+                orderBy: { createdAt: 'asc' }
+            })
+        ]);
+
+        // Process timeline for chart (Fill gaps with zeros)
+        const last30Days = Array.from({ length: 30 }, (_, i) => {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            return date.toISOString().split('T')[0];
+        }).reverse();
+
+        const timelineCounts = (worksTimeline as any[]).reduce((acc: any, work) => {
+            const day = work.createdAt.toISOString().split('T')[0];
+            acc[day] = (acc[day] || 0) + 1;
+            return acc;
+        }, {});
+
+        const timelineData = last30Days.map(date => ({
+            date,
+            count: timelineCounts[date] || 0
+        }));
+
+        return {
+            workshop,
+            stats: {
+                works: {
+                    total: (statusCounts as any[]).reduce((a, b) => a + b._count, 0),
+                    breakdown: (statusCounts as any[]).reduce((acc, curr) => {
+                        acc[curr.status] = curr._count;
+                        return acc;
+                    }, {} as any)
+                },
+                appointments: {
+                    total: (workshop as any)._count.appointments,
+                    last: lastAppointment
+                },
+                inventory: {
+                    total: inventoryCount
+                }
+            },
+            timeline: timelineData,
+            recent: {
+                appointments: recentAppointments,
+                works: recentWorks,
+                publications: recentPublications
+            }
+        };
+    }
 }

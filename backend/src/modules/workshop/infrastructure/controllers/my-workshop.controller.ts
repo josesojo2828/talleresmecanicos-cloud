@@ -23,6 +23,11 @@ export class MyWorkshopController {
         return await this.useCase.pagination({ skip: 0, take: 1, filters: { userId: user.id } }, user);
     }
 
+    @Get('dashboard-stats')
+    async getDashboardStats(@CurrentUser() user: any) {
+        return await this.useCase.getDashboardStats(user);
+    }
+
     @Put(':id')
     async update(@Param('id') id: string, @Body() data: IUpdateWorkshopDto, @CurrentUser() user: any) {
         return await this.useCase.update(id, data, user);

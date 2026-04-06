@@ -65,4 +65,6 @@ export interface IUpdatePublicationDto {
     images?: string[];
     enabled?: boolean;
     categoryIds?: string[];
+    workshopId?: string;
 }
+

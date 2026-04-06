@@ -1,6 +1,6 @@
 import { UserRole } from '@prisma/client';
 
-export function getScopeFilter(user: any) {
+export function getScopeFilter(user: any, relation?: string) {
     if (!user) return { enabled: true };
 
     if (user.role === UserRole.ADMIN) {
@@ -27,18 +27,21 @@ export function getScopeFilter(user: any) {
             filters.push({ cityId: { in: cityIds } });
         }
 
-        return filters.length > 0 ? { OR: filters } : { id: 'none' };
+        let scope = filters.length > 0 ? { OR: filters } : { id: 'none' };
+        
+        if (relation && scope.id !== 'none') {
+            return { [relation]: scope };
+        }
+        
+        return scope;
     }
 
     if (user.role === UserRole.TALLER) {
-        // En consultas generales, el TALLER puede ver todo lo habilitado.
-        // El filtrado por userId se maneja específicamente en controladores privados (ej: MyWorkshop)
+        // En consultas generales, el TALLER puede ver todo lo habilitado de otros talleres, 
+        // pero solo lo propio si no está habilitado.
         return { enabled: true };
     }
 
-    if (user.role === 'PUBLIC') {
-        return { enabled: true };
-    }
-
-    return {};
+    return { enabled: true };
 }
+
