@@ -23,6 +23,7 @@ import { PartDetail } from '@/features/dashboard/components/part/PartDetail';
 import { CountryDetail } from '@/features/dashboard/components/country/CountryDetail';
 import { ForumPostDetail } from '@/features/dashboard/components/forum-post/ForumPostDetail';
 import { CityDetail } from '@/features/dashboard/components/city/CityDetail';
+import { SupportAssignmentsManager } from '@/features/dashboard/components/SupportAssignmentsManager';
 
 const EmbeddedCrud = ({ slug, initialFilters, title }: { slug: string, initialFilters?: Record<string, any>, title: string }) => {
     const crud = useCrud(slug);
@@ -74,8 +75,12 @@ export default function RecordDetailPage() {
             base.splice(2, 0, { id: 'gallery', label: t('ficha.tabs.gallery'), icon: <ImageIcon size={16} /> });
         }
 
+        if (slug === 'user' && data?.role === UserRole.SUPPORT) {
+            base.push({ id: 'territory', label: 'Territorios', icon: <Globe size={16} /> });
+        }
+
         return base;
-    }, [slug, t]);
+    }, [slug, t, data]);
 
     if (loading) {
         return (
@@ -245,6 +250,10 @@ export default function RecordDetailPage() {
                         onUpdate={updateRecord}
                     />
                 </div>
+            )}
+
+            {activeTab === 'territory' && (
+                <SupportAssignmentsManager userId={data.id} />
             )}
 
             {activeTab === 'data' && (

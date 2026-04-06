@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useChat, ChatMessage } from '@/hooks/useChat';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useAlertStore } from '@/store/useAlertStore';
 import { cn } from '@/utils/cn';
 import Link from 'next/link';
 
@@ -106,6 +107,7 @@ const DataBlock = ({ msg, isMe, index }: { msg: ChatMessage, isMe: boolean, inde
 export default function ChatPage() {
     const { user, isAuthenticated, _hasHydrated } = useAuthStore();
     const { messages, sendMessage, isConnected } = useChat();
+    const { addAlert } = useAlertStore();
     const [input, setInput] = useState("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -119,11 +121,7 @@ export default function ChatPage() {
         if (!text) return;
         
         if (!isConnected) {
-            import('sonner').then(({ toast }) => {
-                toast.error("ERROR DE CONEXIÓN", {
-                    description: "Esperando señal del servidor. Reintentando..."
-                });
-            });
+            addAlert("error.default", 'error');
             return;
         }
 

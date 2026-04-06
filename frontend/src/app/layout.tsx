@@ -54,7 +54,7 @@ export default function RootLayout({
                 {children}
               </ThemeWrapper>
             </CountryProvider>
-            <Toaster position="bottom-right" richColors expand={true} />
+            <AlertContainer />
             <ModalContainer />
           </AuthProvider>
         </NextIntlClientProvider>
