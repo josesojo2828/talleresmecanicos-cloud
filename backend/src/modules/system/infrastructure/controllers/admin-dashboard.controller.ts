@@ -4,15 +4,16 @@ import { RolesGuard } from "src/modules/auth/guards/roles.guard";
 import { Roles } from "src/modules/auth/decorators/roles.decorator";
 import { UserRole } from "@prisma/client";
 import { AdminMetricsUCase } from "../../application/use-cases/admin-metrics.ucase";
+import { CurrentUser } from "src/modules/auth/decorators/current-user.decorator";
 
 @Controller('admin/dashboard')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(UserRole.ADMIN)
+@Roles(UserRole.ADMIN, UserRole.SUPPORT)
 export class AdminDashboardController {
     constructor(private readonly metricsUCase: AdminMetricsUCase) { }
 
     @Get('summary')
-    async getSummary() {
-        return await this.metricsUCase.getDashboardSummary();
+    async getSummary(@CurrentUser() user: any) {
+        return await this.metricsUCase.getDashboardSummary(user);
     }
 }
