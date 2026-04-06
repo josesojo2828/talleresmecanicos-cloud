@@ -4,19 +4,23 @@ import React from "react";
 import { useAlertStore } from "@/store/useAlertStore";
 import { Alert } from "@/components/molecules/Alert";
 import { Icon } from "@/components/atoms/Icon";
+import { useTranslations } from "next-intl";
 
 export const AlertContainer: React.FC = () => {
     const { alerts, removeAlert } = useAlertStore();
+    const t = useTranslations();
 
     return (
-        <div className="fixed bottom-4 md:bottom-8 left-4 right-4 md:left-auto md:right-8 z-[100] flex flex-col gap-3 md:gap-4 max-w-none md:max-w-md w-auto md:w-full pointer-events-none">
+        <div className="fixed bottom-4 md:bottom-8 left-4 right-4 md:left-auto md:right-8 z-[120] flex flex-col gap-3 md:gap-4 max-w-none md:max-w-md w-auto md:w-full pointer-events-none">
             {alerts.map((alert) => (
                 <div
                     key={alert.id}
-                    className="pointer-events-auto relative group animate-fade-in-up transition-all duration-500"
+                    className="pointer-events-auto relative group animate-in slide-in-from-right-10 duration-300"
                 >
-                    <Alert variant={alert.type} className="shadow-2xl pr-12 md:pr-14 border-white/5 bg-slate-900/40 backdrop-blur-3xl">
-                        {alert.message}
+                    <Alert variant={alert.type} className="shadow-2xl pr-12 md:pr-14 border-white/10 bg-slate-900/90 backdrop-blur-xl text-white">
+                        <span className="font-medium text-xs">
+                            {t.has(alert.message) ? t(alert.message) : alert.message}
+                        </span>
                     </Alert>
 
                     <button
