@@ -68,19 +68,22 @@ export const useCrud = (slug: string) => {
             const response = await apiClient.get(`/${slug}`, { params });
             const result = response.data?.body || response.data?.data || response.data;
 
-            // Ajustamos según la respuesta de tu persistence (getAll)
-            // Si getAll devuelve { data: [], meta: { total: 0 } }
-            let finalData = Array.isArray(result.data)
-                ? result.data
+            // Ajustamos según la respuesta de tu backend (que devuelve { total, data })
+            let finalData = Array.isArray(result.data) 
+                ? result.data 
                 : Array.isArray(result) ? result : [];
 
-            // Update total from meta if available
-            if (result.meta?.total !== undefined) {
+            // Update total from result.total or result.meta.total
+            if (result.total !== undefined) {
+                setTotal(result.total);
+            } else if (result.meta?.total !== undefined) {
                 setTotal(result.meta.total);
             } else {
-                // If no meta, use result length but it's not ideal for pagination
                 setTotal(finalData.length);
             }
+
+            console.log(`[useCrud] ${slug} results:`, finalData.length, 'Total reported:', result.total);
+
 
             // Filter out admins from the list as per requirements
             if (slug === 'user') {
@@ -103,6 +106,16 @@ export const useCrud = (slug: string) => {
         const localColumns = ModuleColumns[slug] || [];
 
         if (pageFromStore || localColumns.length > 0) {
+            const user = useAuthStore.getState().user;
+            const isTaller = user?.role === 'TALLER';
+            
+            let finalForm = pageFromStore?.form || [];
+            
+            // Si es taller, no debe elegir el taller (se autocompleta)
+            if (isTaller) {
+                finalForm = finalForm.filter((f: any) => f.name !== 'workshopId');
+            }
+
             setConfig({
                 ...(pageFromStore || {
                     slug,
@@ -113,7 +126,8 @@ export const useCrud = (slug: string) => {
                     ? pageFromStore.columns
                     : localColumns,
                 actions: pageFromStore?.actions || [],
-                actionsRows: pageFromStore?.actionsRows || []
+                actionsRows: pageFromStore?.actionsRows || [],
+                form: finalForm
             } as ObjectPage);
         }
 
@@ -136,6 +150,15 @@ export const useCrud = (slug: string) => {
 
             // 1. Clonamos la información para no mutar el estado del formulario directamente
             const body = { ...formData };
+            const user = useAuthStore.getState().user;
+
+            // Inyectar taller si no viene y es obligatorio para el rol Taller
+            const entitiesWithWorkshop = ['appointment', 'work', 'publication', 'part', 'forum-post'];
+            if (user?.role === 'TALLER' && entitiesWithWorkshop.includes(slug) && user.workshop?.id) {
+                body.workshopId = user.workshop.id;
+                // Para forum-post o publicaciones genéricas usamos userId también si hace falta
+                if (slug === 'forum-post') body.userId = user.id;
+            }
 
             // 2. Buscamos campos que tengan archivos (File o Blob)
             const entries = Object.entries(body);

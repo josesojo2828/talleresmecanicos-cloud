@@ -12,7 +12,7 @@ import {
     Minus,
     Images
 } from 'lucide-react';
-import { toast } from 'sonner';
+import { useAlertStore } from '@/store/useAlertStore';
 import apiClient from '@/utils/api/api.client';
 import { cn } from '@/utils/cn';
 import { useTranslations } from 'next-intl';
@@ -29,6 +29,7 @@ interface WorkDetailProps {
 
 export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
     const t = useTranslations();
+    const { addAlert } = useAlertStore();
     const [saving, setSaving] = useState(false);
     const [activeSection, setActiveSection] = useState<'overview' | 'parts' | 'data'>('overview');
 
@@ -68,14 +69,14 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
         setSaving(true);
         try {
             await apiClient.post(`/work/${data.id}/part`, { partId: selectedPart.id, quantity });
-            toast.success(t('success.update'));
+            addAlert(t('success.update'), 'success');
             setSelectedPart(null);
             setSearchPart('');
             setQuantity(1);
             refresh();
             setAddingPart(false);
         } catch (e) {
-            toast.error(t('error.default'));
+            addAlert(t('error.default'), 'error');
         } finally {
             setSaving(false);
         }
@@ -86,10 +87,10 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
         setSaving(true);
         try {
             await apiClient.delete(`/work/${data.id}/part/${partId}`);
-            toast.success(t('success.delete'));
+            addAlert(t('success.delete'), 'success');
             refresh();
         } catch (e) {
-            toast.error(t('error.default'));
+            addAlert(t('error.default'), 'error');
         } finally {
             setSaving(false);
         }
@@ -107,7 +108,7 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
     const copyPublicLink = () => {
         const url = `${window.location.origin}/trabajo/${data.workshop?.slug}/${data.publicId}`;
         navigator.clipboard.writeText(url);
-        toast.success("Enlace copiado al portapapeles");
+        addAlert(t('success.copy_clipboard'), 'success');
     };
 
     const openPublicPage = () => {
@@ -667,7 +668,7 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                                     isUpdate={true}
                                     onSubmit={async (values) => {
                                         await updateRecord(values);
-                                        toast.success("Información actualizada");
+                                        addAlert(t('success.info_updated'), 'success');
                                         setActiveSection('overview');
                                     }}
                                     onCancel={() => setActiveSection('overview')}
@@ -697,7 +698,7 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                             structure={PartCategoryForm}
                             onSubmit={async (val) => {
                                 await apiClient.post('/part/category', val);
-                                toast.success("Categoría creada");
+                                addAlert(t('success.category_created'), 'success');
                                 setModal(null);
                             }}
                             onCancel={() => setModal(null)}
@@ -723,7 +724,7 @@ export function WorkDetail({ data, updateRecord, refresh }: WorkDetailProps) {
                             structure={PartForm}
                             onSubmit={async (val) => {
                                 await apiClient.post('/part', val);
-                                toast.success("Repuesto añadido al inventario");
+                                addAlert(t('success.part_added'), 'success');
                                 setModal(null);
                             }}
                             onCancel={() => setModal(null)}
