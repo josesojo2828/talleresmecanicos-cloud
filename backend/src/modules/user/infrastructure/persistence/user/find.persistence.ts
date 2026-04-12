@@ -37,8 +37,8 @@ export default class FindUserPersistence {
     }
 
     public async find({ where, include }: { where: IUserWhereUniqueType, include?: IUserIncludeType }): Promise<IUser | null> {
-        const user = await this.prisma.user.findUnique({
-            where,
+        const user = await this.prisma.user.findFirst({
+            where: where as any,
             include: include || IDefaultUserInclude
         });
 
