@@ -161,12 +161,14 @@ export class AdminMetricsUCase {
 
     async getWorkshopDashboard(workshopId: string) {
         const [
+            workshop,
             totalWorks,
             totalAppointments,
             totalPublications,
             recentWorks,
             productionRaw
         ] = await Promise.all([
+            this.prisma.workshop.findUnique({ where: { id: workshopId }, include: { city: true } }),
             this.prisma.work.count({ where: { workshopId, deletedAt: null } }),
             this.prisma.appointment.count({ where: { workshopId, deletedAt: null } }),
             this.prisma.publication.count({ where: { workshopId, deletedAt: null } }),
@@ -196,6 +198,7 @@ export class AdminMetricsUCase {
             .map(date => ({ date, count: production[date] }));
 
         return {
+            workshop,
             stats: {
                 totalWorks,
                 totalAppointments,
