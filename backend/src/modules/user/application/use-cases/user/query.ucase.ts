@@ -24,9 +24,37 @@ export default class QueryUserUCase extends UserModel {
 
         let where = this.getWhere(filters || {}, search);
 
-        if (user) {
-            const scope = getScopeFilter(user);
-            where = { ...where, ...scope };
+        if (user && user.role === 'SUPPORT') {
+            const assignments = user.assignments || [];
+            if (assignments.length === 0) {
+                where = { ...where, id: 'none' };
+            } else {
+                // User only has countryId, NOT cityId.
+                // For country assignments -> filter directly by countryId
+                // For city assignments -> find the country of those cities via relation
+                const countryIds = [...new Set(
+                    assignments.map((a: any) => a.countryId).filter((id: any) => id != null)
+                )] as string[];
+
+                const cityIds = [...new Set(
+                    assignments.map((a: any) => a.cityId).filter((id: any) => id != null)
+                )] as string[];
+
+                const orFilters: any[] = [];
+                if (countryIds.length > 0) {
+                    orFilters.push({ countryId: { in: countryIds } });
+                }
+                if (cityIds.length > 0) {
+                    // Users whose country has one of the assigned cities
+                    orFilters.push({ country: { cities: { some: { id: { in: cityIds } } } } });
+                }
+
+                if (orFilters.length > 0) {
+                    where = { ...where, OR: orFilters };
+                } else {
+                    where = { ...where, id: 'none' };
+                }
+            }
         }
 
         const entity = await this.findPersistence.getAll({

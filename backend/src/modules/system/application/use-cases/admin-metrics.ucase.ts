@@ -23,6 +23,8 @@ export class AdminMetricsUCase {
 
     async getDashboardSummary(user?: any) {
         const scope = getScopeFilter(user);
+        console.log('🔍 [DASHBOARD DEBUG] user:', JSON.stringify({ role: user?.role, assignments: user?.assignments }, null, 2));
+        console.log('🔍 [DASHBOARD DEBUG] scope:', JSON.stringify(scope, null, 2));
         
         // Specific scope for entities related to workshops
         const workScope = getScopeFilter(user, 'workshop');
