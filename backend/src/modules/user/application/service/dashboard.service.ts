@@ -212,7 +212,9 @@ export default class DashboardService {
             workshopSidebar.childs.push({ icon: 'post', label: 'nav.my_publications', path: '/dashboard/publication', slug: 'publication' });
         }
 
-        sidebar.push(workshopSidebar);
+        if (isAdmin || isTaller || (isSupport && (user as any).assignments?.length > 0)) {
+            sidebar.push(workshopSidebar);
+        }
 
         pages.push({
             slug: 'finance',

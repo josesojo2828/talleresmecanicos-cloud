@@ -34,7 +34,7 @@ export default function Dashboard() {
     if (user?.role === 'ADMIN' || user?.role === 'SUPPORT') {
         return (
             <div className="p-6 md:p-10 max-w-7xl mx-auto">
-                <AdminDashboard adminStats={adminStats} />
+                <AdminDashboard adminStats={adminStats} userRole={user.role} />
             </div>
         );
     }

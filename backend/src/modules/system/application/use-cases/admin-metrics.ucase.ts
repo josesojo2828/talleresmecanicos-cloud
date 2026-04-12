@@ -27,11 +27,39 @@ export class AdminMetricsUCase {
         // Specific scope for entities related to workshops
         const workScope = getScopeFilter(user, 'workshop');
         
+        // Resolve Support assignments
+        const countryIds = user && user.role === UserRole.SUPPORT 
+            ? user.assignments?.map((a: any) => a.countryId).filter(Boolean) || []
+            : [];
+        const cityIds = user && user.role === UserRole.SUPPORT 
+            ? user.assignments?.map((a: any) => a.cityId).filter(Boolean) || []
+            : [];
+
         // Scope for users (by country if available)
         const userScope: any = {};
         if (user && user.role === UserRole.SUPPORT) {
-            const countryIds = user.assignments?.map(a => a.countryId).filter(Boolean) || [];
-            if (countryIds.length > 0) userScope.countryId = { in: countryIds };
+            if (countryIds.length > 0) {
+                userScope.countryId = { in: countryIds };
+            } else if (cityIds.length > 0) {
+                userScope.country = { cities: { some: { id: { in: cityIds } } } };
+            }
+        }
+
+        // Scope for countries and cities stats
+        const countryFilters: any = { enabled: true };
+        const cityFilters: any = { enabled: true };
+
+        if (user && user.role === UserRole.SUPPORT) {
+            if (countryIds.length > 0) {
+                countryFilters.id = { in: countryIds };
+                cityFilters.countryId = { in: countryIds };
+            } else if (cityIds.length > 0) {
+                countryFilters.cities = { some: { id: { in: cityIds } } };
+                cityFilters.id = { in: cityIds };
+            } else {
+                countryFilters.id = 'none';
+                cityFilters.id = 'none';
+            }
         }
 
         const [
@@ -49,8 +77,8 @@ export class AdminMetricsUCase {
             this.prisma.user.count({ where: { ...userScope, deletedAt: null } }),
             this.prisma.work.count({ where: { ...workScope, deletedAt: null } }),
             this.prisma.appointment.count({ where: { ...workScope, deletedAt: null } }),
-            this.prisma.country.count({ where: { enabled: true } }),
-            this.prisma.city.count({ where: { enabled: true } }),
+            this.prisma.country.count({ where: countryFilters }),
+            this.prisma.city.count({ where: cityFilters }),
             this.prisma.workshop.findMany({
                 where: { ...scope, deletedAt: null },
                 take: 5,
