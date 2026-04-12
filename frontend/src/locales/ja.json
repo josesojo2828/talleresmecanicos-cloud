@@ -44,7 +44,13 @@
         "session": "セッション",
         "my_management": "マイ管理",
         "title": "ユーザー",
-        "subtitle": "プラットフォームユーザーの管理"
+        "subtitle": "プラットフォームユーザーの管理",
+        "role_labels": {
+            "admin": "管理者",
+            "support": "地域サポート",
+            "taller": "ワークショップオーナー",
+            "client": "クライアント"
+        }
     },
     "region": {
         "region": "地域",
@@ -218,8 +224,10 @@
         "upload_file": "ファイルをアップロード"
     },
     "status": {
-        "active": "アクティブ",
-        "inactive": "非アクティブ"
+        "inactive": "非アクティブ",
+        "client": "クライアント",
+        "support": "サポート",
+        "taller": "ワークショップ"
     },
     "dashboard": {
         "search": "データベースで検索...",
@@ -250,7 +258,10 @@
         "about": "私たちについて",
         "brand": "Somos Nexo",
         "login": "ログイン",
-        "login_mobile": "マイアカウントにログイン"
+        "login_mobile": "マイアカウントにログイン",
+        "all_works": "作業指示書 (すべて)",
+        "all_parts": "部品 / 在庫 (グローバル)",
+        "administration": "管理"
     },
     "hero": {
         "badge": "日本のラテンコミュニティを繋ぐ",

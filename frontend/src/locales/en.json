@@ -61,7 +61,13 @@
         "session": "Sessions",
         "my_management": "My Management",
         "title": "Users",
-        "subtitle": "Manage platform users"
+        "subtitle": "Manage platform users",
+        "role_labels": {
+            "admin": "Administrator",
+            "support": "Regional Support",
+            "taller": "Workshop Owner",
+            "client": "Client"
+        }
     },
     "region": {
         "region": "Regions",
@@ -239,8 +245,10 @@
         "all": "All",
         "active": "Active",
         "enabled": "Enabled",
-        "disabled": "Disabled",
-        "inactive": "Inactive"
+        "inactive": "Inactive",
+        "client": "Client",
+        "support": "Support",
+        "taller": "Workshop"
     },
     "dashboard": {
         "search": "Search in database...",
@@ -326,7 +334,10 @@
         "garage": "My Garage",
         "my_vehicles": "My Vehicles",
         "my_requests": "My Requests",
-        "finance": "Finance"
+        "all_works": "Work Orders (All)",
+        "all_parts": "Parts / Inventory (Global)",
+        "finance": "Finance",
+        "administration": "Administration"
     },
     "hero": {
         "badge": "Connecting Latino talent in Japan",

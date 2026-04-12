@@ -99,6 +99,12 @@
         "status_labels": {
             "active": "Activo",
             "inactive": "Inactivo"
+        },
+        "role_labels": {
+            "admin": "Administrador",
+            "support": "Soporte de Talleres/Regiones",
+            "taller": "Taller Mecánico",
+            "client": "Cliente"
         }
     },
     "profile": {
@@ -395,6 +401,7 @@
         "all_works": "Órdenes de Trabajo (Todos)",
         "all_parts": "Piezas / Inventario (Global)",
         "finance": "Finanzas",
+        "administration": "Administración",
         "brand": "TalleresMecanicos"
     },
     "hero": {
@@ -731,7 +738,10 @@
         "waiting": "En Espera",
         "running": "En Ejecución",
         "success": "Exitoso",
-        "error": "Error"
+        "error": "Error",
+        "client": "Cliente",
+        "support": "Soporte",
+        "taller": "Taller"
     },
     "update": {
         "update": "Actualizar"
