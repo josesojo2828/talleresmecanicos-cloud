@@ -118,7 +118,7 @@ export default class DashboardService {
                 childs: []
             };
 
-            if (isAdmin) {
+            if (isAdmin || isSupport) {
                 adminSidebar.childs?.push({ icon: 'user', label: 'user.management', path: '/dashboard/user', slug: 'user' });
             }
             
@@ -127,15 +127,17 @@ export default class DashboardService {
 
             sidebar.push(adminSidebar);
 
-            if (isAdmin) {
+            if (isAdmin || isSupport) {
                 pages.push({
                     slug: 'user',
                     title: 'user.management',
                     subtitle: 'user.subtitle.default',
-                    actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
-                    actionsRows: [
+                    actions: isAdmin ? [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }] : [],
+                    actionsRows: isAdmin ? [
                         { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
                         { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' }
+                    ] : [
+                        { icon: 'visibility', label: 'action.view', action: 'view', type: 'modal' }
                     ],
                     columns: [
                         { key: 'firstName', label: 'headers.firstName', type: 'text' },

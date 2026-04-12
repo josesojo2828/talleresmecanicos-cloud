@@ -46,8 +46,11 @@ export class UserCrudController {
     }
 
     @Get('')
-    @Roles(UserRole.ADMIN)
-    async getPaginate(@Query() q: QueryOptions<User, IUserQueryFilter>) {
-        return await this.queryUseCase.pagination({ q });
+    @Roles(UserRole.ADMIN, UserRole.SUPPORT)
+    async getPaginate(
+        @Query() q: QueryOptions<User, IUserQueryFilter>,
+        @CurrentUser() user: any
+    ) {
+        return await this.queryUseCase.pagination({ q, user });
     }
 }

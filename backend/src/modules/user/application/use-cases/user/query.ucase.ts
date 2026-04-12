@@ -4,6 +4,7 @@ import FindUserPersistence from "src/modules/user/infrastructure/persistence/use
 import { IUserQueryFilter } from "src/modules/user/application/dtos/user.schema";
 import { QueryOptions } from "src/shared/query/input";
 import { User } from "@prisma/client";
+import { getScopeFilter } from "src/shared/utils/scope-filter";
 
 @Injectable()
 export default class QueryUserUCase extends UserModel {
@@ -18,10 +19,15 @@ export default class QueryUserUCase extends UserModel {
         return await this.findPersistence.find({ where: { id } });
     }
 
-    public async pagination({ q }: { q: QueryOptions<User, IUserQueryFilter> }) {
+    public async pagination({ q, user }: { q: QueryOptions<User, IUserQueryFilter>, user?: any }) {
         const { search, filters, skip, take, orderBy } = q as any;
 
-        const where = this.getWhere(filters || {}, search);
+        let where = this.getWhere(filters || {}, search);
+
+        if (user) {
+            const scope = getScopeFilter(user);
+            where = { ...where, ...scope };
+        }
 
         const entity = await this.findPersistence.getAll({
             where,
