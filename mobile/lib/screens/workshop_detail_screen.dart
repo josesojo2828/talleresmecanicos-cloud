@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:animate_do/animate_do.dart';
 
 class WorkshopDetailScreen extends StatelessWidget {
@@ -55,7 +55,7 @@ class WorkshopDetailScreen extends StatelessWidget {
         child: CircleAvatar(
           backgroundColor: Colors.black26,
           child: IconButton(
-            icon: const Icon(LucideIcons.arrow_left, color: Colors.white, size: 20),
+            icon: const Icon(LucideIcons.chevron_left, color: Colors.white, size: 20),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -144,7 +144,7 @@ class WorkshopDetailScreen extends StatelessWidget {
       children: [
         _buildActionButton(LucideIcons.phone, 'Llamar'),
         _buildActionButton(LucideIcons.map, 'Mapa'),
-        _buildActionButton(LucideIcons.message_circle, 'Mensaje'),
+        _buildActionButton(LucideIcons.message_square, 'Mensaje'),
       ],
     );
   }

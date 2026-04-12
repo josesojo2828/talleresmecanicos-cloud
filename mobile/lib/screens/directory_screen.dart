@@ -388,8 +388,9 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                 ],
               ),
             ),
-          );
-        },
+          ),
+        );
+      },
         childCount: _workshops.length,
       ),
     );
