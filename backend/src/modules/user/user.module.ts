@@ -44,6 +44,7 @@ import DeleteNotificationUCase from "./application/use-cases/notification/delete
 import QueryNotificationUCase from "./application/use-cases/notification/query.ucase";
 import { CreateNotificationPersistence, UpdateNotificationPersistence, DeleteNotificationPersistence, FindNotificationPersistence } from "./infrastructure/persistence/notification/notification.persistence";
 import DashboardService from "./application/service/dashboard.service";
+import { DashboardController } from "./infrastructure/controllers/dashboard.controller";
 import SecurityModule from "../security/security.module";
 
 @Module({
@@ -55,7 +56,8 @@ import SecurityModule from "../security/security.module";
         ProfileCrudController,
         SessionCrudController,
         DeviceCrudController,
-        NotificationCrudController
+        NotificationCrudController,
+        DashboardController
     ],
     providers: [
         PrismaService,

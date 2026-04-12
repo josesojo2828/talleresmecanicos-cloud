@@ -18,6 +18,7 @@ interface DashboardStats {
 export const useDashboardStats = () => {
     const { user } = useAuthStore();
     const [workshopStats, setWorkshopStats] = useState<DashboardStats | null>(null);
+    const [clientStats, setClientStats] = useState<any>(null);
     const [adminStats, setAdminStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
@@ -32,6 +33,9 @@ export const useDashboardStats = () => {
             } else if (user.role === 'ADMIN' || user.role === 'SUPPORT') {
                 const res = await apiClient.get('/admin/dashboard/summary');
                 setAdminStats(res.data.body);
+            } else if (user.role === 'CLIENT') {
+                const res = await apiClient.get('/dashboard/client-stats');
+                setClientStats(res.data.body);
             }
         } catch (error) {
             console.error("[useDashboardStats] Error fetching dashboard summary:", error);
@@ -47,6 +51,7 @@ export const useDashboardStats = () => {
     return {
         user,
         workshopStats,
+        clientStats,
         adminStats,
         loading,
         reloadStats

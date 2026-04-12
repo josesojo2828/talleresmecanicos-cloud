@@ -343,6 +343,11 @@
         "badge": "Connecting Latino talent in Japan",
         "title": "Services in one place.",
         "description": "The ultimate platform for Latino entrepreneurs. Discover verified businesses, professional services, and a vibrant community throughout Japan.",
+        "cta_login": "Login",
+        "cta_map": "Interactive Map",
+        "cta_directory": "Directory",
+        "cta_client": "Find a Workshop",
+        "cta_workshop": "Register My Workshop",
         "cta_primary": "Get Started",
         "cta_secondary": "Explore Businesses",
         "trust": {

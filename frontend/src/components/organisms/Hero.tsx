@@ -6,12 +6,14 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import apiClient from "@/utils/api/api.client";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export const Hero = () => {
 
     console.log(process.env.NEXT_PUBLIC_API_URL);
 
     const t = useTranslations("hero");
+    const { isAuthenticated, _hasHydrated } = useAuthStore();
     const [stats, setStats] = useState({ workshops: 0, publications: 0, countries: 0 });
 
     useEffect(() => {
@@ -46,15 +48,36 @@ export const Hero = () => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-4 w-full max-w-lg">
-                        {/* Botón Principal: Acceso Talleres */}
-                        <Link href="/login" className="w-full">
-                            <button className="w-full group px-12 py-6 bg-slate-950 text-white text-[11px] font-black uppercase tracking-[.25em] hover:bg-emerald-600 transition-all duration-300 flex items-center justify-center gap-4 shadow-lg shadow-emerald-950/10">
-                                {t("cta_login") || "ACCESO PARA TALLERES"}
-                                <LogIn className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </button>
-                        </Link>
+                    <div className="flex flex-col sm:flex-row gap-4 w-full max-w-2xl">
+                        {_hasHydrated && isAuthenticated ? (
+                            <Link href="/dashboard" className="w-full">
+                                <button className="w-full group px-8 py-8 bg-emerald-600 text-white text-[12px] font-black uppercase tracking-[.3em] hover:bg-emerald-700 transition-all duration-500 flex items-center justify-center gap-6 shadow-2xl shadow-emerald-900/30">
+                                    IR AL PANEL DE CONTROL
+                                    <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+                                </button>
+                            </Link>
+                        ) : (
+                            <>
+                                {/* Botón Cliente */}
+                                <Link href="/register?role=CLIENT" className="flex-1">
+                                    <button className="w-full group px-8 py-6 bg-emerald-600 text-white text-[11px] font-black uppercase tracking-[.25em] hover:bg-emerald-700 transition-all duration-300 flex items-center justify-center gap-4 shadow-xl shadow-emerald-900/20">
+                                        {t("cta_client") || "ENCONTRAR TALLER"}
+                                        <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                                    </button>
+                                </Link>
 
+                                {/* Botón Taller */}
+                                <Link href="/register?role=TALLER" className="flex-1">
+                                    <button className="w-full group px-8 py-6 bg-slate-950 text-white text-[11px] font-black uppercase tracking-[.25em] hover:bg-slate-800 transition-all duration-300 flex items-center justify-center gap-4 shadow-xl shadow-slate-950/20">
+                                        {t("cta_workshop") || "REGISTRAR MI TALLER"}
+                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                    </button>
+                                </Link>
+                            </>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col gap-4 w-full max-w-lg">
                         {/* Botones Secundarios: Mapa y Directorio */}
                         <div className="flex gap-4 w-full">
                             <Link href="/directorio" className="flex-1">

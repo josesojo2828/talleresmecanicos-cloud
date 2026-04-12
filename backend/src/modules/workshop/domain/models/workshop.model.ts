@@ -22,7 +22,7 @@ export default class WorkshopModel {
             wh.push({ enabled: isEnabled });
         }
         if (param.userId) wh.push({ userId: param.userId });
-        if (param.categoryIds) wh.push({ categories: { some: { id: param.categoryIds } } });
+        if (param.categoryIds) wh.push({ WorkshopToCategory: { some: { B: param.categoryIds } } });
 
         if (search) {
             wh.push({

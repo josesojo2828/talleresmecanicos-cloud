@@ -27,8 +27,8 @@ export class WorkshopUCase extends WorkshopModel {
         };
 
         if (categoryIds && categoryIds.length > 0) {
-            body.categories = {
-                connect: categoryIds.map(id => ({ id }))
+            body.WorkshopToCategory = {
+                create: categoryIds.map(id => ({ B: id }))
             };
         }
 
@@ -75,9 +75,10 @@ export class WorkshopUCase extends WorkshopModel {
         if (countryId) body.country = { connect: { id: countryId } };
         if (cityId) body.city = { connect: { id: cityId } };
         
-        if (categoryIds && categoryIds.length > 0) {
-            body.categories = {
-                set: categoryIds.map(id => ({ id }))
+        if (categoryIds !== undefined) {
+            body.WorkshopToCategory = {
+                deleteMany: {},
+                create: (categoryIds || []).map(id => ({ B: id }))
             };
         }
 

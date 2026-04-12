@@ -151,17 +151,16 @@ export const WorkForm: FormStructure = {
     slug: 'work',
     title: 'work.title',
     fields: [
-        { name: 'title', label: 'headers.title', type: 'text', validation: { required: true } },
-        { name: 'description', label: 'work.description', type: 'textarea' },
-        { name: 'clientName', label: 'headers.name', type: 'text' },
-        { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text' },
-        { name: 'clientPhone', label: 'headers.phone', type: 'text' },
+        { name: 'title', label: 'headers.title', type: 'text', validation: { required: true }, gridCols: 2 },
         { 
             name: 'clientId', 
             label: 'work.client_registered', 
             type: 'autocomplete', 
-            remote: { slug: 'USER' }
+            remote: { slug: 'USER' },
+            validation: { required: true },
+            gridCols: 2
         },
+        { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text', validation: { required: true }, gridCols: 2 },
         { 
             name: 'status', 
             label: 'work.status', 
@@ -172,8 +171,10 @@ export const WorkForm: FormStructure = {
                 { label: 'status.completed', value: 'COMPLETED' },
                 { label: 'status.delivered', value: 'DELIVERED' }
             ],
-            defaultValue: 'OPEN'
+            defaultValue: 'OPEN',
+            gridCols: 2
         },
+        { name: 'description', label: 'work.description', type: 'textarea' },
         { name: 'images', label: 'work.images', type: 'image', multiple: true, validation: { max: 10 } }
     ]
 };

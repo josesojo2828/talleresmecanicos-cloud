@@ -51,16 +51,36 @@ export const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
                             </p>
                         </div>
 
-                        {/* Lista de Beneficios Visuales */}
-                        <div className="space-y-4">
+                        {/* Lista de Beneficios con Estilo Refinado */}
+                        <div className="space-y-6">
                             {benefits.map((benefit, i) => (
-                                <div key={i} className="flex items-center gap-3 text-slate-700 font-bold text-sm">
-                                    <div className="p-2 bg-white rounded-lg shadow-sm text-emerald-600 border border-slate-100">
+                                <div key={i} className="flex items-center gap-4 group cursor-default">
+                                    <div className="w-12 h-12 flex items-center justify-center bg-white rounded-2xl shadow-sm text-emerald-600 border border-slate-100 group-hover:scale-110 group-hover:shadow-emerald-500/10 transition-all duration-300">
                                         {benefit.icon}
                                     </div>
-                                    {benefit.text}
+                                    <div className="space-y-0.5">
+                                        <p className="text-slate-900 font-bold text-sm tracking-tight">{benefit.text}</p>
+                                        <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Verificado y Garantizado</p>
+                                    </div>
                                 </div>
                             ))}
+                        </div>
+
+                        {/* Social Proof Tarjeta Flotante */}
+                        <div className="pt-8">
+                            <div className="inline-flex items-center gap-4 p-4 bg-white/50 backdrop-blur-md rounded-[2rem] border border-white shadow-sm max-w-xs transition-transform hover:-rotate-1">
+                                <div className="flex -space-x-3">
+                                    {[1, 2, 3, 4].map(i => (
+                                        <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden ring-2 ring-emerald-50">
+                                            <div className="w-full h-full bg-slate-400" />
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="space-y-0.5">
+                                    <p className="text-slate-900 font-black text-xs leading-none">+5,000</p>
+                                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-tighter">Latinos ya están aquí</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

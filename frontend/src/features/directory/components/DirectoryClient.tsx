@@ -386,28 +386,7 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
             )}
           </div>
 
-          <div className="flex bg-white/80 backdrop-blur-2xl border border-white shadow-xl rounded-[2.5rem] p-1.5 gap-1 items-center">
-            <button
-              onClick={() => {
-                if (!userLocation && "geolocation" in navigator) {
-                  navigator.geolocation.getCurrentPosition((pos) => {
-                    setUserLocation([pos.coords.latitude, pos.coords.longitude]);
-                    setSortByDistance(true);
-                  }, (err) => {
-                    useAlertStore.getState().addAlert("Por favor permite el acceso a tu ubicación para usar esta función.", "warning");
-                  });
-                } else {
-                  setSortByDistance(!sortByDistance);
-                }
-              }}
-              className={cn(
-                "flex-1 md:flex-none px-6 md:px-10 py-3 md:py-4 rounded-[2rem] text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2",
-                sortByDistance ? "bg-slate-900 text-white shadow-lg" : "text-slate-400 hover:text-slate-900"
-              )}
-            >
-              <Navigation size={14} className={cn(sortByDistance && "animate-pulse")} /> <span className="hidden sm:inline">Cerca de mí</span><span className="sm:hidden">Cerca</span>
-            </button>
-          </div>
+
         </header>
 
         <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
@@ -676,24 +655,7 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
           >
             <LayoutGrid size={16} className="text-emerald-500" /> Ver Lista
           </button>
-          <button
-             onClick={() => {
-              if (!userLocation && "geolocation" in navigator) {
-                navigator.geolocation.getCurrentPosition((pos) => {
-                  setUserLocation([pos.coords.latitude, pos.coords.longitude]);
-                  setSortByDistance(true);
-                });
-              } else {
-                setSortByDistance(!sortByDistance);
-              }
-            }}
-            className={cn(
-              "p-4 rounded-[1.5rem] shadow-2xl flex items-center justify-center border transition-all active:scale-95",
-              sortByDistance ? "bg-emerald-500 text-white border-emerald-400" : "bg-white text-slate-400 border-white/20"
-            )}
-          >
-            <Navigation size={18} />
-          </button>
+
         </div>
       </div>
 

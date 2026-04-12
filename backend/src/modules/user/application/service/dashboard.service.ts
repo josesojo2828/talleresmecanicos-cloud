@@ -298,7 +298,7 @@ export default class DashboardService {
             ].filter(Boolean) as any,
             columns: [
                 { key: 'dateTime', label: 'headers.date', type: 'date' },
-                { key: 'clientName', label: 'headers.client', type: 'text' },
+                { key: 'client.firstName', label: 'headers.client', type: 'text' },
                 { key: 'status', label: 'headers.status', type: 'badge' }
             ],
             form: AppForms.AppointmentForm
@@ -317,7 +317,7 @@ export default class DashboardService {
             columns: [
                 { key: 'title', label: 'headers.title', type: 'text' },
                 { key: 'publicId', label: 'work.publicId', type: 'text' },
-                { key: 'clientName', label: 'headers.name', type: 'text' },
+                { key: 'client.firstName', label: 'headers.client', type: 'text' },
                 { key: 'status', label: 'work.status', type: 'badge' },
                 { key: 'createdAt', label: 'headers.date', type: 'date' }
             ],
@@ -360,7 +360,8 @@ export default class DashboardService {
         });
 
         // 4. FORO (TODOS MENOS TALLER QUE YA TIENE SUS PUBLICACIONES)
-        if (!isTaller) {
+        // 4. FORO (ADMIN & SUPPORT SOLAMENTE PARA MODERACIÓN)
+        if (isAdmin || isSupport) {
             const forumSidebar: ObjectSidebar = {
                 icon: 'message',
                 label: 'nav.public_forum',
@@ -371,24 +372,24 @@ export default class DashboardService {
                 ]
             };
             sidebar.push(forumSidebar);
-        }
 
-        pages.push({
-            slug: 'forum-post',
-            title: 'forum.post.title',
-            subtitle: 'forum.post.subtitle',
-            actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
-            actionsRows: [
-                { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
-                isAdmin ? { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' } : null
-            ].filter(Boolean) as any,
-            columns: [
-                { key: 'title', label: 'headers.title', type: 'text' },
-                { key: 'user.firstName', label: 'headers.author', type: 'text' },
-                { key: 'enabled', label: 'headers.moderated', type: 'boolean' }
-            ],
-            form: AppForms.ForumPostForm
-        });
+            pages.push({
+                slug: 'forum-post',
+                title: 'forum.post.title',
+                subtitle: 'forum.post.subtitle',
+                actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
+                actionsRows: [
+                    { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
+                    isAdmin ? { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' } : null
+                ].filter(Boolean) as any,
+                columns: [
+                    { key: 'title', label: 'headers.title', type: 'text' },
+                    { key: 'user.firstName', label: 'headers.author', type: 'text' },
+                    { key: 'enabled', label: 'headers.moderated', type: 'boolean' }
+                ],
+                form: AppForms.ForumPostForm
+            });
+        }
 
         // 5. CLIENTE (MIS VEHÍCULOS Y SOLICITUDES)
         if (isClient) {
@@ -398,49 +399,12 @@ export default class DashboardService {
                 path: '/dashboard/garage',
                 slug: 'garage',
                 childs: [
-                    { icon: 'user', label: 'nav.my_vehicles', path: '/dashboard/vehicle', slug: 'vehicle' },
-
                     { icon: 'tool', label: 'work.title', path: '/dashboard/work', slug: 'work' },
-                    { icon: 'message', label: 'nav.my_requests', path: '/dashboard/service-request', slug: 'service-request' }
                 ]
             };
             sidebar.push(clientSidebar);
 
-            pages.push({
-                slug: 'vehicle',
-                title: 'nav.garage',
-                subtitle: 'vehicle.subtitle',
-                actions: [{ icon: 'add', label: 'action.register_vehicle', action: 'add', type: 'page' }],
-                actionsRows: [
-                    { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
-                    { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' }
-                ],
-                columns: [
-                    { key: 'brand', label: 'headers.brand', type: 'text' },
-                    { key: 'model', label: 'headers.model', type: 'text' },
-                    { key: 'licensePlate', label: 'headers.licensePlate', type: 'text' },
-                    { key: 'year', label: 'headers.year', type: 'text' }
-                ],
-                form: AppForms.VehicleForm
-            });
 
-            pages.push({
-                slug: 'service-request',
-                title: 'nav.my_requests',
-                subtitle: 'service_request.subtitle',
-                actions: [{ icon: 'add', label: 'action.new_request', action: 'add', type: 'page' }],
-                actionsRows: [
-                    { icon: 'view', label: 'action.view_details', action: 'edit', type: 'modal' },
-                    { icon: 'delete', label: 'action.cancel', action: 'delete', type: 'modal' }
-                ],
-                columns: [
-                    { key: 'title', label: 'headers.title', type: 'text' },
-                    { key: 'status', label: 'headers.status', type: 'badge' },
-                    { key: 'isSOS', label: 'headers.sos', type: 'boolean' },
-                    { key: 'createdAt', label: 'headers.date', type: 'date' }
-                ],
-                form: AppForms.ServiceRequestForm
-            });
 
         }
 
@@ -448,5 +412,42 @@ export default class DashboardService {
             sidebar,
             pages
         }
+    }
+    public async getClientDashboardStats(user: IUser) {
+        const [statusCounts, recentWorks, upcomingAppointments] = await Promise.all([
+            // Status breakdown for works
+            this.prisma.work.groupBy({
+                by: ['status'],
+                where: { clientId: user.id },
+                _count: true
+            }),
+            // Recent works
+            this.prisma.work.findMany({
+                where: { clientId: user.id },
+                take: 5,
+                orderBy: { createdAt: 'desc' },
+                include: { workshop: true }
+            }),
+            // Upcoming appointments
+            this.prisma.appointment.findMany({
+                where: { 
+                    clientId: user.id,
+                    dateTime: { gte: new Date() }
+                },
+                take: 5,
+                orderBy: { dateTime: 'asc' },
+                include: { workshop: true }
+            })
+        ]);
+
+        return {
+            summary: {
+                totalWorks: (statusCounts as any[]).reduce((a, b) => a + b._count, 0),
+                activeWorks: (statusCounts as any[]).filter(v => ['PENDING', 'IN_PROGRESS'].includes(v.status)).reduce((a, b) => a + b._count, 0),
+                upcomingAppointments: upcomingAppointments.length
+            },
+            recentWorks,
+            upcomingAppointments
+        };
     }
 }

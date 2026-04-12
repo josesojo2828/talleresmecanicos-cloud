@@ -9,6 +9,7 @@ export default function Dashboard() {
     const { 
         user, 
         workshopStats, 
+        clientStats,
         adminStats, 
         loading 
     } = useDashboardStats();
@@ -50,7 +51,7 @@ export default function Dashboard() {
     // VISTA USUARIO COMÚN (GARAGE PERSONAL)
     return (
         <div className="w-full">
-            <UserDashboard user={user} />
+            <UserDashboard user={user} clientStats={clientStats} />
         </div>
     );
 }
