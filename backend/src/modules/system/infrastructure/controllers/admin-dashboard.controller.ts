@@ -16,4 +16,9 @@ export class AdminDashboardController {
     async getSummary(@CurrentUser() user: any) {
         return await this.metricsUCase.getDashboardSummary(user);
     }
+
+    @Get('/workshop/:workshopId')
+    async getWorkshopDashboardById(@Param('workshopId') workshopId: string, @CurrentUser() user: any) {
+        return await this.metricsUCase.getWorkshopDashboard(workshopId);
+    }
 }

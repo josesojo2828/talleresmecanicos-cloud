@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseInterceptors, UploadedFiles } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseInterceptors, UploadedFiles, UseGuards } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { StorageService } from "src/modules/storage/storage.service";
 import { ForumUCase } from "../../application/use-cases/forum.ucase";
@@ -6,6 +6,9 @@ import { ICreateForumPostDto, IUpdateForumPostDto, ICreateForumCommentDto } from
 import { QueryOptions } from "src/shared/query/input";
 import { ForumPost, ForumComment } from "@prisma/client";
 import { IForumPostQueryFilter, IForumCommentQueryFilter } from "../../application/dtos/forum.schema";
+import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
+import { CurrentUser } from "src/modules/auth/decorators/current-user.decorator";
+import { OptionalAuthGuard } from "src/modules/auth/guards/optional-auth.guard";
 
 @Controller('forum-post')
 export class ForumCrudController {
@@ -31,18 +34,21 @@ export class ForumCrudController {
     }
 
     @Get('recommended')
-    async getRecommended(@Query('take') take?: number, @Query('userId') userId?: string) {
-        return await this.useCase.getRecommendedPosts(take ? Number(take) : 5, userId);
+    @UseGuards(OptionalAuthGuard)
+    async getRecommended(@Query('take') take?: number, @CurrentUser() user?: any) {
+        return await this.useCase.getRecommendedPosts(take ? Number(take) : 5, user);
     }
 
     @Get(':id')
-    async getPostById(@Param('id') id: string, @Query('userId') userId?: string) {
-        return await this.useCase.findPost(id, userId);
+    @UseGuards(OptionalAuthGuard)
+    async getPostById(@Param('id') id: string, @CurrentUser() user?: any) {
+        return await this.useCase.findPost(id, user);
     }
 
     @Get('')
-    async getPosts(@Query() q: QueryOptions<ForumPost, IForumPostQueryFilter>, @Query('userId') userId?: string) {
-        return await this.useCase.paginationPosts(q, userId);
+    @UseGuards(OptionalAuthGuard)
+    async getPosts(@Query() q: QueryOptions<ForumPost, IForumPostQueryFilter>, @CurrentUser() user?: any) {
+        return await this.useCase.paginationPosts(q, user);
     }
 
     @Post('upload-images')
@@ -84,7 +90,8 @@ export class ForumCrudController {
     }
 
     @Get('stats')
-    async getStats(@Query('userId') userId?: string) {
-        return await this.useCase.getStats(userId);
+    @UseGuards(OptionalAuthGuard)
+    async getStats(@CurrentUser() user?: any) {
+        return await this.useCase.getStats(user);
     }
 }

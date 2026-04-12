@@ -1,12 +1,16 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { QueryOptions } from "src/shared/query/input";
-import { ForumPost, ForumComment } from "@prisma/client";
+import { ForumPost, ForumComment, UserRole } from "@prisma/client";
 import ForumPostModel from "../../domain/models/forum-post.model";
 import ForumPostPersistence from "../../infrastructure/persistence/post/persistence";
 import ForumCommentPersistence from "../../infrastructure/persistence/forum-comment/persistence";
 import { ICreateForumCommentDto, ICreateForumPostDto, IUpdateForumPostDto } from "../dtos/forum.dto";
 import { IForumCommentQueryFilter, IForumPostQueryFilter } from "../dtos/forum.schema";
 import { PrismaService } from "src/config/prisma.service";
+import { getScopeFilter } from "src/shared/utils/scope-filter";
+import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
+import { CurrentUser } from "src/modules/auth/decorators/current-user.decorator";
+import { OptionalAuthGuard } from "src/modules/auth/guards/optional-auth.guard";
 
 @Injectable()
 export class ForumUCase extends ForumPostModel {
@@ -65,7 +69,8 @@ export class ForumUCase extends ForumPostModel {
         };
     }
 
-    async findPost(id: string, userId?: string) {
+    async findPost(id: string, user?: any) {
+        const userId = user?.id;
         const post: any = await this.postPersistence.find({ id }, {
             user: { include: { profile: true } },
             workshop: true,
@@ -91,13 +96,22 @@ export class ForumUCase extends ForumPostModel {
         return post;
     }
 
-    async paginationPosts(q: QueryOptions<ForumPost, IForumPostQueryFilter>, userId?: string) {
+    async paginationPosts(q: QueryOptions<ForumPost, IForumPostQueryFilter>, user?: any) {
         let { search, filters, skip, take, orderBy } = q;
+        const userId = user?.id;
         
         if (typeof filters === 'string') filters = JSON.parse(filters);
         if (typeof orderBy === 'string') orderBy = JSON.parse(orderBy);
 
-        const where = this.getWhere(filters || {}, search);
+        const baseWhere = this.getWhere(filters || {}, search);
+        const workScope = getScopeFilter(user, 'workshop');
+        
+        const finalWhere = {
+            AND: [
+                baseWhere,
+                workScope
+            ]
+        };
         
         let order: any = orderBy;
         if (!order) {
@@ -105,13 +119,14 @@ export class ForumUCase extends ForumPostModel {
         }
 
         const result: any = await this.postPersistence.getAll({
-            where: where,
+            where: finalWhere as any,
             skip: skip ? Number(skip) : 0,
             take: take ? Number(take) : 10,
             orderBy: order as any,
             include: {
                 user: { include: { profile: true } },
                 categories: true,
+                workshop: { include: { country: true, city: true } },
                 _count: {
                     select: { likes: true, comments: true, favorites: true }
                 }
@@ -134,9 +149,15 @@ export class ForumUCase extends ForumPostModel {
         return result;
     }
 
-    async getRecommendedPosts(take: number = 5, userId?: string) {
+    async getRecommendedPosts(take: number = 5, user?: any) {
+        const userId = user?.id;
+        const workScope = getScopeFilter(user, 'workshop');
+
         const result: any = await this.postPersistence.getAll({
-            where: { enabled: true },
+            where: { 
+                enabled: true,
+                ...workScope
+            },
             take: take,
             orderBy: [
                 { likes: { _count: 'desc' } },
@@ -213,8 +234,11 @@ export class ForumUCase extends ForumPostModel {
         });
     }
 
-    async getStats(userId?: string) {
-        if (userId) {
+    async getStats(user?: any) {
+        const userId = user?.id;
+        const workScope = getScopeFilter(user, 'workshop');
+
+        if (userId && user.role !== UserRole.SUPPORT) {
             const [posts, approved, favorites] = await Promise.all([
                 this.prisma.forumPost.count({ where: { userId } }),
                 this.prisma.forumPost.count({ where: { userId, enabled: true } }),
@@ -224,9 +248,9 @@ export class ForumUCase extends ForumPostModel {
         }
 
         const [totalPosts, totalComments, totalLikes] = await Promise.all([
-            this.prisma.forumPost.count({ where: { enabled: true } }),
-            this.prisma.forumComment.count({ where: { enabled: true } }),
-            this.prisma.forumLike.count({})
+            this.prisma.forumPost.count({ where: { enabled: true, ...workScope } }),
+            this.prisma.forumComment.count({ where: { enabled: true, post: { ...workScope } } }),
+            this.prisma.forumLike.count({ where: { post: { ...workScope } } })
         ]);
         return { totalPosts, totalComments, totalLikes };
     }

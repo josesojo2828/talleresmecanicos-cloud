@@ -43,11 +43,13 @@ export class CityCrudController {
     }
 
     @Get(':id')
+    @UseGuards(JwtAuthGuard)
     async getById(@Param('id') id: string, @CurrentUser() user: any) {
         return await this.queryUseCase.findOne({ id, user: user || { role: 'PUBLIC' } });
     }
 
     @Get('')
+    @UseGuards(JwtAuthGuard)
     async getPaginate(@Query() q: QueryOptions<City, ICityQueryFilter>, @CurrentUser() user: any) {
         return await this.queryUseCase.pagination({ q, user: user || { role: 'PUBLIC' } });
     }

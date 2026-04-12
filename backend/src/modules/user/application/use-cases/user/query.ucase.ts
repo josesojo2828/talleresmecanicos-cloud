@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, ForbiddenException } from "@nestjs/common";
 import UserModel from "src/modules/user/domain/models/user.model";
 import FindUserPersistence from "src/modules/user/infrastructure/persistence/user/find.persistence";
 import { IUserQueryFilter } from "src/modules/user/application/dtos/user.schema";
 import { QueryOptions } from "src/shared/query/input";
-import { User } from "@prisma/client";
+import { User, UserRole } from "@prisma/client";
 import { getScopeFilter } from "src/shared/utils/scope-filter";
 
 @Injectable()
@@ -15,45 +15,51 @@ export default class QueryUserUCase extends UserModel {
         super()
     }
 
-    public async findOne({ id }: { id: string }) {
-        return await this.findPersistence.find({ where: { id } });
+    public async findOne({ id, user }: { id: string, user: any }) {
+        let where: any = { id };
+
+        if (user && user.role === UserRole.SUPPORT) {
+            const scope = getScopeFilter(user) as any;
+            if (scope && scope.OR) {
+                const userFilters = scope.OR.map((f: any) => {
+                    if (f.countryId) return { countryId: f.countryId };
+                    if (f.cityId) return { 
+                        OR: [
+                            { country: { cities: { some: { id: f.cityId } } } },
+                            { workshop: { cityId: f.cityId } }
+                        ]
+                    };
+                    return f;
+                });
+                where = { AND: [{ id }, { OR: userFilters }] };
+            }
+        }
+
+        const entity = await this.findPersistence.find({ where });
+        if (!entity) throw new ForbiddenException("No tienes permiso o no existe este usuario en tu región");
+        return entity;
     }
 
     public async pagination({ q, user }: { q: QueryOptions<User, IUserQueryFilter>, user?: any }) {
         const { search, filters, skip, take, orderBy } = q as any;
 
-        let where = this.getWhere(filters || {}, search);
+        const baseWhere = this.getWhere(filters || {}, search);
+        let where: any = { AND: [baseWhere] };
 
-        if (user && user.role === 'SUPPORT') {
-            const assignments = user.assignments || [];
-            if (assignments.length === 0) {
-                where = { ...where, id: 'none' };
-            } else {
-                // User only has countryId, NOT cityId.
-                // For country assignments -> filter directly by countryId
-                // For city assignments -> find the country of those cities via relation
-                const countryIds = [...new Set(
-                    assignments.map((a: any) => a.countryId).filter((id: any) => id != null)
-                )] as string[];
-
-                const cityIds = [...new Set(
-                    assignments.map((a: any) => a.cityId).filter((id: any) => id != null)
-                )] as string[];
-
-                const orFilters: any[] = [];
-                if (countryIds.length > 0) {
-                    orFilters.push({ countryId: { in: countryIds } });
-                }
-                if (cityIds.length > 0) {
-                    // Users whose country has one of the assigned cities
-                    orFilters.push({ country: { cities: { some: { id: { in: cityIds } } } } });
-                }
-
-                if (orFilters.length > 0) {
-                    where = { ...where, OR: orFilters };
-                } else {
-                    where = { ...where, id: 'none' };
-                }
+        if (user && user.role === UserRole.SUPPORT) {
+            const scope = getScopeFilter(user) as any;
+            if (scope && scope.OR) {
+                const userFilters = scope.OR.map((f: any) => {
+                    if (f.countryId) return { countryId: f.countryId };
+                    if (f.cityId) return { 
+                        OR: [
+                            { country: { cities: { some: { id: f.cityId } } } },
+                            { workshop: { cityId: f.cityId } }
+                        ]
+                    };
+                    return f;
+                });
+                where.AND.push({ OR: userFilters });
             }
         }
 

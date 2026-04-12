@@ -23,8 +23,6 @@ export class AdminMetricsUCase {
 
     async getDashboardSummary(user?: any) {
         const scope = getScopeFilter(user);
-        console.log('🔍 [DASHBOARD DEBUG] user:', JSON.stringify({ role: user?.role, assignments: user?.assignments }, null, 2));
-        console.log('🔍 [DASHBOARD DEBUG] scope:', JSON.stringify(scope, null, 2));
         
         // Specific scope for entities related to workshops
         const workScope = getScopeFilter(user, 'workshop');
@@ -157,6 +155,53 @@ export class AdminMetricsUCase {
             recentWorks,
             recentCities,
             workshopLocations,
+            productionStats
+        };
+    }
+
+    async getWorkshopDashboard(workshopId: string) {
+        const [
+            totalWorks,
+            totalAppointments,
+            totalPublications,
+            recentWorks,
+            productionRaw
+        ] = await Promise.all([
+            this.prisma.work.count({ where: { workshopId, deletedAt: null } }),
+            this.prisma.appointment.count({ where: { workshopId, deletedAt: null } }),
+            this.prisma.publication.count({ where: { workshopId, deletedAt: null } }),
+            this.prisma.work.findMany({
+                where: { workshopId, deletedAt: null },
+                take: 5,
+                orderBy: { createdAt: 'desc' }
+            }),
+            this.prisma.work.findMany({
+                where: { 
+                    workshopId, 
+                    createdAt: { gte: new Date(new Date().setDate(new Date().getDate() - 30)) },
+                    deletedAt: null 
+                },
+                select: { createdAt: true }
+            })
+        ]);
+
+        const production = productionRaw.reduce((acc: any, work: any) => {
+            const date = work.createdAt.toISOString().split('T')[0];
+            acc[date] = (acc[date] || 0) + 1;
+            return acc;
+        }, {});
+
+        const productionStats = Object.keys(production)
+            .sort()
+            .map(date => ({ date, count: production[date] }));
+
+        return {
+            stats: {
+                totalWorks,
+                totalAppointments,
+                totalPublications,
+            },
+            recentWorks,
             productionStats
         };
     }

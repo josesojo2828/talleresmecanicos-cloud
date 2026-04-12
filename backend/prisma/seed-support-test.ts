@@ -109,6 +109,7 @@ async function main() {
     // Cleanup: remove test data
     console.log('🧹 Limpiando datos anteriores de test...');
     await prisma.work.deleteMany({ where: { workshop: { country: { slug: { in: ['mexico', 'colombia', 'venezuela', 'peru'] } } } } });
+    await prisma.forumPost.deleteMany({ where: { workshop: { country: { slug: { in: ['mexico', 'colombia', 'venezuela', 'peru'] } } } } });
     await prisma.publication.deleteMany({ where: { workshop: { country: { slug: { in: ['mexico', 'colombia', 'venezuela', 'peru'] } } } } });
     await prisma.workshop.deleteMany({ where: { country: { slug: { in: ['mexico', 'colombia', 'venezuela', 'peru'] } } } });
     await prisma.supportAssignment.deleteMany({ where: { user: { email: { contains: '@soporte-test.com' } } } });
@@ -232,20 +233,34 @@ async function main() {
             }
             console.log(`    📋 ${workCount} órdenes de trabajo creadas`);
 
-            // Create Publications (vary by country)
-            const pubCount = config.slug === 'mexico' ? 3 : config.slug === 'colombia' ? 2 : 1;
+            // Create Publications (1 or 2 per workshop - NEWS/PROMOS)
+            const pubCount = Math.floor(Math.random() * 2) + 1;
             for (let p = 0; p < pubCount; p++) {
                 await prisma.publication.create({
                     data: {
                         workshopId: workshop.id,
                         userId: tallerUser.id,
                         title: `${PUB_TITLES[p % PUB_TITLES.length]} - ${ws.name}`,
-                        content: `Publicación #${p + 1} del taller ${ws.name} en ${config.name}`,
+                        content: `Esta es una promoción/noticia del taller ${ws.name}.`,
                         enabled: true,
                     },
                 });
             }
-            console.log(`    📰 ${pubCount} publicaciones creadas`);
+            console.log(`    📰 ${pubCount} publicaciones creadas (Promos)`);
+
+            // Create ForumPosts (1 or 2 per workshop - FORUM)
+            for (let f = 0; f < pubCount; f++) {
+                await prisma.forumPost.create({
+                    data: {
+                        workshopId: workshop.id,
+                        userId: tallerUser.id,
+                        title: `Consulta técnica: ${WORK_TITLES[f % WORK_TITLES.length]} - ${ws.name}`,
+                        content: `Alguien me puede ayudar con este problema en un taller de ${config.name}?`,
+                        enabled: true,
+                    },
+                });
+            }
+            console.log(`    💬 ${pubCount} posts creados en el foro`);
         }
     }
 

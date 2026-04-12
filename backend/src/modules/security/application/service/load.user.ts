@@ -70,20 +70,7 @@ export class LoadUserService {
         })
 
         // --- ASIGNACIONES REGIONALES ---
-        const vnz = await this.prisma.country.findUnique({ where: { name: 'Venezuela' } });
         const cdmx = await this.prisma.city.findFirst({ where: { name: 'Ciudad de México' } });
-
-        if (vnz) {
-            const exists = await this.prisma.supportAssignment.findFirst({
-                where: { userId: supportUser.id, countryId: vnz.id, cityId: null }
-            });
-            if (!exists) {
-                await this.prisma.supportAssignment.create({
-                    data: { userId: supportUser.id, countryId: vnz.id, cityId: null }
-                });
-                this.logger.log(`Asignado [Venezuela] a soporte2@talleres.com`);
-            }
-        }
 
         if (cdmx) {
             const exists = await this.prisma.supportAssignment.findFirst({

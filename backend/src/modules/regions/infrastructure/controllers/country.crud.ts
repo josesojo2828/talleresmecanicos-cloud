@@ -46,12 +46,12 @@ export class CountryCrudController {
     @Get(':id')
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN, UserRole.SUPPORT)
-    async getById(@Param('id') id: string) {
-        return await this.queryUseCase.findOne({ id });
+    async getById(@Param('id') id: string, @CurrentUser() user: any) {
+        return await this.queryUseCase.findOne({ id, user });
     }
 
     @Get('')
-    @UseGuards(OptionalAuthGuard)
+    @UseGuards(JwtAuthGuard)
     async getPaginate(@Query() q: QueryOptions<Country, ICountryQueryFilter>, @CurrentUser() user: any) {
         return await this.queryUseCase.pagination({ q, user: user || { role: 'PUBLIC' } });
     }
