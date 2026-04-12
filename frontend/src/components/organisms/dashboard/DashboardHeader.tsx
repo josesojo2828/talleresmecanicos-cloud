@@ -32,7 +32,7 @@ export const DashboardHeader = ({ onOpenMobileSidebar }: DashboardHeaderProps) =
                             {user?.firstName} {user?.lastName}
                         </p>
                         <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest mt-1 bg-emerald-50 px-1.5 py-0.5 rounded">
-                            {user?.role || "Usuario"} • {user?.workshopId ? "Taller Activo" : "Online"}
+                            {user?.role || "Usuario"} • {user?.workshop ? "Taller Activo" : "Online"}
                         </p>
                     </div>
 
