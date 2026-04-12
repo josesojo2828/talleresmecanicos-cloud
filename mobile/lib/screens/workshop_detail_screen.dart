@@ -14,71 +14,93 @@ class WorkshopDetailScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFF8FAFC),
       body: CustomScrollView(
         slivers: [
-          _buildAppBar(context),
+          _buildHeroHeader(context),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 500),
-                    child: _buildMainInfo(),
-                  ),
+                  const SizedBox(height: 24),
+                  _buildTitleSection(),
+                  const SizedBox(height: 24),
+                  _buildActionGrid(),
                   const SizedBox(height: 32),
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 600),
-                    child: _buildActionButtons(),
-                  ),
+                  _buildTechStats(),
+                  const SizedBox(height: 32),
+                  _buildLocationAndHours(),
+                  const SizedBox(height: 32),
+                  _buildServiceTracker(),
                   const SizedBox(height: 40),
-                  FadeInUp(
-                    duration: const Duration(milliseconds: 700),
-                    child: _buildDetailsSection(),
-                  ),
                 ],
               ),
             ),
           ),
         ],
       ),
-      bottomNavigationBar: _buildBottomCTA(),
+      bottomNavigationBar: _buildStickyCTA(),
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildHeroHeader(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 250,
+      expandedHeight: 280,
       pinned: true,
       backgroundColor: const Color(0xFF0F172A),
-      leading: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CircleAvatar(
-          backgroundColor: Colors.black26,
-          child: IconButton(
-            icon: const Icon(LucideIcons.chevron_left, color: Colors.white, size: 20),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
+      leading: IconButton(
+        icon: const Icon(LucideIcons.chevron_left, color: Colors.white),
+        onPressed: () => Navigator.pop(context),
       ),
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
-              'https://images.unsplash.com/photo-1486006920555-c77dcf18193c?q=80&w=2000&auto=format&fit=crop', // Placeholder pro
-              fit: BoxFit.cover,
+            // Tech Header Pattern
+            Container(color: const Color(0xFF0F172A)),
+            Opacity(
+              opacity: 0.1,
+              child: Image.network(
+                'https://www.transparenttextures.com/patterns/carbon-fibre.png',
+                repeat: ImageRepeat.repeat,
+              ),
             ),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withOpacity(0.4),
-                    Colors.transparent,
-                    const Color(0xFFF8FAFC).withOpacity(1),
-                  ],
-                ),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FadeInDown(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF10B981),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'VERIFICADO',
+                        style: GoogleFonts.spaceGrotesk(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  FadeIn(
+                    delay: const Duration(milliseconds: 300),
+                    child: const Icon(LucideIcons.qr_code, color: Colors.white54, size: 80),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'IDENTIFIER_MODULE // INFO',
+                    style: GoogleFonts.spaceGrotesk(
+                      color: Colors.white38,
+                      fontSize: 10,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -87,49 +109,202 @@ class WorkshopDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMainInfo() {
+  Widget _buildTitleSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildBadge('Abierto', const Color(0xFF10B981)),
-            Row(
-              children: [
-                const Icon(LucideIcons.star, color: Color(0xFFF59E0B), size: 18),
-                const SizedBox(width: 4),
-                Text(
-                  '4.9 (120 reseñas)',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF0F172A),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
         Text(
-          workshop['name'] ?? 'Taller Elite Premium',
+          workshop['name']?.toUpperCase() ?? 'MARIO MOTORS VZLA',
           style: GoogleFonts.outfit(
             fontSize: 28,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w900,
             color: const Color(0xFF0F172A),
             letterSpacing: -1,
           ),
         ),
-        const SizedBox(height: 8),
-        Row(
+        const SizedBox(height: 16),
+        IntrinsicHeight(
+          child: Row(
+            children: [
+              Container(width: 4, color: const Color(0xFF10B981)),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  'ESTE TALLER ES PARTE DE NUESTRA RED CERTIFICADA DE ESPECIALISTAS MECÁNICOS.',
+                  style: GoogleFonts.outfit(
+                    color: const Color(0xFF64748B),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    height: 1.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionGrid() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildActionCard(
+            'WHATSAPP',
+            LucideIcons.message_square,
+            const Color(0xFF10B981),
+            const Color(0xFFD1FAE5),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: _buildActionCard(
+            'TELÉFONO',
+            LucideIcons.phone,
+            const Color(0xFF0F172A),
+            const Color(0xFFF1F5F9),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionCard(String label, IconData icon, Color color, Color bgColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 32),
+          const SizedBox(height: 12),
+          Text(
+            label,
+            style: GoogleFonts.spaceGrotesk(
+              color: color,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+              letterSpacing: 1,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTechStats() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0F172A),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'ESTADÍSTICAS_TÉCNICAS',
+                style: GoogleFonts.spaceGrotesk(
+                  color: Colors.white54,
+                  fontSize: 10,
+                  letterSpacing: 1,
+                ),
+              ),
+              const Icon(LucideIcons.activity, color: Color(0xFF10B981), size: 16),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Row(
+            children: [
+              _buildStatItem('APARICIONES', '1,240+'),
+              const Spacer(),
+              _buildStatItem('SUCCESS_RATE', '99.2%'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.spaceGrotesk(color: Colors.white38, fontSize: 9),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: GoogleFonts.outfit(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLocationAndHours() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          _buildInfoRow(LucideIcons.map_pin, 'Av. Libertador, Caracas', 'CARACAS // VENEZUELA'),
+          const Divider(height: 32, color: Color(0xFFF1F5F9)),
+          _buildInfoRow(LucideIcons.clock, 'Horario de Atención', 'LUN-SÁB 8:00 – 19:00'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String title, String sub) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF8FAFC),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Icon(icon, color: const Color(0xFF0F172A), size: 20),
+        ),
+        const SizedBox(width: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(LucideIcons.map_pin, color: Color(0xFF64748B), size: 16),
-            const SizedBox(width: 8),
             Text(
-              workshop['address'] ?? 'Dirección del taller',
-              style: GoogleFonts.inter(
-                color: const Color(0xFF64748B),
+              title,
+              style: GoogleFonts.outfit(
+                color: const Color(0xFF0F172A),
+                fontWeight: FontWeight.bold,
                 fontSize: 15,
+              ),
+            ),
+            Text(
+              sub,
+              style: GoogleFonts.spaceGrotesk(
+                color: const Color(0xFF64748B),
+                fontSize: 10,
               ),
             ),
           ],
@@ -138,143 +313,45 @@ class WorkshopDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _buildActionButton(LucideIcons.phone, 'Llamar'),
-        _buildActionButton(LucideIcons.map, 'Mapa'),
-        _buildActionButton(LucideIcons.message_square, 'Mensaje'),
-      ],
-    );
-  }
-
-  Widget _buildActionButton(IconData icon, String label) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF0F172A).withOpacity(0.04),
-                blurRadius: 15,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Icon(icon, color: const Color(0xFF10B981), size: 24),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: GoogleFonts.inter(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF0F172A),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDetailsSection() {
+  Widget _buildServiceTracker() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Sobre nosotros',
+          'MIS SOLICITUDES DE SERVICIO?',
           style: GoogleFonts.outfit(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w900,
             color: const Color(0xFF0F172A),
+            fontSize: 16,
           ),
         ),
-        const SizedBox(height: 12),
-        Text(
-          'Especialistas en mecánica de alta precisión. Ofrecemos servicios de mantenimiento preventivo, pintura y diagnóstico computarizado con la mejor tecnología del mercado.',
-          style: GoogleFonts.inter(
-            color: const Color(0xFF64748B),
-            fontSize: 15,
-            height: 1.6,
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFE2E8F0)),
           ),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          'Especialidades',
-          style: GoogleFonts.outfit(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF0F172A),
+          child: TextField(
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'EJ: ABCD1234',
+              hintStyle: GoogleFonts.spaceGrotesk(color: Colors.black26),
+              suffixIcon: const Icon(LucideIcons.search, size: 20),
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            _buildSpecialtyChip('Motor'),
-            _buildSpecialtyChip('Suspensión'),
-            _buildSpecialtyChip('Frenos'),
-            _buildSpecialtyChip('Pintura'),
-          ],
         ),
       ],
     );
   }
 
-  Widget _buildSpecialtyChip(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFF10B981).withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF10B981).withOpacity(0.1)),
-      ),
-      child: Text(
-        text,
-        style: GoogleFonts.inter(
-          color: const Color(0xFF10B981),
-          fontWeight: FontWeight.bold,
-          fontSize: 13,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBadge(String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        text.toUpperCase(),
-        style: GoogleFonts.inter(
-          color: color,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomCTA() {
+  Widget _buildStickyCTA() {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            offset: const Offset(0, -5),
-            blurRadius: 20,
-          ),
-        ],
+        border: Border(top: BorderSide(color: const Color(0xFFF1F5F9))),
       ),
       child: SafeArea(
         child: ElevatedButton(
@@ -283,16 +360,24 @@ class WorkshopDetailScreen extends StatelessWidget {
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 20),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            elevation: 0,
+            elevation: 8,
+            shadowColor: const Color(0xFF10B981).withOpacity(0.4),
           ),
           onPressed: () {},
-          child: Text(
-            'SOLICITAR CITA',
-            style: GoogleFonts.outfit(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              letterSpacing: 1,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'SOLICITAR CITA',
+                style: GoogleFonts.spaceGrotesk(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 16,
+                  letterSpacing: 2,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Icon(LucideIcons.arrow_right, size: 20),
+            ],
           ),
         ),
       ),
