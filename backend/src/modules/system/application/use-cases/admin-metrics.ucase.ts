@@ -27,12 +27,12 @@ export class AdminMetricsUCase {
         // Specific scope for entities related to workshops
         const workScope = getScopeFilter(user, 'workshop');
         
-        // Resolve Support assignments
+        // Resolve Support assignments (only real non-null assignments)
         const countryIds = user && user.role === UserRole.SUPPORT 
-            ? user.assignments?.map((a: any) => a.countryId).filter(Boolean) || []
+            ? [...new Set(user.assignments?.map((a: any) => a.countryId).filter((id: any) => id != null))] as string[]
             : [];
         const cityIds = user && user.role === UserRole.SUPPORT 
-            ? user.assignments?.map((a: any) => a.cityId).filter(Boolean) || []
+            ? [...new Set(user.assignments?.map((a: any) => a.cityId).filter((id: any) => id != null))] as string[]
             : [];
 
         // Scope for users (by country if available)
@@ -50,16 +50,19 @@ export class AdminMetricsUCase {
         const cityFilters: any = { enabled: true };
 
         if (user && user.role === UserRole.SUPPORT) {
-            const cityOrFilters: any[] = [];
-            if (countryIds.length > 0) cityOrFilters.push({ countryId: { in: countryIds } });
-            if (cityIds.length > 0) cityOrFilters.push({ id: { in: cityIds } });
+            const hasCountries = countryIds.length > 0;
+            const hasCities = cityIds.length > 0;
 
-            if (cityOrFilters.length > 0) {
+            if (hasCountries || hasCities) {
+                const cityOrFilters: any[] = [];
+                if (hasCountries) cityOrFilters.push({ countryId: { in: countryIds } });
+                if (hasCities) cityOrFilters.push({ id: { in: cityIds } });
                 cityFilters.OR = cityOrFilters;
-                countryFilters.OR = [
-                    { id: { in: countryIds } },
-                    { cities: { some: { id: { in: cityIds } } } }
-                ];
+
+                const countryOrFilters: any[] = [];
+                if (hasCountries) countryOrFilters.push({ id: { in: countryIds } });
+                if (hasCities) countryOrFilters.push({ cities: { some: { id: { in: cityIds } } } });
+                countryFilters.OR = countryOrFilters;
             } else {
                 countryFilters.id = 'none';
                 cityFilters.id = 'none';

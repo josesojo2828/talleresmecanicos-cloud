@@ -11,13 +11,13 @@ export function getScopeFilter(user: any, relation?: string) {
         const assignments = user.assignments || [];
         if (assignments.length === 0) return { id: 'none' };
 
-        const countryIds = assignments
-            .filter(a => a.countryId && !a.cityId)
-            .map(a => a.countryId);
+        const countryIds = [...new Set(
+            assignments.map((a: any) => a.countryId).filter((id: any) => id != null)
+        )] as string[];
         
-        const cityIds = assignments
-            .filter(a => a.cityId)
-            .map(a => a.cityId);
+        const cityIds = [...new Set(
+            assignments.map((a: any) => a.cityId).filter((id: any) => id != null)
+        )] as string[];
 
         const filters: any[] = [];
         if (countryIds.length > 0) {
