@@ -28,7 +28,7 @@ export const SupportAssignmentsManager = ({ userId }: { userId: string }) => {
     const loadAssignments = async () => {
         try {
             setLoading(true);
-            const res = await apiClient.get('/support', { 
+            const res = await apiClient.get('/support/assignment', { 
                 params: { filters: JSON.stringify({ userId }), take: 100 } 
             });
             setAssignments(res.data.body?.data || []);
@@ -45,7 +45,11 @@ export const SupportAssignmentsManager = ({ userId }: { userId: string }) => {
             setSearching(true);
             const endpoint = type === 'COUNTRY' ? '/country' : '/city';
             const res = await apiClient.get(endpoint, { 
-                params: { search: text, take: 10 } 
+                params: { 
+                    search: text, 
+                    take: 10,
+                    filters: JSON.stringify({ enabled: true })
+                } 
             });
             setOptions(res.data.body?.data || []);
         } catch (error) {
@@ -63,7 +67,7 @@ export const SupportAssignmentsManager = ({ userId }: { userId: string }) => {
                 userId,
                 [type === 'COUNTRY' ? 'countryId' : 'cityId']: targetId
             };
-            await apiClient.post('/support', payload);
+            await apiClient.post('/support/assignment', payload);
             addAlert(t('success.create'), 'success');
             setTargetId('');
             loadAssignments();
@@ -76,7 +80,7 @@ export const SupportAssignmentsManager = ({ userId }: { userId: string }) => {
 
     const handleDelete = async (id: string) => {
         try {
-            await apiClient.delete(`/support/${id}`);
+            await apiClient.delete(`/support/assignment/${id}`);
             addAlert(t('success.delete'), 'success');
             loadAssignments();
         } catch (error) {

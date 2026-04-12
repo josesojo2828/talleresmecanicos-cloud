@@ -34,13 +34,14 @@ export class SupportUCase extends SupportAssignmentModel {
     }
 
     async pagination(q: QueryOptions<SupportAssignment, ISupportAssignmentQueryFilter>) {
-        const { search, filters, skip, take, orderBy } = q;
-        const where = this.getWhere(filters || {}, search);
+        const { search, filters, skip, take, orderBy } = q as any;
+        const parsedFilters = typeof filters === 'string' ? JSON.parse(filters) : filters;
+        const where = this.getWhere(parsedFilters || {}, search);
         return await this.persistence.getAll({
             where,
             skip: skip ? Number(skip) : 0,
             take: take ? Number(take) : 10,
-            orderBy: orderBy as any
+            orderBy: orderBy ? (typeof orderBy === 'string' ? JSON.parse(orderBy) : orderBy) : undefined
         });
     }
 }

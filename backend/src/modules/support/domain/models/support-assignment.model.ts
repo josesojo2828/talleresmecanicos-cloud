@@ -18,6 +18,14 @@ export default class SupportAssignmentModel {
         if (param.countryId) wh.push({ countryId: param.countryId });
         if (param.cityId) wh.push({ cityId: param.cityId });
 
+        // Solo mostrar asignaciones de territorios habilitados
+        wh.push({
+            OR: [
+                { country: { enabled: true } },
+                { city: { enabled: true } }
+            ]
+        });
+
         return wh.length > 0 ? { AND: wh } : {};
     }
 }
