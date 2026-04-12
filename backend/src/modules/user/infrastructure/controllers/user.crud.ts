@@ -41,9 +41,9 @@ export class UserCrudController {
     }
 
     @Get(':id')
-    @Roles(UserRole.ADMIN, UserRole.TALLER, UserRole.CLIENT)
-    async getById(@Param('id') id: string) {
-        return await this.queryUseCase.findOne({ id });
+    @Roles(UserRole.ADMIN, UserRole.SUPPORT, UserRole.TALLER, UserRole.CLIENT)
+    async getById(@Param('id') id: string, @CurrentUser() user: any) {
+        return await this.queryUseCase.findOne({ id, user });
     }
 
     @Get('')
