@@ -40,7 +40,8 @@ class WorkshopService {
 
       final response = await _api.get('/public/workshops$query');
       if (response.statusCode == 200) {
-        return jsonDecode(response.body)['body'] ?? [];
+        final decoded = jsonDecode(response.body);
+        return decoded['body']?['data'] ?? decoded['data'] ?? [];
       }
       return [];
     } catch (e) {
