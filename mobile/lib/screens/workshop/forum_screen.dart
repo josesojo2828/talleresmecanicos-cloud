@@ -14,88 +14,62 @@ class ForumScreen extends StatefulWidget {
 
 class _ForumScreenState extends State<ForumScreen> {
   final _api = ApiClient();
-  List _posts = [];
+  List<dynamic> _topics = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadPosts();
+    _loadTopics();
   }
 
-  Future<void> _loadPosts() async {
-    setState(() => _isLoading = true);
+  Future<void> _loadTopics() async {
     try {
-      final response = await _api.get('/forum-post');
-      if (response.statusCode == 200) {
-        setState(() => _posts = jsonDecode(response.body));
+      final res = await _api.get('/forum/topics');
+      if (res.statusCode == 200) {
+        setState(() { _topics = jsonDecode(res.body); _isLoading = false; });
       }
-    } catch (e) { print('Forum load failed: $e'); }
-    finally { setState(() => _isLoading = false); }
+    } catch (e) {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: const Color(0xFFF1F5F9),
       appBar: AppBar(
-        title: Text('FORO DE TALLERES', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16)),
-        backgroundColor: Colors.white, foregroundColor: const Color(0xFF0F172A), elevation: 0,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {}, // Implementar creación de post luego
-        backgroundColor: const Color(0xFF0F172A),
-        child: const Icon(LucideIcons.plus, color: Colors.white),
+        title: Text('COMUNIDAD KINETIC', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16)),
+        backgroundColor: Colors.white, foregroundColor: const Color(0xFF0F172A), elevation: 0.5,
       ),
       body: _isLoading 
         ? const Center(child: CircularProgressIndicator(color: Color(0xFF10B981)))
-        : RefreshIndicator(
-            onRefresh: _loadPosts,
-            color: const Color(0xFF10B981),
-            child: ListView.separated(
-              padding: const EdgeInsets.all(24),
-              itemCount: _posts.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
-              itemBuilder: (context, index) {
-                final post = _posts[index];
-                return FadeInUp(
-                  delay: Duration(milliseconds: index * 100),
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: Colors.slate.shade100)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          const CircleAvatar(radius: 12, backgroundColor: Color(0xFFF1F5F9), child: Icon(LucideIcons.user, size: 12, color: Color(0xFF94A3B8))),
-                          const SizedBox(width: 8),
-                          Text(post['user']?['firstName'] ?? 'Taller Anon', style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: const Color(0xFF64748B))),
-                        ]),
-                        const SizedBox(height: 12),
-                        Text(post['title'] ?? 'Sin título', style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w900, color: const Color(0xFF0F172A))),
-                        const SizedBox(height: 8),
-                        Text(post['content'] ?? '', maxLines: 3, overflow: TextOverflow.ellipsis, style: GoogleFonts.outfit(color: const Color(0xFF64748B), fontSize: 13)),
-                        const SizedBox(height: 16),
-                        Row(children: [
-                          _buildStat(LucideIcons.heart, '${post['_count']?['likes'] ?? 0}'),
-                          const SizedBox(width: 16),
-                          _buildStat(LucideIcons.message_circle, '${post['_count']?['comments'] ?? 0}'),
-                        ]),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+        : ListView.separated(
+            padding: const EdgeInsets.all(24),
+            itemCount: _topics.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 16),
+            itemBuilder: (context, index) {
+              final topic = _topics[index];
+              return FadeInUp(
+                delay: Duration(milliseconds: index * 50),
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), 
+                    // FIX: Border.all(color: ...)
+                    border: Border.all(color: const Color(0xFFF1F5F9))),
+                  child: Row(children: [
+                    CircleAvatar(backgroundColor: const Color(0xFF10B981).withOpacity(0.1), child: const Icon(LucideIcons.message_square, color: Color(0xFF10B981), size: 18)),
+                    const SizedBox(width: 16),
+                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text(topic['title'] ?? 'Sin título', style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 14)),
+                      Text('${topic['replies']} respuestas • ${topic['author']}', style: GoogleFonts.outfit(fontSize: 11, color: Colors.blueGrey)),
+                    ])),
+                    const Icon(LucideIcons.chevron_right, size: 16, color: Color(0xFF94A3B8)),
+                  ]),
+                ),
+              );
+            },
           ),
     );
-  }
-
-  Widget _buildStat(IconData icon, String text) {
-    return Row(children: [
-      Icon(icon, size: 14, color: const Color(0xFF94A3B8)),
-      const SizedBox(width: 4),
-      Text(text, style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xFF94A3B8))),
-    ]);
   }
 }

@@ -132,10 +132,11 @@ export default function FinanceDashboard() {
                                  innerRadius={40}
                                  outerRadius={55}
                                  paddingAngle={5}
+                                 cornerRadius={5}
                                  dataKey="value"
                               >
                                  {pieData?.map((entry: any, index: number) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} cornerRadius={5} />
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                  ))}
                               </Pie>
                            </PieChart>

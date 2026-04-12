@@ -137,7 +137,7 @@ class _WorkshopDashboardState extends State<WorkshopDashboard> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.slate.shade100),
+        border: Border.all(color: const Color(0xFFF1F5F9)),
       ),
       child: Icon(icon, size: 20, color: const Color(0xFF64748B)),
     );
@@ -232,7 +232,7 @@ class _WorkshopDashboardState extends State<WorkshopDashboard> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.slate.shade100),
+              border: Border.all(color: const Color(0xFFF1F5F9)),
             ),
             child: Row(
               children: [

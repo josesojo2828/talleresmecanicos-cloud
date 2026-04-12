@@ -44,7 +44,7 @@ class _SupportDashboardTabState extends State<SupportDashboardTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FadeInDown(child: KineticHeader(title: 'Auditoría Nacional', subtitle: 'Telemetría Flota')),
+              FadeInDown(child: const KineticHeader(title: 'Auditoría Nacional', subtitle: 'Telemetría Flota')),
               const SizedBox(height: 32),
               _buildNetworkStatus(),
               const SizedBox(height: 24),
@@ -77,7 +77,8 @@ class _SupportDashboardTabState extends State<SupportDashboardTab> {
 
   Widget _buildFleetMiniStats() {
     return Row(children: [
-      Expanded(child: _buildMiniStat('REPORTES', '124', LucideIcons.file_warning, Colors.orange)),
+      // FIX: Using Material Icons for maximum compatibility
+      Expanded(child: _buildMiniStat('REPORTES', '124', Icons.warning_amber_rounded, Colors.orange)),
       const SizedBox(width: 16),
       Expanded(child: _buildMiniStat('AUDITORÍAS', '48', LucideIcons.shield_check, const Color(0xFF10B981))),
     ]);
@@ -87,7 +88,7 @@ class _SupportDashboardTabState extends State<SupportDashboardTab> {
     return FadeInUp(
       child: Container(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: Colors.slate.shade100)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: const Color(0xFFF1F5F9))),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Icon(icon, color: color, size: 20),
           const SizedBox(height: 12),

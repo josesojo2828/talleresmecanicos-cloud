@@ -70,7 +70,7 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FadeInDown(child: KineticHeader(title: 'Configuración / Identidad', subtitle: 'Mi Taller')),
+              FadeInDown(child: const KineticHeader(title: 'Configuración / Identidad', subtitle: 'Mi Taller')),
               const SizedBox(height: 32),
               FadeInUp(delay: const Duration(milliseconds: 200), child: _buildForm()),
               const SizedBox(height: 48),
@@ -85,7 +85,9 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
   Widget _buildForm() {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(32), border: Border.all(color: Colors.slate.shade100)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(32), 
+        // FIX: Border.all(color: ...)
+        border: Border.all(color: const Color(0xFFF1F5F9))),
       child: Column(children: [
         KineticInput(label: 'Nombre del Taller', icon: LucideIcons.warehouse, controller: _nameController),
         const SizedBox(height: 24),

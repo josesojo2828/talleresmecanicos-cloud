@@ -173,7 +173,7 @@ class SupportDashboard extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Colors.slate.shade100),
+              border: Border.all(color: const Color(0xFFF1F5F9)),
             ),
             child: Row(
               children: [

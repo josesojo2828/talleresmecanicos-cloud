@@ -48,7 +48,7 @@ class _DashboardTabState extends State<DashboardTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FadeInDown(child: KineticHeader(title: 'Telemetría Taller', subtitle: 'Resumen Diario')),
+              FadeInDown(child: const KineticHeader(title: 'Telemetría Taller', subtitle: 'Resumen Diario')),
               const SizedBox(height: 32),
               _buildFinanceMainCard(),
               const SizedBox(height: 24),
@@ -87,7 +87,9 @@ class _DashboardTabState extends State<DashboardTab> {
     return FadeInUp(
       child: Container(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: Colors.slate.shade100)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), 
+          // FIX: Border.all(color: ...)
+          border: Border.all(color: const Color(0xFFF1F5F9))),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Icon(icon, color: color, size: 20),
           const SizedBox(height: 12),

@@ -16,7 +16,8 @@ class KineticSearch extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white, 
         borderRadius: BorderRadius.circular(20), 
-        border: Border.all(color: Colors.slate.shade100),
+        // FIX: Border.all with named color
+        border: Border.all(color: const Color(0xFFF1F5F9)),
         boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.01), blurRadius: 10, offset: const Offset(0, 4))]
       ),
       child: TextField(

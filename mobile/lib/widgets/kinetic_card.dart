@@ -24,7 +24,8 @@ class KineticCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white, 
         borderRadius: BorderRadius.circular(32), 
-        border: Border.all(color: Colors.slate.shade100),
+        // FIX: Border.all with named color and hex
+        border: Border.all(color: const Color(0xFFF1F5F9)),
         boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))]
       ),
       child: Column(
@@ -90,7 +91,7 @@ class KineticLinkCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         child: Container(
           padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: Colors.slate.shade100)),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: const Color(0xFFF1F5F9))),
           child: Row(
             children: [
               Container(

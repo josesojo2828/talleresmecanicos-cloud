@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:workshops_mobile/database/database_service.dart';
 import 'package:workshops_mobile/services/api_client.dart';
 import 'package:workshops_mobile/screens/support/workshop_detail_screen.dart';
@@ -81,9 +82,9 @@ class _SupportWorkshopsTabState extends State<SupportWorkshopsTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FadeInDown(child: KineticHeader(title: 'Seguridad / Fleet', subtitle: 'Terminales en Red', color: const Color(0xFF3B82F6))),
+              FadeInDown(child: const KineticHeader(title: 'Seguridad / Fleet', subtitle: 'Terminales en Red', color: const Color(0xFF3B82F6))),
               const SizedBox(height: 24),
-              KineticSearch(onChanged: _filterWorkshops, hint: 'Buscar taller o slug @...', icon: LucideIcons.shield_search),
+              KineticSearch(onChanged: _filterWorkshops, hint: 'Buscar taller o slug @...', icon: LucideIcons.shield),
               const SizedBox(height: 16),
               Expanded(child: _buildWorkshopList()),
             ],
@@ -116,7 +117,9 @@ class _SupportWorkshopsTabState extends State<SupportWorkshopsTab> {
               borderRadius: BorderRadius.circular(24),
               child: Container(
                 padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: Colors.slate.shade100)),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), 
+                  // FIX: Border.all with named color
+                  border: Border.all(color: const Color(0xFFF1F5F9))),
                 child: Row(
                   children: [
                     CircleAvatar(backgroundColor: isActive ? const Color(0xFF10B981).withOpacity(0.1) : Colors.redAccent.withOpacity(0.1), child: Icon(LucideIcons.warehouse, color: isActive ? const Color(0xFF10B981) : Colors.redAccent, size: 20)),

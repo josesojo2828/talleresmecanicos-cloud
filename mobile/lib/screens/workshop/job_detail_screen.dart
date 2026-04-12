@@ -30,7 +30,8 @@ class JobDetailScreen extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            FadeInDown(child: KineticStatusHeader(title: job['status'] ?? 'Pendiente', subtitle: 'ORDEN #${job['id']?.toString().substring(0,6) ?? 'ID'}', icon: LucideIcons.check_circle_2, statusColor: const Color(0xFF10B981))),
+            // FIX: check instead of check_circle
+            FadeInDown(child: KineticStatusHeader(title: job['status'] ?? 'Pendiente', subtitle: 'ORDEN #${job['id']?.toString().substring(0,6) ?? 'ID'}', icon: LucideIcons.check, statusColor: const Color(0xFF10B981))),
             const SizedBox(height: 24),
             FadeInUp(delay: const Duration(milliseconds: 200), child: KineticCard(title: 'Información del Bólido', icon: LucideIcons.car, children: [
               KineticDataRow(label: 'Vehículo', value: job['car_info'] ?? 'No especificado'),
@@ -39,7 +40,7 @@ class JobDetailScreen extends StatelessWidget {
             const SizedBox(height: 16),
             FadeInUp(delay: const Duration(milliseconds: 400), child: KineticCard(title: 'Presupuesto Técnico', icon: LucideIcons.receipt_text, children: [
               KineticDataRow(label: 'Mano de Obra', value: '\$${job['labor_price'] ?? 0}'),
-              KineticDataRow(label: 'Insumos y Repuestos', value: '\$${job['parts_price'] ?? 0}'),
+              KineticDataRow(label: 'Insumos e Repuestos', value: '\$${job['parts_price'] ?? 0}'),
               const Divider(height: 32),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text('TOTAL FINAL', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 18)),

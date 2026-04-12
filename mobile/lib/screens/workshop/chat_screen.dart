@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:animate_do/animate_do.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workshops_mobile/services/api_client.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -15,54 +12,58 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final TextEditingController _msgController = TextEditingController();
   late IO.Socket _socket;
-  final _messageController = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
   bool _isConnected = false;
-  bool _isOffline = false;
 
   @override
   void initState() {
     super.initState();
-    _checkConnectivityAndConnect();
+    _initSocket();
   }
 
-  Future<void> _checkConnectivityAndConnect() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult.contains(ConnectivityResult.none)) {
-      setState(() => _isOffline = true);
-      return;
-    }
-    
-    _connectSocket();
-  }
-
-  Future<void> _connectSocket() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
+  void _initSocket() {
     final baseUrl = ApiClient().baseUrl.replaceAll('/api', '');
-
-    _socket = IO.io(baseUrl, IO.OptionBuilder()
+    
+    // FIX: Proper socket configuration without setNamespace
+    _socket = IO.io('$baseUrl/chat', IO.OptionBuilder()
       .setTransports(['websocket'])
-      .setNamespace('/chat')
-      .setAuth({'token': token})
+      .disableAutoConnect()
       .build());
+
+    _socket.connect();
 
     _socket.onConnect((_) {
       if (mounted) setState(() => _isConnected = true);
     });
 
-    _socket.on('history', (data) {
-      if (mounted) setState(() => _messages.addAll(List<Map<String, dynamic>>.from(data)));
-    });
-
-    _socket.on('newMessage', (data) {
-      if (mounted) setState(() => _messages.insert(0, data));
-    });
-
     _socket.onDisconnect((_) {
       if (mounted) setState(() => _isConnected = false);
     });
+
+    _socket.on('message', (data) {
+      if (mounted) {
+        setState(() {
+          _messages.add({
+            'user': data['user'] ?? 'Anónimo',
+            'text': data['text'] ?? '',
+            'isMe': false,
+          });
+        });
+      }
+    });
+  }
+
+  void _sendMessage() {
+    if (_msgController.text.isNotEmpty) {
+      final msg = {'text': _msgController.text, 'user': 'Piloto'};
+      _socket.emit('message', msg);
+      setState(() {
+        _messages.add({'user': 'Yo', 'text': _msgController.text, 'isMe': true});
+      });
+      _msgController.clear();
+    }
   }
 
   @override
@@ -73,76 +74,53 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isOffline) return _buildOfflineState();
-
     return Scaffold(
       backgroundColor: const Color(0xFFF1F5F9),
       appBar: AppBar(
         title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('CHAT PÚBLICO', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16)),
-          Text(_isConnected ? 'Online' : 'Conectando...', style: GoogleFonts.outfit(fontSize: 10, color: _isConnected ? Colors.green : Colors.orange)),
+          Text('CANAL PÚBLICO RADIO', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 13)),
+          Text(_isConnected ? '🛰️ EN LÍNEA' : '🔴 DESCONECTADO', style: GoogleFonts.outfit(fontSize: 9, color: _isConnected ? const Color(0xFF10B981) : Colors.red)),
         ]),
-        backgroundColor: Colors.white, foregroundColor: const Color(0xFF0F172A), elevation: 0,
+        backgroundColor: Colors.white, foregroundColor: const Color(0xFF0F172A), elevation: 1,
       ),
       body: Column(
         children: [
-          Expanded(child: _buildMessageList()),
+          Expanded(child: ListView.builder(
+            padding: const EdgeInsets.all(24),
+            itemCount: _messages.length,
+            itemBuilder: (context, index) {
+              final msg = _messages[index];
+              return _buildMessageBubble(msg);
+            },
+          )),
           _buildInputArea(),
         ],
       ),
     );
   }
 
-  Widget _buildOfflineState() {
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(40),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const Icon(LucideIcons.wifi_off, size: 80, color: Color(0xFF94A3B8)),
-            const SizedBox(height: 24),
-            Text('ZONA SIN SEÑAL', style: GoogleFonts.outfit(fontSize: 24, fontWeight: FontWeight.w900, color: const Color(0xFF0F172A))),
-            const SizedBox(height: 8),
-            Text('El Chat requiere una conexión en tiempo real. Reconéctate para hablar con otros talleres.', textAlign: TextAlign.center, style: GoogleFonts.outfit(color: const Color(0xFF64748B))),
-            const SizedBox(height: 32),
-            ElevatedButton(onPressed: _checkConnectivityAndConnect, child: const Text('REINTENTAR CONEXIÓN')),
-          ]),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMessageList() {
-    return ListView.builder(
-      reverse: true,
-      padding: const EdgeInsets.all(20),
-      itemCount: _messages.length,
-      itemBuilder: (context, index) {
-        final msg = _messages[index];
-        final isMe = false; // Implementar lógica con CurrentUser
-        return Align(
-          alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-          child: FadeInUp(
-            delay: const Duration(milliseconds: 100),
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: isMe ? const Color(0xFF0F172A) : Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10)],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (!isMe) Text(msg['user']?['firstName'] ?? 'Taller', style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.w900, color: const Color(0xFF3B82F6))),
-                  Text(msg['content'] ?? '', style: GoogleFonts.outfit(color: isMe ? Colors.white : const Color(0xFF0F172A), fontSize: 14)),
-                ],
-              ),
-            ),
+  Widget _buildMessageBubble(Map<String, dynamic> msg) {
+    final isMe = msg['isMe'] ?? false;
+    return Align(
+      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isMe ? const Color(0xFF10B981) : Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(20),
+            topRight: const Radius.circular(20),
+            bottomLeft: Radius.circular(isMe ? 20 : 0),
+            bottomRight: Radius.circular(isMe ? 0 : 20),
           ),
-        );
-      },
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 5)],
+        ),
+        child: Column(crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start, children: [
+          Text(msg['user'], style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold, color: isMe ? Colors.white70 : Colors.blueGrey)),
+          Text(msg['text'], style: GoogleFonts.outfit(color: isMe ? Colors.white : const Color(0xFF0F172A), fontWeight: FontWeight.bold)),
+        ]),
+      ),
     );
   }
 
@@ -150,21 +128,15 @@ class _ChatScreenState extends State<ChatScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       color: Colors.white,
-      child: SafeArea(
-        child: Row(children: [
-          Expanded(child: TextField(
-            controller: _messageController,
-            decoration: InputDecoration(hintText: 'Escribe un mensaje...', filled: true, fillColor: const Color(0xFFF1F5F9), border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none)),
-          )),
-          const SizedBox(width: 12),
-          IconButton.filled(onPressed: () {
-            if (_messageController.text.isNotEmpty) {
-              _socket.emit('sendMessage', _messageController.text);
-              _messageController.clear();
-            }
-          }, icon: const Icon(LucideIcons.send_horizontal), style: IconButton.styleFrom(backgroundColor: const Color(0xFF0F172A))),
-        ]),
-      ),
+      child: SafeArea(child: Row(children: [
+        Expanded(child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(color: const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(20)),
+          child: TextField(controller: _msgController, decoration: const InputDecoration(border: InputBorder.none, hintText: 'Enviá un mensaje a boxes...')),
+        )),
+        const SizedBox(width: 12),
+        IconButton.filled(onPressed: _sendMessage, icon: const Icon(LucideIcons.send_horizontal), style: IconButton.styleFrom(backgroundColor: const Color(0xFF10B981))),
+      ])),
     );
   }
 }

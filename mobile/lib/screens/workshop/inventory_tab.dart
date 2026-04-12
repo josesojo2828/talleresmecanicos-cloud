@@ -83,7 +83,9 @@ class _InventoryTabState extends State<InventoryTab> {
             borderRadius: BorderRadius.circular(24),
             child: Container(
               padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), border: Border.all(color: Colors.slate.shade100)),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), 
+                // FIX: Border.all with named color property
+                border: Border.all(color: const Color(0xFFF1F5F9))),
               child: Row(
                 children: [
                   Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(16)),
