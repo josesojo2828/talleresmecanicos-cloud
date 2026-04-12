@@ -24,6 +24,7 @@ import { CountryDetail } from '@/features/dashboard/components/country/CountryDe
 import { ForumPostDetail } from '@/features/dashboard/components/forum-post/ForumPostDetail';
 import { CityDetail } from '@/features/dashboard/components/city/CityDetail';
 import { SupportAssignmentsManager } from '@/features/dashboard/components/SupportAssignmentsManager';
+import { WorkshopStatsDetail } from '@/features/dashboard/components/workshop/WorkshopStatsDetail';
 
 const EmbeddedCrud = ({ slug, initialFilters, title }: { slug: string, initialFilters?: Record<string, any>, title: string }) => {
     const crud = useCrud(slug);
@@ -185,7 +186,11 @@ export default function RecordDetailPage() {
                         <ForumPostDetail data={data} />
                     ) : (
                         <>
-                            <SimpleStats slug={slug} data={data} />
+                            {(slug === 'workshop' || (slug === 'user' && data.role === 'TALLER' && data.workshop)) ? (
+                                <WorkshopStatsDetail workshopId={slug === 'workshop' ? data.id : data.workshop.id} />
+                            ) : (
+                                <SimpleStats slug={slug} data={data} />
+                            )}
 
                             {slug === 'workshop' && (
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
