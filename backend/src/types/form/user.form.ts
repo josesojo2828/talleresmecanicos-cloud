@@ -15,10 +15,7 @@ export const UserCreateForm: FormStructure = {
         { name: 'lastName', label: 'user.lastName', type: 'text', gridCols: 2, validation: { required: true } },
         { name: 'email', label: 'user.email', type: 'email', validation: { required: true, pattern: '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$' } },
         { name: 'passwordHash', label: 'user.password', type: 'password', validation: { required: true, minLength: 8 } },
-        { name: 'phone', label: 'user.phone', type: 'text', gridCols: 2 },
-        { name: 'permissionId', label: 'user.permission', type: 'autocomplete', gridCols: 2, remote: { slug: 'USER' }, validation: { required: true } },
-        { name: 'referralCode', label: 'user.referralCode', type: 'text', gridCols: 2 },
-        { name: 'referredById', label: 'user.referredBy', type: 'autocomplete', gridCols: 2, remote: { slug: 'USER' } }
+        { name: 'phone', label: 'user.phone', type: 'text', gridCols: 2 }
     ]
 };
 
