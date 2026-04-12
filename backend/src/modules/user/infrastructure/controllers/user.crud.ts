@@ -29,7 +29,7 @@ export class UserCrudController {
     }
 
     @Put(':id')
-    @Roles(UserRole.ADMIN, UserRole.TALLER, UserRole.CLIENT)
+    @Roles(UserRole.ADMIN, UserRole.SUPPORT, UserRole.TALLER, UserRole.CLIENT)
     async update(@Param('id') id: string, @Body() body: IUpdateUserDto) {
         return await this.updateUseCase.execute({ data: body, id });
     }
