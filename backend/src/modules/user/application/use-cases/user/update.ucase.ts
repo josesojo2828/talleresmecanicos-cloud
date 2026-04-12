@@ -28,10 +28,10 @@ export default class UpdateUserUCase extends UserModel {
         if (firstName) body.firstName = firstName;
         if (lastName) body.lastName = lastName;
         if (phone) body.phone = phone;
-        // if (languaje) body.languaje = languaje;
+        if (data.role) (body as any).role = data.role;
+        if (data.enabled !== undefined) body.enabled = data.enabled;
         // if (status) body.status = status;
         // if (kycLevel) body.kycLevel = kycLevel;
-        // if (twoFactorEnabled !== undefined) body.twoFactorEnabled = twoFactorEnabled;
 
         if (passwordHash) {
             const salt = await bcrypt.genSalt(10);

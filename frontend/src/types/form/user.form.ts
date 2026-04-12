@@ -15,6 +15,14 @@ export const UserCreateForm: FormStructure = {
         { name: 'lastName', label: 'user.lastName', type: 'text', gridCols: 2, validation: { required: true } },
         { name: 'email', label: 'user.email', type: 'email', validation: { required: true, pattern: '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$' } },
         { name: 'passwordHash', label: 'user.password', type: 'password', validation: { required: true, minLength: 8 } },
+        {
+            name: 'role', label: 'user.permission', type: 'select', validation: { required: true }, options: [
+                { label: 'user.role_labels.admin', value: 'ADMIN' },
+                { label: 'user.role_labels.support', value: 'SUPPORT' },
+                { label: 'user.role_labels.taller', value: 'TALLER' },
+                { label: 'user.role_labels.client', value: 'CLIENT' }
+            ]
+        }
     ]
 };
 
@@ -24,10 +32,13 @@ export const UserUpdateForm: FormStructure = {
         { name: 'email', label: 'user.email', type: 'email' },
         { name: 'firstName', label: 'user.firstName', type: 'text', gridCols: 2 },
         { name: 'lastName', label: 'user.lastName', type: 'text', gridCols: 2 },
+        { name: 'enabled', label: 'user.status', type: 'switch', gridCols: 2 },
         {
-            name: 'status', label: 'user.status', type: 'select', gridCols: 2, options: [
-                { label: 'user.status.active', value: 'ACTIVE' },
-                { label: 'user.status.inactive', value: 'INACTIVE' }
+            name: 'role', label: 'user.permission', type: 'select', gridCols: 2, options: [
+                { label: 'user.role_labels.admin', value: 'ADMIN' },
+                { label: 'user.role_labels.support', value: 'SUPPORT' },
+                { label: 'user.role_labels.taller', value: 'TALLER' },
+                { label: 'user.role_labels.client', value: 'CLIENT' }
             ]
         },
         {

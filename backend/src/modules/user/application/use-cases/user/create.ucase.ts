@@ -36,8 +36,10 @@ export default class CreateUserUCase extends UserModel {
                 passwordHash: pass,
                 firstName,
                 lastName,
+                phone,
+                role: (data.role as any) || 'CLIENT',
+                enabled: data.enabled ?? true,
                 profile: { create: {} },
-                // permissions: { connect: { id: permitFound.id } },
             }
         });
 
