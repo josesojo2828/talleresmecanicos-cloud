@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:workshops_mobile/screens/splash_screen.dart';
 import 'package:workshops_mobile/screens/login_screen.dart';
 import 'package:workshops_mobile/screens/directory_screen.dart';
+import 'package:workshops_mobile/screens/workshop_detail_screen.dart';
 import 'package:workshops_mobile/screens/workshop/workshop_tabs.dart';
 import 'package:workshops_mobile/screens/support/support_tabs.dart';
 import 'package:workshops_mobile/services/sync_service.dart';
@@ -41,6 +42,15 @@ class WorkshopsApp extends StatelessWidget {
         '/login': (context) => const LoginScreen(),
         '/dashboard/workshop': (context) => const WorkshopTabs(),
         '/dashboard/support': (context) => const SupportTabs(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/workshop-detail') {
+          final workshop = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => WorkshopDetailScreen(workshop: workshop),
+          );
+        }
+        return null;
       },
     );
   }
