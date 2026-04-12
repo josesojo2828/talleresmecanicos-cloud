@@ -53,7 +53,8 @@ class WorkshopService {
     try {
       final response = await _api.get('/public/locations/countries');
       if (response.statusCode == 200) {
-        return jsonDecode(response.body)['body'] ?? [];
+        final decoded = jsonDecode(response.body);
+        return decoded['body']?['data'] ?? decoded['data'] ?? [];
       }
       return [];
     } catch (e) {
@@ -65,7 +66,8 @@ class WorkshopService {
     try {
       final response = await _api.get('/public/locations/cities?country=$country');
       if (response.statusCode == 200) {
-        return jsonDecode(response.body)['body'] ?? [];
+        final decoded = jsonDecode(response.body);
+        return decoded['body']?['data'] ?? decoded['data'] ?? [];
       }
       return [];
     } catch (e) {

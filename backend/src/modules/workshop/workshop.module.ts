@@ -7,6 +7,7 @@ import { MyWorkshopController } from "./infrastructure/controllers/my-workshop.c
 import { WorkshopCategoryCrudController } from "./infrastructure/controllers/workshop-category.crud";
 import { PublicationCrudController } from "./infrastructure/controllers/publication.crud";
 import { FinanceController } from "./infrastructure/controllers/finance.controller";
+import { PublicWorkshopController } from "./infrastructure/controllers/public-workshop.controller";
 
 // Use Cases
 import { WorkshopUCase } from "./application/use-cases/workshop/workshop.ucase";
@@ -27,6 +28,7 @@ import PublicationPersistence from "./infrastructure/persistence/publication/per
         WorkshopCategoryCrudController,
         PublicationCrudController,
         FinanceController,
+        PublicWorkshopController,
     ],
     providers: [
         PrismaService,
