@@ -109,11 +109,14 @@ export const useCrud = (slug: string) => {
             const user = useAuthStore.getState().user;
             const isTaller = user?.role === 'TALLER';
             
-            let finalForm = pageFromStore?.form || [];
+            let finalForm = pageFromStore?.form;
             
             // Si es taller, no debe elegir el taller (se autocompleta)
-            if (isTaller) {
-                finalForm = finalForm.filter((f: any) => f.name !== 'workshopId');
+            if (finalForm && isTaller) {
+                finalForm = {
+                    ...finalForm,
+                    fields: finalForm.fields.filter((f: any) => f.name !== 'workshopId')
+                };
             }
 
             setConfig({
