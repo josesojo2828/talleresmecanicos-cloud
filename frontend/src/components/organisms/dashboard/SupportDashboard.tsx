@@ -12,7 +12,7 @@ import {
     ArrowRight, 
     FileText,
     Store,
-    Buildings
+    Building2
 } from "lucide-react";
 import { 
     AreaChart, 
@@ -162,7 +162,7 @@ export const SupportDashboard = ({ adminStats, user }: SupportDashboardProps) =>
                     renderItem={(ws: any) => (
                         <div key={ws.id} className="flex items-center gap-4 group/item">
                             <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover/item:bg-blue-50 group-hover/item:text-blue-500 transition-colors">
-                                <Buildings size={16} />
+                                <Building2 size={16} />
                             </div>
                             <div className="flex-grow">
                                 <p className="text-xs font-black text-slate-800 uppercase line-clamp-1">{ws.name}</p>
