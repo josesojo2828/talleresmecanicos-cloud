@@ -1,4 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { CurrentUser } from "src/modules/auth/decorators/current-user.decorator";
+import { OptionalAuthGuard } from "src/modules/auth/guards/optional-auth.guard";
 import CreateCountryUCase from "../../application/use-cases/country/create.ucase";
 import UpdateCountryUCase from "../../application/use-cases/country/update.ucase";
 import DeleteCountryUCase from "../../application/use-cases/country/delete.ucase";
@@ -49,7 +51,8 @@ export class CountryCrudController {
     }
 
     @Get('')
-    async getPaginate(@Query() q: QueryOptions<Country, ICountryQueryFilter>) {
-        return await this.queryUseCase.pagination({ q });
+    @UseGuards(OptionalAuthGuard)
+    async getPaginate(@Query() q: QueryOptions<Country, ICountryQueryFilter>, @CurrentUser() user: any) {
+        return await this.queryUseCase.pagination({ q, user: user || { role: 'PUBLIC' } });
     }
 }
