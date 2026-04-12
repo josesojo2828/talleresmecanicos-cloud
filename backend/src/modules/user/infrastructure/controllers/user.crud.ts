@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { CurrentUser } from "src/modules/auth/decorators/current-user.decorator";
 import CreateUserUCase from "../../application/use-cases/user/create.ucase";
 import UpdateUserUCase from "../../application/use-cases/user/update.ucase";
 import DeleteUserUCase from "../../application/use-cases/user/delete.ucase";
