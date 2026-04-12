@@ -29,8 +29,6 @@ class WorkshopDetailScreen extends StatelessWidget {
                   _buildTechStats(),
                   const SizedBox(height: 32),
                   _buildLocationAndHours(),
-                  const SizedBox(height: 32),
-                  _buildServiceTracker(),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -308,39 +306,6 @@ class WorkshopDetailScreen extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildServiceTracker() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'MIS SOLICITUDES DE SERVICIO?',
-          style: GoogleFonts.outfit(
-            fontWeight: FontWeight.w900,
-            color: const Color(0xFF0F172A),
-            fontSize: 16,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFFE2E8F0)),
-          ),
-          child: TextField(
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'EJ: ABCD1234',
-              hintStyle: GoogleFonts.spaceGrotesk(color: Colors.black26),
-              suffixIcon: const Icon(LucideIcons.search, size: 20),
-            ),
-          ),
         ),
       ],
     );

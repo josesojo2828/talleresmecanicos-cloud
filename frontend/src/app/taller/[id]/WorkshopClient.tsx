@@ -376,56 +376,6 @@ export default function WorkshopClient() {
                             )}
                         </section>
 
-                        {/* CUSTOMER PORTAL PORTAL */}
-                        <section className="bg-slate-950 rounded-[48px] p-12 lg:p-16 text-white relative overflow-hidden shadow-3xl">
-                            <div className="absolute bottom-0 right-0 w-80 h-80 bg-emerald-500/20 rounded-full blur-[100px] -mr-40 -mb-40"></div>
-                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"></div>
-                            
-                            <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                                <div className="space-y-8">
-                                    <header className="space-y-4">
-                                        <div className="inline-flex gap-3 items-center py-2 px-4 bg-emerald-500/10 rounded-full border border-emerald-500/20">
-                                            <Search size={12} className="text-emerald-500" />
-                                            <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest italic">{t('nav.profile')} // TRACKER</span>
-                                        </div>
-                                        <h2 className="text-5xl font-black uppercase tracking-tighter leading-[0.85] italic">
-                                            {t('service_request.title')}?
-                                        </h2>
-                                    </header>
-                                    <p className="text-slate-400 text-sm font-bold leading-relaxed border-l-2 border-slate-800 pl-6 italic">
-                                        CONSULTA EL ESTADO EN TIEMPO REAL DE TU REPARACIÓN CON EL IDENTIFICADOR MAESTRO.
-                                    </p>
-                                </div>
-                                
-                                <div className="bg-white/5 backdrop-blur-2xl rounded-[40px] p-10 border border-white/10 space-y-6">
-                                    <div className="space-y-2">
-                                        <label className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">{t('work.publicId')}</label>
-                                        <input 
-                                            type="text" 
-                                            placeholder="EJ: ABCD1234"
-                                            className="w-full bg-white/5 border-2 border-white/5 rounded-2xl px-8 py-5 text-white text-base font-black uppercase tracking-widest focus:border-emerald-500 focus:bg-white focus:text-slate-950 focus:outline-none transition-all placeholder:text-white/10"
-                                            id="public-work-id"
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    const idVal = (e.target as HTMLInputElement).value;
-                                                    if (idVal) router.push(`/taller/${id}/t/${idVal.trim().toUpperCase()}`);
-                                                }
-                                            }}
-                                        />
-                                    </div>
-                                    <button 
-                                        onClick={() => {
-                                            const idVal = (document.getElementById('public-work-id') as HTMLInputElement).value;
-                                            if (idVal) router.push(`/taller/${id}/t/${idVal.trim().toUpperCase()}`);
-                                        }}
-                                        className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-black uppercase tracking-[0.2em] text-[10px] py-6 rounded-2xl transition-all shadow-3xl shadow-emerald-500/40 active:scale-95 group"
-                                    >
-                                        {t('action.advertise').toUpperCase()} <ArrowRight size={14} className="inline ml-2 group-hover:translate-x-2 transition-transform" />
-                                    </button>
-                                </div>
-                            </div>
-                        </section>
-
                         {/* INFO & LOCATION GRID */}
                         <section className="grid grid-cols-1 md:grid-cols-2 gap-10">
                             {/* CARD: SCHEDULE & ADDRESS */}
