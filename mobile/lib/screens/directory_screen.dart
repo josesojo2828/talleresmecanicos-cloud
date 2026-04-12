@@ -218,11 +218,17 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(),
-          _buildWorkshopsList(),
-        ],
+      body: RefreshIndicator(
+        onRefresh: _fetchWorkshops,
+        color: const Color(0xFF10B981),
+        backgroundColor: Colors.white,
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            _buildAppBar(),
+            _buildWorkshopsList(),
+          ],
+        ),
       ),
       floatingActionButton: _buildFloatingButtons(),
     );
