@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient {
-  static const String _baseUrl = 'https://talleresmecanicos.quanticarch.com/api'; 
+  static const String _baseUrl = 'https://talleresmecanicos.quanticarch.com/api/v1'; 
   final http.Client _client = http.Client();
 
   String get baseUrl => _baseUrl;

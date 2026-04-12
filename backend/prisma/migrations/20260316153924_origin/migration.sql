@@ -1,0 +1,2 @@
+-- Migración neutralizada para evitar errores en bases nuevas.
+-- La estructura real se encuentra en las migraciones subsiguientes.

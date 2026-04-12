@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:workshops_mobile/screens/splash_screen.dart';
 import 'package:workshops_mobile/screens/login_screen.dart';
+import 'package:workshops_mobile/screens/directory_screen.dart';
 import 'package:workshops_mobile/screens/workshop/workshop_tabs.dart';
 import 'package:workshops_mobile/screens/support/support_tabs.dart';
 import 'package:workshops_mobile/services/sync_service.dart';
@@ -36,6 +37,7 @@ class WorkshopsApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const SplashScreen(),
+        '/directory': (context) => const DirectoryScreen(),
         '/login': (context) => const LoginScreen(),
         '/dashboard/workshop': (context) => const WorkshopTabs(),
         '/dashboard/support': (context) => const SupportTabs(),

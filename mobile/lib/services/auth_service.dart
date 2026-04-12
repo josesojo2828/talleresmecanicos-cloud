@@ -20,6 +20,8 @@ class AuthService {
         await prefs.setString('token', data['token']);
         await prefs.setString('user_name', '${data['user']['firstName']} ${data['user']['lastName']}');
         await prefs.setString('user_role', data['user']['role']);
+        if (data['user']['country'] != null) await prefs.setString('user_country', data['user']['country']);
+        if (data['user']['city'] != null) await prefs.setString('user_city', data['user']['city']);
         return true;
       }
       return false;

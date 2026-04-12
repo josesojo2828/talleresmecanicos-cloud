@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final authenticated = await _auth.authenticateWithBiometrics();
     if (authenticated && mounted) {
       final role = await _auth.getUserRole();
-      Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/workshop' : '/support');
+      Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support');
     }
   }
 
@@ -49,37 +49,71 @@ class _LoginScreenState extends State<LoginScreen> {
     final canBiometric = await _auth.canAuthenticateWithBiometrics();
     if (canBiometric && mounted) {
       showDialog(context: context, builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
         title: Text('¿ACTIVAR DEDO?', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
         content: const Text('Para la próxima vuelta podés entrar con tu huella digital.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/workshop' : '/support'), child: const Text('LUEGO')),
-          ElevatedButton(onPressed: () => Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/workshop' : '/support'), child: const Text('ACTIVAR')),
+          TextButton(onPressed: () => Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support'), child: const Text('LUEGO')),
+          ElevatedButton(onPressed: () => Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support'), child: const Text('ACTIVAR')),
         ],
       ));
     } else {
-      if (mounted) Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/workshop' : '/support');
+      if (mounted) Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
+      backgroundColor: const Color(0xFFF8FAFC),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(40),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FadeInDown(child: const CircleAvatar(radius: 40, backgroundColor: Color(0xFF10B981), child: Icon(LucideIcons.gauge, size: 40, color: Colors.white))),
+              const SizedBox(height: 40),
+              FadeInDown(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 10))
+                    ]
+                  ),
+                  child: const Icon(LucideIcons.gauge, size: 40, color: Color(0xFF10B981))
+                )
+              ),
               const SizedBox(height: 24),
-              FadeInDown(delay: const Duration(milliseconds: 200), child: Text('KINETIC ATELIER', style: GoogleFonts.outfit(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w900, letterSpacing: 2))),
+              FadeInDown(
+                delay: const Duration(milliseconds: 200), 
+                child: Text('KINETIC ATELIER', style: GoogleFonts.outfit(color: const Color(0xFF0F172A), fontSize: 24, fontWeight: FontWeight.w900, letterSpacing: 2))
+              ),
               const SizedBox(height: 8),
-              FadeInDown(delay: const Duration(milliseconds: 400), child: Text('Ingreso a la terminal oficial', style: GoogleFonts.outfit(color: const Color(0xFF64748B), fontSize: 13, fontWeight: FontWeight.bold))),
+              FadeInDown(
+                delay: const Duration(milliseconds: 400), 
+                child: Text('Ingreso a la terminal oficial', style: GoogleFonts.outfit(color: const Color(0xFF64748B), fontSize: 13, fontWeight: FontWeight.bold))
+              ),
               const SizedBox(height: 48),
               _buildLoginForm(),
               const SizedBox(height: 32),
-              FadeInUp(delay: const Duration(milliseconds: 600), child: KineticButton(label: 'ENTRAR A PISTA', isLoading: _isLoading, onPressed: _login, color: const Color(0xFF10B981), textColor: const Color(0xFF0F172A))),
+              FadeInUp(
+                delay: const Duration(milliseconds: 600), 
+                child: KineticButton(
+                  label: 'ENTRAR A PISTA', 
+                  isLoading: _isLoading, 
+                  onPressed: _login, 
+                  color: const Color(0xFF0F172A), 
+                  textColor: Colors.white
+                )
+              ),
+              const SizedBox(height: 24),
+              TextButton(
+                onPressed: () => Navigator.pushReplacementNamed(context, '/directory'),
+                child: Text('VOLVER AL DIRECTORIO', style: GoogleFonts.outfit(color: Colors.grey, fontWeight: FontWeight.bold))
+              ),
             ],
           ),
         ),
@@ -91,7 +125,13 @@ class _LoginScreenState extends State<LoginScreen> {
     return FadeInUp(
       child: Container(
         padding: const EdgeInsets.all(32),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(32)),
+        decoration: BoxDecoration(
+          color: Colors.white, 
+          borderRadius: BorderRadius.circular(32),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 24, offset: const Offset(0, 8))
+          ]
+        ),
         child: Column(children: [
           KineticInput(label: 'Email del Piloto', icon: LucideIcons.mail, controller: _emailController, keyboardType: TextInputType.emailAddress),
           const SizedBox(height: 24),

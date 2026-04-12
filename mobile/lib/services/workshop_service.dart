@@ -31,6 +31,48 @@ class WorkshopService {
     return cacheData; // Devolvemos cache si no hay red o falló el fetch
   }
 
+  // Módulo de Directorio Público
+  Future<List<dynamic>> getWorkshops({String? country, String? city}) async {
+    try {
+      String query = '';
+      if (country != null) query += '?country=$country';
+      if (city != null) query += '${query.isEmpty ? '?' : '&'}city=$city';
+
+      final response = await _api.get('/public/workshops$query');
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['body'] ?? [];
+      }
+      return [];
+    } catch (e) {
+      print('Error cargando directorio: $e');
+      return [];
+    }
+  }
+
+  Future<List<dynamic>> getCountries() async {
+    try {
+      final response = await _api.get('/public/locations/countries');
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['body'] ?? [];
+      }
+      return [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<dynamic>> getCities(String country) async {
+    try {
+      final response = await _api.get('/public/locations/cities?country=$country');
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['body'] ?? [];
+      }
+      return [];
+    } catch (e) {
+      return [];
+    }
+  }
+
   // --- CRUD local pendiente de sincronización ---
   // Podemos implementar el guardado de órdenes offline acá...
 }

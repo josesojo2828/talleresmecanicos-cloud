@@ -1,1 +1,0 @@
- /home/jsojo/Documentos/quanticarch/talleres_mecanicos/mobile/.dart_tool/flutter_build/06c6ef892d9f2a717c8d9fbcce586ae1/dart_build_result.json:  /home/jsojo/Documentos/quanticarch/talleres_mecanicos/mobile/.dart_tool/package_config.json /home/jsojo/Documentos/quanticarch/talleres_mecanicos/mobile/pubspec.yaml /home/jsojo/develop/flutter/bin/cache/dart-sdk/version

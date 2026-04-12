@@ -36,14 +36,14 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.pushReplacementNamed(context, '/dashboard/workshop');
       }
     } else {
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, '/directory');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -67,7 +67,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       fontSize: 32,
                       fontWeight: FontWeight.w900,
                       letterSpacing: -2,
-                      color: Colors.white,
+                      color: const Color(0xFF0F172A),
                     ),
                   ),
                   Text(

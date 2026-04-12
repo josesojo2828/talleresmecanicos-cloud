@@ -1,1 +1,0 @@
- /home/jsojo/Documentos/quanticarch/talleres_mecanicos/mobile/.dart_tool/flutter_build/06c6ef892d9f2a717c8d9fbcce586ae1/native_assets.json: 

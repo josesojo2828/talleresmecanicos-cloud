@@ -53,6 +53,32 @@ class DatabaseService {
     );
   }
 
+  Future<void> saveFinanceCache(Map<String, dynamic> data) async {
+    final db = await database;
+    await db.insert(
+      'finance_cache',
+      {
+        'id': 'main_finance',
+        'data': jsonEncode(data),
+        'last_updated': DateTime.now().toIso8601String(),
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<Map<String, dynamic>?> getFinanceCache() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'finance_cache',
+      where: 'id = ?',
+      whereArgs: ['main_finance'],
+    );
+    if (maps.isNotEmpty) {
+      return jsonDecode(maps.first['data']);
+    }
+    return null;
+  }
+
   Future<void> saveSupportStats(Map<String, dynamic> data) async {
     final db = await database;
     await db.insert('support_stats_cache', {'id': 'global_stats', 'data': jsonEncode(data), 'last_updated': DateTime.now().toIso8601String()}, conflictAlgorithm: ConflictAlgorithm.replace);

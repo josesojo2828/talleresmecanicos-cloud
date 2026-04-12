@@ -1,43 +1,41 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+# Flutter-specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
 
-# dependencies
-node_modules/
+# Android-specific
+android/**.iml
+android/.gradle/
+android/local.properties
+android/key.properties
+android/app/src/main/res/raw/google_services.json
 
-# Expo
-.expo/
-dist/
-web-build/
-expo-env.d.ts
+# iOS-specific
+ios/**.iml
+ios/.generated/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/ServiceDefinitions.json
+ios/Runner/GoogleService-Info.plist
 
-# Native
-.kotlin/
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
+# Symbols and logs
+core
+core.*
+*.log
+*.metadata
 
-# Metro
-.metro-health-check*
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
 
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
-
-# macOS
-.DS_Store
-*.pem
-
-# local env files
-.env*.local
-
-# typescript
-*.tsbuildinfo
-
-app-example
-
-# generated native folders
-/ios
-/android
+# Environment files
+.env
+.env.*
+!.env.example

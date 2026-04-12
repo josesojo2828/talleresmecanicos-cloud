@@ -4,6 +4,7 @@ import { PrismaService } from "src/config/prisma.service";
 // Controllers
 import { CountryCrudController } from "./infrastructure/controllers/country.crud";
 import { CityCrudController } from "./infrastructure/controllers/city.crud";
+import { PublicRegionsController } from "./infrastructure/controllers/public-regions.controller";
 
 // Use Cases - Country
 import CreateCountryUCase from "./application/use-cases/country/create.ucase";
@@ -33,7 +34,8 @@ import FindCityPersistence from "./infrastructure/persistence/city/find.persiste
     imports: [],
     controllers: [
         CountryCrudController,
-        CityCrudController
+        CityCrudController,
+        PublicRegionsController
     ],
     providers: [
         PrismaService,
