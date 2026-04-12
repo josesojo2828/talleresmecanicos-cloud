@@ -11,21 +11,21 @@ git pull origin main
 
 # 2. Detener contenedores actuales
 echo "🛑 Deteniendo servicios..."
-docker compose down
+docker compose --profile prod down
 
 # 3. Construir y levantar servicios
 echo "🏗️ Construyendo servicios (sin caché)..."
-docker compose build --no-cache
+docker compose --profile prod build --no-cache
 echo "🚀 Levantando servicios..."
-docker compose up -d
+docker compose --profile prod up -d
 
 # 4. Actualización de Base de Datos (Opcional)
 echo "🗄️ ¿Deseas aplicar las migraciones de la base de datos ahora mismo? (s/n)"
 read -r response
 if [[ "$response" =~ ^([sS][yY]|[sS])$ ]]; then
     echo "🔄 Ejecutando prisma migrate deploy..."
-    # Usamos el nombre del contenedor que está en el .env (backend_tm por defecto)
-    docker compose exec backend npx prisma migrate deploy
+    # Usamos el nombre del contenedor de producción
+    docker compose --profile prod exec backend npx prisma migrate deploy
 fi
 
 # 5. Limpiar imágenes huérfanas
