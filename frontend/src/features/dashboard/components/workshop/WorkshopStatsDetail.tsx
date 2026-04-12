@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { StatCard } from "@/components/molecules/dashboard/StatCard";
 import { DashboardChart } from "@/components/molecules/dashboard/DashboardChart";
 import { Wrench, Calendar, Store, Loader2, TrendingUp } from "lucide-react";
-import apiClient from '@/utils/apiClient';
+import apiClient from '@/utils/api/api.client';
 
 interface Props {
     workshopId: string;
