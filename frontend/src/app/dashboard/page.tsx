@@ -2,6 +2,7 @@
 
 import { useDashboardStats } from "@/features/dashboard/hooks/useDashboardStats";
 import { AdminDashboard } from "@/components/organisms/dashboard/AdminDashboard";
+import { SupportDashboard } from "@/components/organisms/dashboard/SupportDashboard";
 import { WorkshopDashboard } from "@/components/organisms/dashboard/WorkshopDashboard";
 import { UserDashboard } from "@/components/organisms/dashboard/UserDashboard";
 
@@ -30,11 +31,20 @@ export default function Dashboard() {
         );
     }
 
-    // VISTA ADMINISTRADOR O SOPORTE REGIONAL
-    if (user?.role === 'ADMIN' || user?.role === 'SUPPORT') {
+    // VISTA ADMINISTRADOR
+    if (user?.role === 'ADMIN') {
         return (
             <div className="p-6 md:p-10 max-w-7xl mx-auto">
                 <AdminDashboard adminStats={adminStats} userRole={user.role} />
+            </div>
+        );
+    }
+
+    // VISTA SOPORTE REGIONAL
+    if (user?.role === 'SUPPORT') {
+        return (
+            <div className="p-6 md:p-10 max-w-7xl mx-auto">
+                <SupportDashboard adminStats={adminStats} user={user} />
             </div>
         );
     }

@@ -50,12 +50,16 @@ export class AdminMetricsUCase {
         const cityFilters: any = { enabled: true };
 
         if (user && user.role === UserRole.SUPPORT) {
-            if (countryIds.length > 0) {
-                countryFilters.id = { in: countryIds };
-                cityFilters.countryId = { in: countryIds };
-            } else if (cityIds.length > 0) {
-                countryFilters.cities = { some: { id: { in: cityIds } } };
-                cityFilters.id = { in: cityIds };
+            const cityOrFilters: any[] = [];
+            if (countryIds.length > 0) cityOrFilters.push({ countryId: { in: countryIds } });
+            if (cityIds.length > 0) cityOrFilters.push({ id: { in: cityIds } });
+
+            if (cityOrFilters.length > 0) {
+                cityFilters.OR = cityOrFilters;
+                countryFilters.OR = [
+                    { id: { in: countryIds } },
+                    { cities: { some: { id: { in: cityIds } } } }
+                ];
             } else {
                 countryFilters.id = 'none';
                 cityFilters.id = 'none';
@@ -69,9 +73,12 @@ export class AdminMetricsUCase {
             totalAppointments,
             totalCountries,
             totalCities,
+            totalPublications,
             recentWorkshops,
             recentWorks,
-            workshopLocations
+            recentCities,
+            workshopLocations,
+            productionRaw
         ] = await Promise.all([
             this.prisma.workshop.count({ where: { ...scope, deletedAt: null } }),
             this.prisma.user.count({ where: { ...userScope, deletedAt: null } }),
@@ -79,6 +86,7 @@ export class AdminMetricsUCase {
             this.prisma.appointment.count({ where: { ...workScope, deletedAt: null } }),
             this.prisma.country.count({ where: countryFilters }),
             this.prisma.city.count({ where: cityFilters }),
+            this.prisma.publication.count({ where: { ...workScope, deletedAt: null } }),
             this.prisma.workshop.findMany({
                 where: { ...scope, deletedAt: null },
                 take: 5,
@@ -91,6 +99,12 @@ export class AdminMetricsUCase {
                 orderBy: { createdAt: 'desc' },
                 include: { workshop: { select: { name: true } } }
             }),
+            this.prisma.city.findMany({
+                where: { ...cityFilters, deletedAt: null },
+                take: 5,
+                orderBy: { createdAt: 'desc' },
+                include: { country: { select: { name: true } } }
+            }),
             this.prisma.workshop.findMany({
                 where: { ...scope, deletedAt: null },
                 select: {
@@ -102,8 +116,27 @@ export class AdminMetricsUCase {
                     phone: true,
                     logoUrl: true
                 }
+            }),
+            this.prisma.work.findMany({
+                where: { 
+                    ...workScope, 
+                    createdAt: { gte: new Date(new Date().setDate(new Date().getDate() - 30)) },
+                    deletedAt: null 
+                },
+                select: { createdAt: true }
             })
         ]);
+
+        // Process production data by day
+        const production = productionRaw.reduce((acc: any, work: any) => {
+            const date = work.createdAt.toISOString().split('T')[0];
+            acc[date] = (acc[date] || 0) + 1;
+            return acc;
+        }, {});
+
+        const productionStats = Object.keys(production)
+            .sort()
+            .map(date => ({ date, count: production[date] }));
 
         return {
             stats: {
@@ -113,10 +146,13 @@ export class AdminMetricsUCase {
                 totalAppointments,
                 totalCountries,
                 totalCities,
+                totalPublications,
             },
             recentWorkshops,
             recentWorks,
-            workshopLocations
+            recentCities,
+            workshopLocations,
+            productionStats
         };
     }
 }
