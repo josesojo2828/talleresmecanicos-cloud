@@ -107,5 +107,41 @@ class SyncService {
     } catch (e) {
       print('Download clients failed: $e');
     }
+
+    // --- 5. Descargar Trabajos (Works) ---
+    try {
+      final res = await _api.get('/work');
+      if (res.statusCode == 200) {
+        final List jobsData = jsonDecode(res.body)['data'] ?? [];
+        for (var job in jobsData) {
+          // Calculamos el total de repuestos si vienen
+          double partsTotal = 0;
+          if (job['partsUsed'] != null) {
+            for (var p in job['partsUsed']) {
+              partsTotal += (p['quantity'] ?? 0) * (p['part']?['price'] ?? 0);
+            }
+          }
+
+          await db.insert('works', {
+            'id': job['id'],
+            'title': job['title'],
+            'client_name': job['clientName'],
+            'client_phone': job['clientPhone'],
+            'workshop_client_id': job['workshopClientId'],
+            'car_info': job['vehicleLicensePlate'],
+            'labor_price': job['laborPrice'] ?? 0.0,
+            'parts_price': partsTotal,
+            'total_price': (job['laborPrice'] ?? 0.0) + partsTotal,
+            'currency': job['currency'] ?? 'USD',
+            'status': job['status'] ?? 'OPEN',
+            'created_at': job['createdAt'],
+            'sync_status': 1
+          }, conflictAlgorithm: ConflictAlgorithm.replace);
+        }
+        print('########## DOWNLOAD SUCCESS: ${jobsData.length} works synced');
+      }
+    } catch (e) {
+      print('Download works failed: $e');
+    }
   }
 }

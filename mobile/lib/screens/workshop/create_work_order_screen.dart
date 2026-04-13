@@ -14,18 +14,14 @@ class CreateWorkOrderScreen extends StatefulWidget {
 class _CreateWorkOrderScreenState extends State<CreateWorkOrderScreen> {
   final _titleController = TextEditingController();
   final _clientNameController = TextEditingController();
-  final _clientPhoneController = TextEditingController();
   final _plateController = TextEditingController();
-  final _laborController = TextEditingController(text: '0');
   
-  String _currency = 'USD';
   String _status = 'OPEN';
   String? _selectedWorkshopClientId;
   
   final _salesService = SalesService();
   bool _isLoading = false;
 
-  final List<String> _currencies = ['USD', 'COP', 'ARS', 'MXN', 'JPY'];
   final Map<String, String> _statuses = {
     'OPEN': 'ABIERTO',
     'IN_PROGRESS': 'EN PROGRESO',
@@ -36,10 +32,9 @@ class _CreateWorkOrderScreenState extends State<CreateWorkOrderScreen> {
   void _submit() async {
     final title = _titleController.text.trim();
     final clientName = _clientNameController.text.trim();
-    final labor = double.tryParse(_laborController.text) ?? 0.0;
 
-    if (title.isEmpty || clientName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Por favor, completa título y cliente')));
+    if (title.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Por favor, ingresa un título para el trabajo')));
       return;
     }
 
@@ -48,14 +43,13 @@ class _CreateWorkOrderScreenState extends State<CreateWorkOrderScreen> {
     await _salesService.createWorkOrder({
       'title': title,
       'client_name': clientName,
-      'client_phone': _clientPhoneController.text.trim(),
       'workshop_client_id': _selectedWorkshopClientId,
-      'car_info': _plateController.text.trim(), // Lo guardamos en car_info para compatibilidad con lista vieja
-      'labor_price': labor,
-      'currency': _currency,
+      'car_info': _plateController.text.trim(),
+      'labor_price': 0.0,
+      'currency': 'USD',
       'status': _status,
       'parts_price': 0.0,
-      'total_price': labor,
+      'total_price': 0.0,
     });
 
     if (mounted) {
@@ -69,7 +63,6 @@ class _CreateWorkOrderScreenState extends State<CreateWorkOrderScreen> {
 
   Future<List<Map<String, dynamic>>> _searchClients(String query) async {
     if (query.isEmpty) return [];
-    // Assuming getClients exists in SalesService
     return await _salesService.getClients(query);
   }
 
@@ -82,104 +75,90 @@ class _CreateWorkOrderScreenState extends State<CreateWorkOrderScreen> {
         elevation: 0, backgroundColor: Colors.white, foregroundColor: const Color(0xFF0F172A),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FadeInDown(child: _buildField('TÍTULO DE LA OBRA', LucideIcons.wrench, _titleController, 'Ej: Cambio de Frenos')),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: FadeInLeft(
-                    delay: const Duration(milliseconds: 100), 
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('CLIENTE', style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 2)),
-                        const SizedBox(height: 12),
-                        Autocomplete<Map<String, dynamic>>(
-                          displayStringForOption: (option) => option['first_name'] ?? '',
-                          optionsBuilder: (textEditingValue) => _searchClients(textEditingValue.text),
-                          onSelected: (option) {
-                            setState(() {
-                              _clientNameController.text = option['first_name'] ?? '';
-                              _clientPhoneController.text = option['phone'] ?? '';
-                              _selectedWorkshopClientId = option['id'];
-                            });
-                          },
-                          fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-                            // Sincronizar controllador manual con el de autocomplete si es necesario
-                            // Pero usaremos el del autocomplete como el principal para el nombre
-                            return TextField(
-                              controller: controller,
-                              focusNode: focusNode,
-                              onChanged: (v) {
-                                _clientNameController.text = v;
-                                _selectedWorkshopClientId = null; // Si escribe, reseteamos el ID
-                              },
-                              style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(LucideIcons.user, size: 20, color: Color(0xFF64748B)),
-                                hintText: 'Nombre',
-                                hintStyle: GoogleFonts.outfit(color: Colors.grey.shade400, fontSize: 13),
-                                filled: true, fillColor: const Color(0xFFF8FAFC),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
-                              ),
-                            );
-                          },
-                          optionsViewBuilder: (context, onSelected, options) {
-                            return Align(
-                              alignment: Alignment.topLeft,
-                              child: Material(
-                                elevation: 4,
-                                borderRadius: BorderRadius.circular(20),
-                                child: Container(
-                                  width: 300,
-                                  constraints: const BoxConstraints(maxHeight: 200),
-                                  child: ListView.builder(
-                                    padding: EdgeInsets.zero,
-                                    shrinkWrap: true,
-                                    itemCount: options.length,
-                                    itemBuilder: (context, index) {
-                                      final option = options.elementAt(index);
-                                      return ListTile(
-                                        title: Text(option['first_name'], style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
-                                        subtitle: Text(option['phone'] ?? '', style: GoogleFonts.outfit(fontSize: 12)),
-                                        onTap: () => onSelected(option),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
+            FadeInDown(child: _buildField('TÍTULO DEL TRABAJO', LucideIcons.wrench, _titleController, 'Ej: Cambio de Frenos')),
+            const SizedBox(height: 32),
+            FadeInLeft(
+              delay: const Duration(milliseconds: 100), 
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('CLIENTE (OPCIONAL)', style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 2)),
+                  const SizedBox(height: 12),
+                  Autocomplete<Map<String, dynamic>>(
+                    displayStringForOption: (option) => option['first_name'] ?? '',
+                    optionsBuilder: (textEditingValue) => _searchClients(textEditingValue.text),
+                    onSelected: (option) {
+                      setState(() {
+                        _clientNameController.text = option['first_name'] ?? '';
+                        _selectedWorkshopClientId = option['id'];
+                      });
+                    },
+                    fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+                      return TextField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        onChanged: (v) {
+                          _clientNameController.text = v;
+                          _selectedWorkshopClientId = null;
+                        },
+                        style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(LucideIcons.user, size: 20, color: Color(0xFF64748B)),
+                          hintText: 'Nombre del cliente',
+                          hintStyle: GoogleFonts.outfit(color: Colors.grey.shade400, fontSize: 13),
+                          filled: true, fillColor: const Color(0xFFF8FAFC),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
                         ),
-                      ],
-                    ),
+                      );
+                    },
+                    optionsViewBuilder: (context, onSelected, options) {
+                      return Align(
+                        alignment: Alignment.topLeft,
+                        child: Material(
+                          elevation: 10,
+                          borderRadius: BorderRadius.circular(24),
+                          clipBehavior: Clip.antiAlias,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width - 64,
+                            constraints: const BoxConstraints(maxHeight: 250),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: ListView.separated(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              itemCount: options.length,
+                              separatorBuilder: (context, index) => const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                              itemBuilder: (context, index) {
+                                final option = options.elementAt(index);
+                                return ListTile(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                  title: Text(option['first_name'] + " " + (option['last_name'] ?? ''), style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 14)),
+                                  subtitle: Text(option['phone'] ?? 'Sin teléfono', style: GoogleFonts.outfit(fontSize: 11, color: const Color(0xFF94A3B8))),
+                                  onTap: () => onSelected(option),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(child: FadeInRight(delay: const Duration(milliseconds: 100), child: _buildField('TELÉFONO', LucideIcons.phone, _clientPhoneController, 'Número'))),
-              ],
+                ],
+              ),
             ),
-            const SizedBox(height: 24),
-            FadeInDown(delay: const Duration(milliseconds: 200), child: _buildField('PATENTE / VEHÍCULO', LucideIcons.car, _plateController, 'Patente o Modelo')),
-            const SizedBox(height: 48),
-            _buildSectionTitle('DESGLOSE Y ESTADO'),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(flex: 2, child: FadeInLeft(delay: const Duration(milliseconds: 300), child: _buildNumericField('MANO DE OBRA', LucideIcons.dollar_sign, _laborController))),
-                const SizedBox(width: 16),
-                Expanded(flex: 1, child: FadeInRight(delay: const Duration(milliseconds: 300), child: _buildDropdown('MONEDA', _currencies, _currency, (v) => setState(() => _currency = v!)))),
-              ],
-            ),
-            const SizedBox(height: 24),
-            FadeInUp(delay: const Duration(milliseconds: 400), child: _buildDropdown('ESTADO INICIAL', _statuses.keys.toList(), _status, (v) => setState(() => _status = v!), labels: _statuses)),
+            const SizedBox(height: 32),
+            FadeInDown(delay: const Duration(milliseconds: 200), child: _buildField('PATENTE / VEHÍCULO', LucideIcons.car, _plateController, 'Placa o descripción del auto')),
+            const SizedBox(height: 32),
+            FadeInUp(delay: const Duration(milliseconds: 300), child: _buildDropdown('ESTADO DEL TRABAJO', _statuses.keys.toList(), _status, (v) => setState(() => _status = v!), labels: _statuses)),
             const SizedBox(height: 64),
             FadeInUp(
-              delay: const Duration(milliseconds: 500),
+              delay: const Duration(milliseconds: 400),
               child: SizedBox(
                 width: double.infinity,
                 height: 64,
@@ -191,7 +170,9 @@ class _CreateWorkOrderScreenState extends State<CreateWorkOrderScreen> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
                     elevation: 0,
                   ),
-                  child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : Text('CONFIRMAR TRABAJO', style: GoogleFonts.outfit(fontWeight: FontWeight.bold, letterSpacing: 1)),
+                  child: _isLoading 
+                    ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) 
+                    : Text('CREAR ORDEN', style: GoogleFonts.outfit(fontWeight: FontWeight.bold, letterSpacing: 1, fontSize: 14)),
                 ),
               ),
             ),
@@ -219,29 +200,12 @@ class _CreateWorkOrderScreenState extends State<CreateWorkOrderScreen> {
     ]);
   }
 
-  Widget _buildNumericField(String label, IconData icon, TextEditingController controller) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(label, style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 1)),
-      const SizedBox(height: 12),
-      TextField(
-        controller: controller,
-        keyboardType: TextInputType.number,
-        style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 18),
-        decoration: InputDecoration(
-          prefixIcon: Icon(icon, size: 18),
-          filled: true, fillColor: const Color(0xFFF8FAFC),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
-        ),
-      ),
-    ]);
-  }
-
   Widget _buildDropdown(String label, List<String> options, String value, Function(String?) onChanged, {Map<String, String>? labels}) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(label, style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 1)),
+      Text(label, style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 2)),
       const SizedBox(height: 12),
       Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(color: const Color(0xFFF8FAFC), borderRadius: BorderRadius.circular(20)),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
@@ -255,9 +219,5 @@ class _CreateWorkOrderScreenState extends State<CreateWorkOrderScreen> {
         ),
       ),
     ]);
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Text(title, style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 2));
   }
 }
