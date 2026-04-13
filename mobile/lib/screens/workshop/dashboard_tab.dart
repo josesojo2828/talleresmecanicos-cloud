@@ -48,7 +48,16 @@ class _DashboardTabState extends State<DashboardTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FadeInDown(child: const KineticHeader(title: 'Telemetría Taller', subtitle: 'Resumen Diario')),
+              FadeInDown(
+                child: KineticHeader(
+                  title: 'Telemetría Taller', 
+                  subtitle: 'Resumen Diario',
+                  trailing: IconButton(
+                    icon: const Icon(LucideIcons.layout_list, color: Color(0xFF64748B)),
+                    onPressed: () => Navigator.pushNamed(context, '/directory'),
+                  ),
+                )
+              ),
               const SizedBox(height: 32),
               _buildFinanceMainCard(),
               const SizedBox(height: 24),

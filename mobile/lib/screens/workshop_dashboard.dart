@@ -125,21 +125,32 @@ class _WorkshopDashboardState extends State<WorkshopDashboard> {
               ),
             ],
           ),
-          _buildActionButton(LucideIcons.bell),
+          Row(
+            children: [
+              _buildActionButton(LucideIcons.layout_list, onTap: () {
+                Navigator.pushNamed(context, '/directory');
+              }),
+              const SizedBox(width: 8),
+              _buildActionButton(LucideIcons.bell),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildActionButton(IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
+  Widget _buildActionButton(IconData icon, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFF1F5F9)),
+        ),
+        child: Icon(icon, size: 20, color: const Color(0xFF64748B)),
       ),
-      child: Icon(icon, size: 20, color: const Color(0xFF64748B)),
     );
   }
 

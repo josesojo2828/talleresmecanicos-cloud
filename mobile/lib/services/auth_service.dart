@@ -15,13 +15,19 @@ class AuthService {
       });
 
       if (response.statusCode == 201 || response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final rawData = jsonDecode(response.body);
+        final data = rawData['body'] ?? rawData;
+        
+        final token = data['access_token'] ?? data['token'];
+        if (token == null) return false;
+
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', data['token']);
+        await prefs.setString('token', token);
         await prefs.setString('user_name', '${data['user']['firstName']} ${data['user']['lastName']}');
         await prefs.setString('user_role', data['user']['role']);
-        if (data['user']['country'] != null) await prefs.setString('user_country', data['user']['country']);
-        if (data['user']['city'] != null) await prefs.setString('user_city', data['user']['city']);
+        
+        if (data['user']['country'] != null) await prefs.setString('user_country', data['user']['country'].toString());
+        if (data['user']['city'] != null) await prefs.setString('user_city', data['user']['city'].toString());
         return true;
       }
       return false;

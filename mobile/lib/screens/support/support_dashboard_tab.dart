@@ -44,7 +44,16 @@ class _SupportDashboardTabState extends State<SupportDashboardTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FadeInDown(child: const KineticHeader(title: 'Auditoría Nacional', subtitle: 'Telemetría Flota')),
+              FadeInDown(
+                child: KineticHeader(
+                  title: 'Auditoría Nacional', 
+                  subtitle: 'Telemetría Flota',
+                  trailing: IconButton(
+                    icon: const Icon(LucideIcons.layout_list, color: Color(0xFF64748B)),
+                    onPressed: () => Navigator.pushNamed(context, '/directory'),
+                  ),
+                )
+              ),
               const SizedBox(height: 32),
               _buildNetworkStatus(),
               const SizedBox(height: 24),

@@ -340,12 +340,21 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        width: 48,
+                        height: 48,
                         decoration: BoxDecoration(
                           color: const Color(0xFF10B981).withOpacity(0.1),
                           borderRadius: BorderRadius.circular(16),
+                          image: (workshop['logoUrl'] != null && workshop['logoUrl'].toString().isNotEmpty)
+                            ? DecorationImage(
+                                image: NetworkImage(workshop['logoUrl']),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
                         ),
-                        child: const Icon(LucideIcons.wrench, color: Color(0xFF10B981), size: 24),
+                        child: (workshop['logoUrl'] == null || workshop['logoUrl'].toString().isEmpty)
+                          ? const Icon(LucideIcons.wrench, color: Color(0xFF10B981), size: 24)
+                          : null,
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -379,8 +388,6 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                   const SizedBox(height: 20),
                   Row(
                     children: [
-                      _buildMiniBadge('Habilitado', const Color(0xFF10B981)),
-                      const SizedBox(width: 8),
                       if (workshop['category'] != null)
                         _buildMiniBadge(workshop['category']['name'] ?? 'General', const Color(0xFF64748B).withOpacity(0.1), textColor: const Color(0xFF64748B)),
                     ],

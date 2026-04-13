@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,20 +27,36 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _checkBiometrics() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    debugPrint('########## TOKEN ALMACENADO: $token ##########');
+
+    if (token == null) {
+      debugPrint('########## SIN SESIÓN PREVIA: No se intenta biometría ##########');
+      return;
+    }
+
     final authenticated = await _auth.authenticateWithBiometrics();
+    debugPrint('########## RESULTADO BIOMETRÍA: $authenticated ##########');
+
     if (authenticated && mounted) {
       final role = await _auth.getUserRole();
+      debugPrint('########## ROL RECUPERADO: $role ##########');
       Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support');
     }
   }
 
   Future<void> _login() async {
     setState(() => _isLoading = true);
+    debugPrint('########## INTENTANDO LOGIN: ${_emailController.text} ##########');
     final success = await _auth.login(_emailController.text, _passwordController.text);
+    
     if (success && mounted) {
       final role = await _auth.getUserRole();
+      debugPrint('########## LOGIN EXITOSO: ROL: $role ##########');
       _showBiometricSetupIfNeeded(role);
     } else {
+      debugPrint('########## LOGIN FALLIDO: Credenciales o Respuesta Inválida ##########');
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Credenciales incorrectas balín. Ponete las pilas.')));
       setState(() => _isLoading = false);
     }
@@ -54,7 +71,17 @@ class _LoginScreenState extends State<LoginScreen> {
         content: const Text('Para la próxima vuelta podés entrar con tu huella digital.'),
         actions: [
           TextButton(onPressed: () => Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support'), child: const Text('LUEGO')),
-          ElevatedButton(onPressed: () => Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support'), child: const Text('ACTIVAR')),
+          ElevatedButton(
+            onPressed: () async {
+              final verified = await _auth.authenticateWithBiometrics();
+              if (verified && mounted) {
+                Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support');
+              } else {
+                if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No se pudo verificar la huella.')));
+              }
+            }, 
+            child: const Text('ACTIVAR')
+          ),
         ],
       ));
     } else {

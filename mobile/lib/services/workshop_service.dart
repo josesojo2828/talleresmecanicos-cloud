@@ -78,4 +78,18 @@ class WorkshopService {
 
   // --- CRUD local pendiente de sincronización ---
   // Podemos implementar el guardado de órdenes offline acá...
+
+  Future<bool> createAppointment(String workshopId, DateTime dateTime, String description) async {
+    try {
+      final response = await _api.post('/appointment', {
+        'workshopId': workshopId,
+        'dateTime': dateTime.toIso8601String(),
+        'description': description,
+      });
+      return response.statusCode == 201 || response.statusCode == 200;
+    } catch (e) {
+      print('Error creando cita: $e');
+      return false;
+    }
+  }
 }

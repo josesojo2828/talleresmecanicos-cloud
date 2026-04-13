@@ -17,15 +17,18 @@ export class AppointmentController {
     @Post()
     @Roles(UserRole.ADMIN, UserRole.CLIENT, UserRole.TALLER)
     async create(@Body() data: ICreateAppointmentDto, @CurrentUser() user: any) {
-        // If Client, force clientId to their own id
+        // Por defecto, el cliente es quien hace la solicitud
+        if (!data.clientId) {
+            data.clientId = user.id;
+        }
+
+        // Si es un CLIENTE, forzamos que sea él mismo
         if (user.role === UserRole.CLIENT) {
             data.clientId = user.id;
         }
         
-        // If Workshop, force workshopId to their own workshop
-        if (user.role === UserRole.TALLER) {
-            data.workshopId = user.workshop?.id;
-        }
+        // Si es un TALLER y no especificó taller destino, usamos el de los parámetros o el suyo?
+        // En el directorio el workshopId viene en el body desde la App.
         
         return await this.useCase.create(data);
     }

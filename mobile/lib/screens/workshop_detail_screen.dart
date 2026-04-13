@@ -2,14 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:animate_do/animate_do.dart';
+import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
-class WorkshopDetailScreen extends StatelessWidget {
+import 'package:workshops_mobile/services/auth_service.dart';
+import 'package:workshops_mobile/widgets/kinetic_button.dart';
+
+class WorkshopDetailScreen extends StatefulWidget {
   final Map<String, dynamic> workshop;
 
   const WorkshopDetailScreen({super.key, required this.workshop});
 
   @override
+  State<WorkshopDetailScreen> createState() => _WorkshopDetailScreenState();
+}
+
+class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
+  bool _isLoggedIn = false;
+  String _userRole = '';
+  final _auth = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuth();
+  }
+
+  Future<void> _checkAuth() async {
+    final loggedIn = await _auth.isLoggedIn();
+    final role = await _auth.getUserRole();
+    if (mounted) {
+      setState(() {
+        _isLoggedIn = loggedIn;
+        _userRole = role;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final workshop = widget.workshop;
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: CustomScrollView(
@@ -26,8 +58,6 @@ class WorkshopDetailScreen extends StatelessWidget {
                   const SizedBox(height: 24),
                   _buildActionGrid(),
                   const SizedBox(height: 32),
-                  _buildTechStats(),
-                  const SizedBox(height: 32),
                   _buildLocationAndHours(),
                   const SizedBox(height: 40),
                 ],
@@ -41,6 +71,10 @@ class WorkshopDetailScreen extends StatelessWidget {
   }
 
   Widget _buildHeroHeader(BuildContext context) {
+    final List<dynamic> images = (widget.workshop['images'] as List? ?? [])
+        .where((img) => img != null && img.toString().isNotEmpty)
+        .toList();
+    
     return SliverAppBar(
       expandedHeight: 280,
       pinned: true,
@@ -53,52 +87,45 @@ class WorkshopDetailScreen extends StatelessWidget {
         background: Stack(
           fit: StackFit.expand,
           children: [
-            // Tech Header Pattern
-            Container(color: const Color(0xFF0F172A)),
-            Opacity(
-              opacity: 0.1,
-              child: Image.network(
-                'https://www.transparenttextures.com/patterns/carbon-fibre.png',
-                repeat: ImageRepeat.repeat,
+            if (images.isEmpty)
+              Container(color: const Color(0xFF0F172A))
+            else
+              PageView.builder(
+                itemCount: images.length,
+                itemBuilder: (context, index) {
+                  return Image.network(
+                    images[index],
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
+            // Gradient Overlay
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.4),
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.8),
+                  ],
+                ),
               ),
             ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FadeInDown(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF10B981),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        'VERIFICADO',
-                        style: GoogleFonts.spaceGrotesk(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  FadeIn(
-                    delay: const Duration(milliseconds: 300),
-                    child: const Icon(LucideIcons.qr_code, color: Colors.white54, size: 80),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'IDENTIFIER_MODULE // INFO',
-                    style: GoogleFonts.spaceGrotesk(
-                      color: Colors.white38,
-                      fontSize: 10,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                ],
+            Positioned(
+              bottom: 20,
+              right: 20,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '1 / ${images.length > 0 ? images.length : 1}',
+                  style: GoogleFonts.spaceGrotesk(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],
@@ -112,7 +139,7 @@ class WorkshopDetailScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          workshop['name']?.toUpperCase() ?? 'MARIO MOTORS VZLA',
+          widget.workshop['name']?.toUpperCase() ?? 'MARIO MOTORS VZLA',
           style: GoogleFonts.outfit(
             fontSize: 28,
             fontWeight: FontWeight.w900,
@@ -150,9 +177,18 @@ class WorkshopDetailScreen extends StatelessWidget {
         Expanded(
           child: _buildActionCard(
             'WHATSAPP',
-            LucideIcons.message_square,
+            LucideIcons.message_circle,
             const Color(0xFF10B981),
             const Color(0xFFD1FAE5),
+            onTap: () async {
+              final whatsapp = widget.workshop['whatsapp'];
+              if (whatsapp != null) {
+                final url = 'https://wa.me/${whatsapp.replaceAll(RegExp(r'[^0-9]'), '')}';
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                }
+              }
+            },
           ),
         ),
         const SizedBox(width: 16),
@@ -162,114 +198,138 @@ class WorkshopDetailScreen extends StatelessWidget {
             LucideIcons.phone,
             const Color(0xFF0F172A),
             const Color(0xFFF1F5F9),
+            onTap: () async {
+              final phone = widget.workshop['phone'];
+              if (phone != null) {
+                final url = 'tel:${phone.replaceAll(RegExp(r'[^0-9]'), '')}';
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url));
+                }
+              }
+            },
           ),
         ),
       ],
     );
   }
 
-  Widget _buildActionCard(String label, IconData icon, Color color, Color bgColor) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 32),
-          const SizedBox(height: 12),
-          Text(
-            label,
-            style: GoogleFonts.spaceGrotesk(
-              color: color,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-              letterSpacing: 1,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTechStats() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildActionCard(String label, IconData icon, Color color, Color bgColor, {VoidCallback? onTap}) {
+    return Material(
+      color: bgColor,
+      borderRadius: BorderRadius.circular(24),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 24),
+          child: Column(
             children: [
+              Icon(icon, color: color, size: 32),
+              const SizedBox(height: 12),
               Text(
-                'ESTADÍSTICAS_TÉCNICAS',
+                label,
                 style: GoogleFonts.spaceGrotesk(
-                  color: Colors.white54,
-                  fontSize: 10,
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
                   letterSpacing: 1,
                 ),
               ),
-              const Icon(LucideIcons.activity, color: Color(0xFF10B981), size: 16),
             ],
           ),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              _buildStatItem('APARICIONES', '1,240+'),
-              const Spacer(),
-              _buildStatItem('SUCCESS_RATE', '99.2%'),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildStatItem(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.spaceGrotesk(color: Colors.white38, fontSize: 9),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: GoogleFonts.outfit(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    );
+  String _formatSchedule(dynamic hours) {
+    if (hours == null) return 'Consulte disponibilidad';
+    
+    Map<String, dynamic> parsed;
+    if (hours is String) {
+      try {
+        parsed = jsonDecode(hours);
+      } catch (e) {
+        return hours;
+      }
+    } else {
+      parsed = hours;
+    }
+
+    final daysOrder = [
+      {'key': 'monday', 'label': 'Lunes', 'short': 'LUN'},
+      {'key': 'tuesday', 'label': 'Martes', 'short': 'MAR'},
+      {'key': 'wednesday', 'label': 'Miércoles', 'short': 'MIE'},
+      {'key': 'thursday', 'label': 'Jueves', 'short': 'JUE'},
+      {'key': 'friday', 'label': 'Viernes', 'short': 'VIE'},
+      {'key': 'saturday', 'label': 'Sábado', 'short': 'SAB'},
+      {'key': 'sunday', 'label': 'Domingo', 'short': 'DOM'},
+    ];
+
+    String formatTime(String? time) {
+      if (time == null || time.isEmpty) return '';
+      if (time.toLowerCase().contains('a.m.') || time.toLowerCase().contains('p.m.')) return time;
+      if (time.toLowerCase().contains('am') || time.toLowerCase().contains('pm')) return time;
+
+      try {
+        final parts = time.split(':');
+        int h = int.parse(parts[0]);
+        String m = parts.length > 1 ? parts[1] : '00';
+        final suffix = h >= 12 ? 'pm' : 'am';
+        h = h % 12;
+        if (h == 0) h = 12;
+        return '$h:$m $suffix';
+      } catch (e) {
+        return time;
+      }
+    }
+
+    List<Map<String, String>> groups = [];
+    Map<String, String>? currentGroup;
+
+    for (var day in daysOrder) {
+      final key = day['key'] as String;
+      final short = day['short'] as String;
+      if (parsed[key] != null && parsed[key]['enabled'] == true) {
+        final open = formatTime(parsed[key]['open']);
+        final close = formatTime(parsed[key]['close']);
+        final timeStr = '$open – $close';
+        
+        if (currentGroup == null || currentGroup['time'] != timeStr) {
+          currentGroup = {'start': short, 'end': short, 'time': timeStr};
+          groups.add(currentGroup);
+        } else {
+          currentGroup['end'] = short;
+        }
+      } else {
+        currentGroup = null;
+      }
+    }
+
+    if (groups.isEmpty) return 'Consultar horario';
+    
+    return groups.map((g) {
+      if (g['start'] == g['end']) return '${g['start']}: ${g['time']}';
+      return '${g['start']} – ${g['end']}: ${g['time']}';
+    }).join('\n');
   }
 
   Widget _buildLocationAndHours() {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(color: const Color(0xFFF1F5F9)),
       ),
       child: Column(
         children: [
-          _buildInfoRow(LucideIcons.map_pin, 'Av. Libertador, Caracas', 'CARACAS // VENEZUELA'),
-          const Divider(height: 32, color: Color(0xFFF1F5F9)),
-          _buildInfoRow(LucideIcons.clock, 'Horario de Atención', 'LUN-SÁB 8:00 – 19:00'),
+          _buildInfoRow(LucideIcons.map_pin, widget.workshop['address'] ?? 'Sin dirección', '${widget.workshop['city']?['name'] ?? ''} // ${widget.workshop['country']?['name'] ?? ''}'),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Divider(color: Color(0xFFF1F5F9)),
+          ),
+          _buildInfoRow(LucideIcons.clock, 'Horario de Atención', _formatSchedule(widget.workshop['openingHours'])),
         ],
       ),
     );
@@ -312,39 +372,30 @@ class WorkshopDetailScreen extends StatelessWidget {
   }
 
   Widget _buildStickyCTA() {
+    // Si ya inició sesión pero NO es cliente (es Taller o Soporte), 
+    // ocultamos el botón de solicitar cita ya que este flujo es para clientes.
+    if (_isLoggedIn && _userRole != 'CLIENT') {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(top: BorderSide(color: const Color(0xFFF1F5F9))),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 40, offset: const Offset(0, -10))
+        ],
       ),
-      child: SafeArea(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF10B981),
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            elevation: 8,
-            shadowColor: const Color(0xFF10B981).withOpacity(0.4),
-          ),
-          onPressed: () {},
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'SOLICITAR CITA',
-                style: GoogleFonts.spaceGrotesk(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 16,
-                  letterSpacing: 2,
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Icon(LucideIcons.arrow_right, size: 20),
-            ],
-          ),
-        ),
+      child: KineticButton(
+        label: _isLoggedIn ? 'SOLICITAR CITA' : 'INICIAR SESIÓN PARA SOLICITAR',
+        onPressed: () {
+          if (_isLoggedIn) {
+            Navigator.pushNamed(context, '/appointment-form', arguments: widget.workshop);
+          } else {
+            Navigator.pushNamed(context, '/login');
+          }
+        },
+        color: const Color(0xFF10B981),
       ),
     );
   }

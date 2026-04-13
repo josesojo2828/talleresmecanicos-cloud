@@ -72,10 +72,27 @@ class SupportDashboard extends StatelessWidget {
                   letterSpacing: -1,
                 ),
               ),
-              const CircleAvatar(
-                radius: 24,
-                backgroundColor: Color(0xFFE2E8F0),
-                child: Icon(LucideIcons.user, color: Color(0xFF64748B), size: 20),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, '/directory'),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                      ),
+                      child: const Icon(LucideIcons.layout_list, size: 20, color: Color(0xFF64748B)),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Color(0xFFE2E8F0),
+                    child: Icon(LucideIcons.user, color: Color(0xFF64748B), size: 20),
+                  ),
+                ],
               ),
             ],
           ),

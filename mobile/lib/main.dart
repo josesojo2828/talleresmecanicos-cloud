@@ -4,6 +4,7 @@ import 'package:workshops_mobile/screens/splash_screen.dart';
 import 'package:workshops_mobile/screens/login_screen.dart';
 import 'package:workshops_mobile/screens/directory_screen.dart';
 import 'package:workshops_mobile/screens/workshop_detail_screen.dart';
+import 'package:workshops_mobile/screens/appointment_form_screen.dart';
 import 'package:workshops_mobile/screens/workshop/workshop_tabs.dart';
 import 'package:workshops_mobile/screens/support/support_tabs.dart';
 import 'package:workshops_mobile/services/sync_service.dart';
@@ -48,6 +49,12 @@ class WorkshopsApp extends StatelessWidget {
           final workshop = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
             builder: (context) => WorkshopDetailScreen(workshop: workshop),
+          );
+        }
+        if (settings.name == '/appointment-form') {
+          final workshop = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => AppointmentFormScreen(workshop: workshop),
           );
         }
         return null;
