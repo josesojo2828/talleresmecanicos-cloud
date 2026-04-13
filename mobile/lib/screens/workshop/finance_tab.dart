@@ -18,7 +18,7 @@ class _FinanceTabState extends State<FinanceTab> {
   final _workshopService = WorkshopService();
   bool _isLoading = true;
   Map<String, dynamic>? _financeData;
-  final _formatter = NumberFormat.currency(symbol: '$', decimalDigits: 0);
+  final _formatter = NumberFormat.currency(symbol: '\$', decimalDigits: 0);
 
   @override
   void initState() {
@@ -206,7 +206,30 @@ class _FinanceTabState extends State<FinanceTab> {
               child: LineChart(
                 LineChartData(
                   gridData: const FlGridData(show: true, drawVerticalLine: false),
-                  titlesData: const FlTitlesData(show: false),
+                  titlesData: FlTitlesData(
+                    show: true,
+                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          if (value.toInt() < 0 || value.toInt() >= chartData.length) return const SizedBox();
+                          final dateStr = chartData[value.toInt()]['date'].toString();
+                          final date = dateStr.contains('-') ? DateTime.parse('$dateStr-01') : DateTime.now();
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              DateFormat('MMM').format(date).toUpperCase(),
+                              style: GoogleFonts.outfit(fontSize: 8, fontWeight: FontWeight.bold, color: const Color(0xFF94A3B8)),
+                            ),
+                          );
+                        },
+                        reservedSize: 30,
+                      )
+                    ),
+                  ),
                   borderData: FlBorderData(show: false),
                   lineBarsData: [
                     LineChartBarData(

@@ -3,6 +3,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workshops_mobile/screens/workshop/appointments_screen.dart';
 import 'package:workshops_mobile/screens/workshop/finance_tab.dart';
 import 'package:workshops_mobile/screens/workshop/workshop_info_tab.dart';
 import 'package:workshops_mobile/screens/workshop/chat_screen.dart';
@@ -97,7 +98,9 @@ class _ProfileTabState extends State<ProfileTab> {
                 )));
               }),
               const SizedBox(height: 12),
-              _buildOptionCard(LucideIcons.calendar_clock, 'GESTIÓN DE CITAS', 'Calendario completo de reservas', const Color(0xFF3B82F6), () {}),
+              _buildOptionCard(LucideIcons.calendar_clock, 'GESTIÓN DE CITAS', 'Calendario completo de reservas', const Color(0xFF3B82F6), () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const AppointmentsScreen()));
+              }),
               const SizedBox(height: 12),
               _buildOptionCard(LucideIcons.layout_grid, 'MIS PUBLICACIONES', 'Gestión del marketplace', const Color(0xFF8B5CF6), () {
                  Navigator.push(context, MaterialPageRoute(builder: (_) => const ForumScreen()));

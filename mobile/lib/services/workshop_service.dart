@@ -212,4 +212,18 @@ class WorkshopService {
       return [];
     }
   }
+
+  Future<List<dynamic>> getAppointments() async {
+    try {
+      final response = await _api.get('/appointment');
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        return decoded['body']?['data'] ?? [];
+      }
+      return [];
+    } catch (e) {
+      print('Error cargando citas: $e');
+      return [];
+    }
+  }
 }
