@@ -3,6 +3,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workshops_mobile/screens/workshop/finance_tab.dart';
+import 'package:workshops_mobile/screens/workshop/workshop_info_tab.dart';
 import 'package:workshops_mobile/screens/workshop/chat_screen.dart';
 import 'package:workshops_mobile/screens/workshop/forum_screen.dart';
 import 'package:workshops_mobile/services/auth_service.dart';
@@ -88,11 +90,18 @@ class _ProfileTabState extends State<ProfileTab> {
 
               _buildSectionHeader('ADMINISTRACIÓN CENTRAL'),
               const SizedBox(height: 16),
-              _buildOptionCard(LucideIcons.trending_up, 'FINANZAS', 'Balance, ingresos y egresos', const Color(0xFF10B981), () {}),
+              _buildOptionCard(LucideIcons.trending_up, 'FINANZAS', 'Balance, ingresos y egresos', const Color(0xFF10B981), () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => Scaffold(
+                  appBar: AppBar(title: Text('FINANZAS', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: 1))),
+                  body: const FinanceTab(),
+                )));
+              }),
               const SizedBox(height: 12),
               _buildOptionCard(LucideIcons.calendar_clock, 'GESTIÓN DE CITAS', 'Calendario completo de reservas', const Color(0xFF3B82F6), () {}),
               const SizedBox(height: 12),
-              _buildOptionCard(LucideIcons.layout_grid, 'MIS PUBLICACIONES', 'Gestión del marketplace', const Color(0xFF8B5CF6), () {}),
+              _buildOptionCard(LucideIcons.layout_grid, 'MIS PUBLICACIONES', 'Gestión del marketplace', const Color(0xFF8B5CF6), () {
+                 Navigator.push(context, MaterialPageRoute(builder: (_) => const ForumScreen()));
+              }),
 
               const SizedBox(height: 40),
               _buildSectionHeader('COMUNICACIÓN'),
@@ -102,7 +111,9 @@ class _ProfileTabState extends State<ProfileTab> {
               const SizedBox(height: 40),
               _buildSectionHeader('CUENTA'),
               const SizedBox(height: 16),
-              _buildOptionCard(LucideIcons.shield_check, 'PERFIL (DATOS DE ACCESO)', 'Seguridad y credenciales', const Color(0xFF64748B), () {}),
+              _buildOptionCard(LucideIcons.shield_check, 'PERFIL (FICHA TALLER)', 'Información pública y contacto', const Color(0xFF64748B), () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const WorkshopInfoTab()));
+              }),
               const SizedBox(height: 12),
               _buildOptionCard(LucideIcons.log_out, 'CERRAR SESIÓN', 'Finalizar ciclo de trabajo', Colors.redAccent, () async {
                 await auth.logout();
