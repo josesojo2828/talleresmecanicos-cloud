@@ -205,8 +205,8 @@ export function FormGenerator({ structure, defaultValues, isUpdate, onSubmit, on
                                                     ? formValues[field.remote.dependsOn] 
                                                     : (field.remote?.slug === 'VEHICLE' 
                                                         ? user?.id 
-                                                        : (['PART_CATEGORY', 'PART', 'WORKSHOP_CATEGORY'].includes(field.remote?.slug || "") 
-                                                            ? user?.workshop?.id 
+                                                        : (['PART_CATEGORY', 'PART', 'WORKSHOP_CATEGORY', 'WORKSHOP_CLIENT'].includes(field.remote?.slug || "") 
+                                                            ? (user as any)?.workshop?.id 
                                                             : undefined))
                                                 }
                                             />

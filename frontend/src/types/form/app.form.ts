@@ -125,26 +125,15 @@ export const WorkForm: FormStructure = {
     title: 'headers.work',
     fields: [
         { name: 'title', label: 'headers.title', type: 'text', validation: { required: true } },
-        { name: 'description', label: 'headers.description', type: 'textarea' },
-        { name: 'images', label: 'headers.images', type: 'image', multiple: true, validation: { max: 8 } },
-        { name: 'clientName', label: 'headers.name', type: 'text', gridCols: 2 },
-        { name: 'clientPhone', label: 'headers.phone', type: 'text', gridCols: 2 },
-        { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text', gridCols: 2 },
-        { name: 'laborPrice', label: 'headers.price_labor', type: 'number', gridCols: 1 },
         {
-            name: 'currency',
-            label: 'currency.label',
-            type: 'select',
-            options: [
-                { label: 'currency.usd', value: 'USD' },
-                { label: 'currency.cop', value: 'COP' },
-                { label: 'currency.ars', value: 'ARS' },
-                { label: 'currency.mxn', value: 'MXN' },
-                { label: 'currency.jpy', value: 'JPY' }
-            ],
-            defaultValue: 'USD',
-            gridCols: 1
+            name: 'workshopClientId',
+            label: 'headers.client',
+            type: 'autocomplete',
+            remote: { slug: 'WORKSHOP_CLIENT' },
+            placeholder: 'Selecciona un cliente o deja vacío para manual'
         },
+        { name: 'clientName', label: 'headers.name_manual', type: 'text', placeholder: 'Nombre del cliente (si no está registrado)' },
+        { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text' },
         { 
             name: 'status', 
             label: 'headers.status', 

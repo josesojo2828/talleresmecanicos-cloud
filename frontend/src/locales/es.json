@@ -291,6 +291,7 @@
     },
     "headers": {
         "name": "Nombre",
+        "name_manual": "Nombre (Manual)",
         "sku": "SKU / Código",
         "price": "Precio",
         "quantity": "Cantidad",
