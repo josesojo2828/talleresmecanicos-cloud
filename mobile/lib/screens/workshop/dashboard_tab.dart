@@ -10,6 +10,7 @@ import 'package:workshops_mobile/widgets/kinetic_chart.dart';
 import 'package:workshops_mobile/widgets/kinetic_button.dart';
 import 'package:workshops_mobile/screens/workshop/create_work_order_screen.dart';
 import 'package:workshops_mobile/screens/workshop/job_detail_screen.dart';
+import 'package:workshops_mobile/screens/workshop/create_appointment_screen.dart';
 
 class DashboardTab extends StatefulWidget {
   const DashboardTab({super.key});
@@ -111,12 +112,22 @@ class _DashboardTabState extends State<DashboardTab> {
                 ),
                 const SizedBox(height: 32),
                 
-                // Botón Nueva Orden (Igual que el Web)
+                // Botones de Acción (Igual que el Web)
                 FadeInUp(
-                  child: KineticButton(
-                    label: '+ NUEVA ORDEN DE TRABAJO',
-                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CreateWorkOrderScreen())).then((_) => _loadAll()),
-                    color: const Color(0xFF10B981),
+                  child: Column(
+                    children: [
+                      KineticButton(
+                        label: '+ NUEVA ORDEN DE TRABAJO',
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CreateWorkOrderScreen())).then((_) => _loadAll()),
+                        color: const Color(0xFF10B981),
+                      ),
+                      const SizedBox(height: 12),
+                      KineticButton(
+                        label: '+ AGENDAR CITA / RESERVA',
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const WorkshopCreateAppointmentScreen())).then((_) => _loadAll()),
+                        color: const Color(0xFF3B82F6),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 32),
