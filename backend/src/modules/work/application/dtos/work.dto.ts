@@ -3,6 +3,7 @@ import { WorkStatus } from "@prisma/client";
 export interface ICreateWorkDto {
     workshopId: string;
     clientId?: string;
+    workshopClientId?: string;
     title: string;
     description?: string;
     clientName?: string;
@@ -20,6 +21,7 @@ export interface IUpdateWorkDto {
     clientName?: string;
     clientPhone?: string;
     vehicleLicensePlate?: string;
+    workshopClientId?: string;
     images?: string[];
     laborPrice?: number;
     currency?: string;

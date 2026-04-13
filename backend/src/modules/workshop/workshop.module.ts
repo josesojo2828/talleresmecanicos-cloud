@@ -8,17 +8,20 @@ import { WorkshopCategoryCrudController } from "./infrastructure/controllers/wor
 import { PublicationCrudController } from "./infrastructure/controllers/publication.crud";
 import { FinanceController } from "./infrastructure/controllers/finance.controller";
 import { PublicWorkshopController } from "./infrastructure/controllers/public-workshop.controller";
+import { WorkshopClientController } from "./infrastructure/controllers/workshop-client.controller";
 
 // Use Cases
 import { WorkshopUCase } from "./application/use-cases/workshop/workshop.ucase";
 import { WorkshopCategoryUCase } from "./application/use-cases/workshop-category/workshop-category.ucase";
 import { PublicationUCase } from "./application/use-cases/publication/publication.ucase";
 import { FinanceUCase } from "./application/use-cases/finance/finance.ucase";
+import { WorkshopClientUCase } from "./application/use-cases/workshop-client.ucase";
 
 // Persistence
 import WorkshopPersistence from "./infrastructure/persistence/workshop/persistence";
 import WorkshopCategoryPersistence from "./infrastructure/persistence/workshop-category/persistence";
 import PublicationPersistence from "./infrastructure/persistence/publication/persistence";
+import WorkshopClientPersistence from "./infrastructure/persistence/workshop-client.persistence";
 
 @Module({
     imports: [],
@@ -29,6 +32,7 @@ import PublicationPersistence from "./infrastructure/persistence/publication/per
         PublicationCrudController,
         FinanceController,
         PublicWorkshopController,
+        WorkshopClientController,
     ],
     providers: [
         PrismaService,
@@ -45,6 +49,10 @@ import PublicationPersistence from "./infrastructure/persistence/publication/per
         PublicationUCase,
         PublicationPersistence,
         FinanceUCase,
+
+        // Workshop Client
+        WorkshopClientUCase,
+        WorkshopClientPersistence,
     ],
     exports: [
         WorkshopPersistence,

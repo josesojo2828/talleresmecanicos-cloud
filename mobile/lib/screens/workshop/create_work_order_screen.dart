@@ -20,6 +20,7 @@ class _CreateWorkOrderScreenState extends State<CreateWorkOrderScreen> {
   
   String _currency = 'USD';
   String _status = 'OPEN';
+  String? _selectedWorkshopClientId;
   
   final _salesService = SalesService();
   bool _isLoading = false;
@@ -48,6 +49,7 @@ class _CreateWorkOrderScreenState extends State<CreateWorkOrderScreen> {
       'title': title,
       'client_name': clientName,
       'client_phone': _clientPhoneController.text.trim(),
+      'workshop_client_id': _selectedWorkshopClientId,
       'car_info': _plateController.text.trim(), // Lo guardamos en car_info para compatibilidad con lista vieja
       'labor_price': labor,
       'currency': _currency,
@@ -63,6 +65,12 @@ class _CreateWorkOrderScreenState extends State<CreateWorkOrderScreen> {
         const SnackBar(content: Text('Orden guardada localmente - Sincronizando'), backgroundColor: Color(0xFF10B981)),
       );
     }
+  }
+
+  Future<List<Map<String, dynamic>>> _searchClients(String query) async {
+    if (query.isEmpty) return [];
+    // Assuming getClients exists in SalesService
+    return await _salesService.getClients(query);
   }
 
   @override
@@ -82,7 +90,75 @@ class _CreateWorkOrderScreenState extends State<CreateWorkOrderScreen> {
             const SizedBox(height: 24),
             Row(
               children: [
-                Expanded(child: FadeInLeft(delay: const Duration(milliseconds: 100), child: _buildField('CLIENTE', LucideIcons.user, _clientNameController, 'Nombre'))),
+                Expanded(
+                  child: FadeInLeft(
+                    delay: const Duration(milliseconds: 100), 
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('CLIENTE', style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 2)),
+                        const SizedBox(height: 12),
+                        Autocomplete<Map<String, dynamic>>(
+                          displayStringForOption: (option) => option['first_name'] ?? '',
+                          optionsBuilder: (textEditingValue) => _searchClients(textEditingValue.text),
+                          onSelected: (option) {
+                            setState(() {
+                              _clientNameController.text = option['first_name'] ?? '';
+                              _clientPhoneController.text = option['phone'] ?? '';
+                              _selectedWorkshopClientId = option['id'];
+                            });
+                          },
+                          fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+                            // Sincronizar controllador manual con el de autocomplete si es necesario
+                            // Pero usaremos el del autocomplete como el principal para el nombre
+                            return TextField(
+                              controller: controller,
+                              focusNode: focusNode,
+                              onChanged: (v) {
+                                _clientNameController.text = v;
+                                _selectedWorkshopClientId = null; // Si escribe, reseteamos el ID
+                              },
+                              style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(LucideIcons.user, size: 20, color: Color(0xFF64748B)),
+                                hintText: 'Nombre',
+                                hintStyle: GoogleFonts.outfit(color: Colors.grey.shade400, fontSize: 13),
+                                filled: true, fillColor: const Color(0xFFF8FAFC),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
+                              ),
+                            );
+                          },
+                          optionsViewBuilder: (context, onSelected, options) {
+                            return Align(
+                              alignment: Alignment.topLeft,
+                              child: Material(
+                                elevation: 4,
+                                borderRadius: BorderRadius.circular(20),
+                                child: Container(
+                                  width: 300,
+                                  constraints: const BoxConstraints(maxHeight: 200),
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    itemCount: options.length,
+                                    itemBuilder: (context, index) {
+                                      final option = options.elementAt(index);
+                                      return ListTile(
+                                        title: Text(option['first_name'], style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+                                        subtitle: Text(option['phone'] ?? '', style: GoogleFonts.outfit(fontSize: 12)),
+                                        onTap: () => onSelected(option),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(width: 16),
                 Expanded(child: FadeInRight(delay: const Duration(milliseconds: 100), child: _buildField('TELÉFONO', LucideIcons.phone, _clientPhoneController, 'Número'))),
               ],

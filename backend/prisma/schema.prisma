@@ -34,6 +34,7 @@ model User {
   supportAssignments SupportAssignment[]
   country            Country?            @relation("UserCountryPreference", fields: [countryId], references: [id])
   works              Work[]
+  workshopClients    WorkshopClient[]
   workshop           Workshop?
 
   @@map("users")
@@ -203,6 +204,7 @@ model Workshop {
   parts              Part[]
   publications       Publication[]
   works              Work[]
+  workshopClients    WorkshopClient[]
   city               City                 @relation(fields: [cityId], references: [id])
   country            Country              @relation(fields: [countryId], references: [id])
   user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -345,13 +347,35 @@ model Work {
   laborPrice          Float?     @default(0) @map("labor_price")
   currency            String?    @default("USD")
   partsUsed           WorkPart[]
+  workshopClientId    String?    @map("workshop_client_id")
+  workshopClient      WorkshopClient? @relation(fields: [workshopClientId], references: [id])
   client              User?      @relation(fields: [clientId], references: [id])
   workshop            Workshop   @relation(fields: [workshopId], references: [id], onDelete: Cascade)
 
   @@index([workshopId])
   @@index([clientId])
+  @@index([workshopClientId])
   @@index([publicId])
   @@map("works")
+}
+
+model WorkshopClient {
+  id         String   @id @default(uuid())
+  name       String
+  phone      String?
+  email      String?
+  workshopId String   @map("workshop_id")
+  userId     String?  @map("user_id") // Opcional: si el cliente se registra
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  workshop Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  user     User?    @relation(fields: [userId], references: [id])
+  works    Work[]
+
+  @@index([workshopId])
+  @@index([userId])
+  @@map("workshop_clients")
 }
 
 model PartCategory {

@@ -10,6 +10,7 @@ export type IWorkIncludeType = Prisma.WorkInclude;
 export const IDefaultWorkInclude: IWorkIncludeType = {
     workshop: true,
     client: true,
+    workshopClient: true,
     partsUsed: {
         include: {
             part: {

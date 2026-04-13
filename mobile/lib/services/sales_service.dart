@@ -24,5 +24,13 @@ class SalesService {
     return await database.query('works', orderBy: 'created_at DESC');
   }
 
-  // Podemos agregar lógica de "sync single order" si vuelve la red al instante
+  Future<List<Map<String, dynamic>>> getClients(String query) async {
+    final database = await _db.database;
+    return await database.query(
+      'clients', 
+      where: 'first_name LIKE ? OR phone LIKE ?', 
+      whereArgs: ['%$query%', '%$query%'],
+      limit: 5
+    );
+  }
 }

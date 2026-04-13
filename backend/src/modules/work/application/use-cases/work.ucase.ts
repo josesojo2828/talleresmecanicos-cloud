@@ -17,7 +17,7 @@ export class WorkUCase extends WorkModel {
     }
 
     async create(data: ICreateWorkDto) {
-        const { workshopId, clientId, title, description, images, clientName, clientPhone, vehicleLicensePlate, laborPrice, currency } = data;
+        const { workshopId, clientId, workshopClientId, title, description, images, clientName, clientPhone, vehicleLicensePlate, laborPrice, currency } = data;
 
         const body: any = {
             title,
@@ -36,6 +36,10 @@ export class WorkUCase extends WorkModel {
             body.client = { connect: { id: clientId } };
         }
 
+        if (workshopClientId) {
+            body.workshopClient = { connect: { id: workshopClientId } };
+        }
+
         return {
             message: 'success.create',
             data: await this.persistence.create(body)
@@ -45,7 +49,7 @@ export class WorkUCase extends WorkModel {
     async update(id: string, data: IUpdateWorkDto, user: any) {
         await this.findOne(id, user); // Permissions check
         
-        const { title, description, status, images, clientName, clientPhone, vehicleLicensePlate, laborPrice, currency } = data;
+        const { title, description, status, images, clientName, clientPhone, vehicleLicensePlate, laborPrice, currency, workshopClientId } = data;
         const body: any = {};
         
         if (title) body.title = title;
@@ -57,6 +61,9 @@ export class WorkUCase extends WorkModel {
         if (laborPrice !== undefined) body.laborPrice = Number(laborPrice);
         if (currency !== undefined) body.currency = currency;
         
+        if (workshopClientId) {
+            body.workshopClient = { connect: { id: workshopClientId } };
+        }
         if (images) {
             body.images = (images as any[]).filter(img => typeof img === 'string');
         }

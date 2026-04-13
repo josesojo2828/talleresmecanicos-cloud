@@ -28,8 +28,9 @@ class SyncService {
       try {
         final res = await _api.post('/work', {
           'title': work['title'] ?? 'Trabajo sin título',
-          'clientName': work['client_name'] ?? 'Cliente Público',
+          'clientName': work['client_name'],
           'clientPhone': work['client_phone'],
+          'workshopClientId': work['workshop_client_id'], // Nuevo campo
           'vehicleLicensePlate': work['car_info'], // Usamos car_info como patente
           'laborPrice': work['labor_price'],
           'currency': work['currency'] ?? 'USD',
@@ -86,6 +87,25 @@ class SyncService {
       } catch (e) {
         print('Sync settings failed: $e');
       }
+    }
+
+    // --- 4. Descargar Clientes (Workshop Clients) ---
+    try {
+      final res = await _api.get('/workshop-client');
+      if (res.statusCode == 200) {
+        final List clientsData = jsonDecode(res.body)['data'] ?? [];
+        for (var client in clientsData) {
+          await db.insert('clients', {
+            'id': client['id'],
+            'first_name': client['name'],
+            'phone': client['phone'],
+            'email': client['email'],
+            'sync_status': 1
+          }, conflictAlgorithm: ConflictAlgorithm.replace);
+        }
+      }
+    } catch (e) {
+      print('Download clients failed: $e');
     }
   }
 }

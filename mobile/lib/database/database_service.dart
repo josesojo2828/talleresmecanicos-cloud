@@ -16,14 +16,14 @@ class DatabaseService {
   }
 
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'workshop_v4_support.db');
+    String path = join(await getDatabasesPath(), 'workshop_v5_support.db');
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: (db, version) async {
         await db.execute('CREATE TABLE finance_cache (id TEXT PRIMARY KEY, data TEXT, last_updated TEXT)');
         await db.execute('CREATE TABLE inventory (id TEXT PRIMARY KEY, name TEXT, sku TEXT, price REAL, quantity INTEGER, category TEXT, currency TEXT, description TEXT, sync_status INTEGER DEFAULT 1)');
-        await db.execute('CREATE TABLE works (id TEXT PRIMARY KEY, client_id TEXT, title TEXT, car_info TEXT, client_name TEXT, client_phone TEXT, labor_price REAL, parts_price REAL, total_price REAL, currency TEXT, status TEXT, created_at TEXT, sync_status INTEGER DEFAULT 1)');
+        await db.execute('CREATE TABLE works (id TEXT PRIMARY KEY, client_id TEXT, workshop_client_id TEXT, title TEXT, car_info TEXT, client_name TEXT, client_phone TEXT, labor_price REAL, parts_price REAL, total_price REAL, currency TEXT, status TEXT, created_at TEXT, sync_status INTEGER DEFAULT 1)');
         await db.execute('CREATE TABLE clients (id TEXT PRIMARY KEY, first_name TEXT, last_name TEXT, phone TEXT, email TEXT, sync_status INTEGER DEFAULT 1)');
         await db.execute('CREATE TABLE workshop_settings (id TEXT PRIMARY KEY, name TEXT, slug TEXT, address TEXT, phone TEXT, logo_url TEXT, sync_status INTEGER DEFAULT 1)');
         await db.execute('CREATE TABLE support_stats_cache (id TEXT PRIMARY KEY, data TEXT, last_updated TEXT)');
@@ -39,9 +39,12 @@ class DatabaseService {
             await db.execute('ALTER TABLE inventory ADD COLUMN sku TEXT');
             await db.execute('ALTER TABLE inventory ADD COLUMN currency TEXT');
             await db.execute('ALTER TABLE inventory ADD COLUMN description TEXT');
-          } catch (e) {
-            print('Database upgrade error: $e');
-          }
+          } catch (e) {}
+        }
+        if (oldVersion < 3) {
+           try {
+             await db.execute('ALTER TABLE works ADD COLUMN workshop_client_id TEXT');
+           } catch (e) {}
         }
       },
     );
