@@ -94,17 +94,122 @@ class WorkshopService {
   // --- CRUD local pendiente de sincronización ---
   // Podemos implementar el guardado de órdenes offline acá...
 
-  Future<bool> createAppointment(String workshopId, DateTime dateTime, String description) async {
+  Future<bool> createAppointment(String workshopId, DateTime dateTime, String description, {String status = 'PENDING'}) async {
     try {
       final response = await _api.post('/appointment', {
         'workshopId': workshopId,
         'dateTime': dateTime.toIso8601String(),
         'description': description,
+        'status': status,
       });
       return response.statusCode == 201 || response.statusCode == 200;
     } catch (e) {
       print('Error creando cita: $e');
       return false;
+    }
+  }
+
+  Future<bool> createAppointmentStatus(DateTime dateTime, String description, String status) async {
+    try {
+      // El backend deduce el workshopId del token del usuario taller
+      final response = await _api.post('/appointment', {
+        'dateTime': dateTime.toIso8601String(),
+        'description': description,
+        'status': status,
+      });
+      return response.statusCode == 201 || response.statusCode == 200;
+    } catch (e) {
+      print('Error creando entrada de cita: $e');
+      return false;
+    }
+  }
+
+  // --- Módulo Gestión de Perfil de Taller ---
+
+  Future<Map<String, dynamic>?> getMyWorkshop() async {
+    try {
+      final response = await _api.get('/my-workshop');
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['body'];
+      }
+      return null;
+    } catch (e) {
+      print('Error obteniendo taller: $e');
+      return null;
+    }
+  }
+
+  Future<bool> updateWorkshop(Map<String, dynamic> data) async {
+    try {
+      final response = await _api.put('/my-workshop', data);
+      return response.statusCode == 200 || response.statusCode == 204;
+    } catch (e) {
+      print('Error actualizando taller: $e');
+      return false;
+    }
+  }
+
+  // --- Módulo Inventario / Partes ---
+
+  Future<List<dynamic>> getInventory() async {
+    try {
+      final response = await _api.get('/part');
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        // El backend de partes parece devolver { body: { data: [...] } }
+        return decoded['body']?['data'] ?? [];
+      }
+      return [];
+    } catch (e) {
+      print('Error cargando inventario: $e');
+      return [];
+    }
+  }
+
+  Future<Map<String, dynamic>?> getPartById(String id) async {
+    try {
+      final response = await _api.get('/part/$id');
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['body'];
+      }
+      return null;
+    } catch (e) {
+      print('Error cargando detalle de parte: $e');
+      return null;
+    }
+  }
+
+  Future<bool> createPart(Map<String, dynamic> data) async {
+    try {
+      final response = await _api.post('/part', data);
+      return response.statusCode == 201 || response.statusCode == 200;
+    } catch (e) {
+      print('Error creando parte: $e');
+      return false;
+    }
+  }
+
+  Future<bool> updatePart(String id, Map<String, dynamic> data) async {
+    try {
+      final response = await _api.put('/part/$id', data);
+      return response.statusCode == 200 || response.statusCode == 204;
+    } catch (e) {
+      print('Error actualizando parte: $e');
+      return false;
+    }
+  }
+
+  Future<List<dynamic>> getPartCategories() async {
+    try {
+      final response = await _api.get('/part/category/all');
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        return decoded['body']?['data'] ?? [];
+      }
+      return [];
+    } catch (e) {
+      print('Error cargando categorías: $e');
+      return [];
     }
   }
 }
