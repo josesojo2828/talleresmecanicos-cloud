@@ -31,6 +31,21 @@ class WorkshopService {
     return cacheData; // Devolvemos cache si no hay red o falló el fetch
   }
 
+  Future<Map<String, dynamic>?> getFullDashboardStats() async {
+    try {
+      print('########## API CALL START: /my-workshop/dashboard-stats');
+      final response = await _api.get('/my-workshop/dashboard-stats').timeout(const Duration(seconds: 10));
+      print('########## API RESPONSE STATUS: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['body'];
+      }
+      return null;
+    } catch (e) {
+      print('########## API ERROR/TIMEOUT: $e');
+      return null;
+    }
+  }
+
   // Módulo de Directorio Público
   Future<List<dynamic>> getWorkshops({String? country, String? city}) async {
     try {

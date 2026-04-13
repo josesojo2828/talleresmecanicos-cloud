@@ -19,36 +19,30 @@ class DatabaseService {
     String path = join(await getDatabasesPath(), 'workshop_v4_support.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: (db, version) async {
-        // --- Tablas Taller ---
         await db.execute('CREATE TABLE finance_cache (id TEXT PRIMARY KEY, data TEXT, last_updated TEXT)');
-        await db.execute('CREATE TABLE inventory (id TEXT PRIMARY KEY, name TEXT, price REAL, quantity INTEGER, category TEXT, sync_status INTEGER DEFAULT 1)');
-        await db.execute('CREATE TABLE works (id TEXT PRIMARY KEY, client_id TEXT, car_info TEXT, labor_price REAL, parts_price REAL, total_price REAL, status TEXT, created_at TEXT, sync_status INTEGER DEFAULT 1)');
+        await db.execute('CREATE TABLE inventory (id TEXT PRIMARY KEY, name TEXT, sku TEXT, price REAL, quantity INTEGER, category TEXT, currency TEXT, description TEXT, sync_status INTEGER DEFAULT 1)');
+        await db.execute('CREATE TABLE works (id TEXT PRIMARY KEY, client_id TEXT, title TEXT, car_info TEXT, client_name TEXT, client_phone TEXT, labor_price REAL, parts_price REAL, total_price REAL, currency TEXT, status TEXT, created_at TEXT, sync_status INTEGER DEFAULT 1)');
         await db.execute('CREATE TABLE clients (id TEXT PRIMARY KEY, first_name TEXT, last_name TEXT, phone TEXT, email TEXT, sync_status INTEGER DEFAULT 1)');
         await db.execute('CREATE TABLE workshop_settings (id TEXT PRIMARY KEY, name TEXT, slug TEXT, address TEXT, phone TEXT, logo_url TEXT, sync_status INTEGER DEFAULT 1)');
-        
-        // 🔹 MODULO SOPORTE (Blindado)
-        // Cache de Estadísticas Globales
-        await db.execute('''
-          CREATE TABLE support_stats_cache (
-            id TEXT PRIMARY KEY,
-            data TEXT,
-            last_updated TEXT
-          )
-        ''');
-
-        // Listado de Talleres para el Monitor
-        await db.execute('''
-          CREATE TABLE workshops_list (
-            id TEXT PRIMARY KEY,
-            name TEXT,
-            slug TEXT,
-            owner_name TEXT,
-            status TEXT,
-            is_active INTEGER DEFAULT 1
-          )
-        ''');
+        await db.execute('CREATE TABLE support_stats_cache (id TEXT PRIMARY KEY, data TEXT, last_updated TEXT)');
+        await db.execute('CREATE TABLE workshops_list (id TEXT PRIMARY KEY, name TEXT, slug TEXT, owner_name TEXT, status TEXT, is_active INTEGER DEFAULT 1)');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          try {
+            await db.execute('ALTER TABLE works ADD COLUMN title TEXT');
+            await db.execute('ALTER TABLE works ADD COLUMN client_name TEXT');
+            await db.execute('ALTER TABLE works ADD COLUMN client_phone TEXT');
+            await db.execute('ALTER TABLE works ADD COLUMN currency TEXT');
+            await db.execute('ALTER TABLE inventory ADD COLUMN sku TEXT');
+            await db.execute('ALTER TABLE inventory ADD COLUMN currency TEXT');
+            await db.execute('ALTER TABLE inventory ADD COLUMN description TEXT');
+          } catch (e) {
+            print('Database upgrade error: $e');
+          }
+        }
       },
     );
   }

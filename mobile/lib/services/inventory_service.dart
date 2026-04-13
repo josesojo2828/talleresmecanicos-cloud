@@ -37,6 +37,7 @@ class InventoryService {
   Future<void> addPartOffline(Map<String, dynamic> partData) async {
     final database = await _db.database;
     await database.insert('inventory', {
+      'id': DateTime.now().millisecondsSinceEpoch.toString(), // ID provisional local
       ...partData,
       'sync_status': 0 // 0: Pendiente de subir
     });

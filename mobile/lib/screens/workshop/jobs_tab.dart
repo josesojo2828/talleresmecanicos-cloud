@@ -3,6 +3,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:workshops_mobile/database/database_service.dart';
+import 'package:workshops_mobile/screens/workshop/create_work_order_screen.dart';
 import 'package:workshops_mobile/screens/workshop/job_detail_screen.dart';
 import 'package:workshops_mobile/widgets/kinetic_header.dart';
 import 'package:workshops_mobile/widgets/kinetic_search.dart';
@@ -29,7 +30,9 @@ class _JobsTabState extends State<JobsTab> {
   Future<void> _loadJobs() async {
     final db = await _db.database;
     final List<Map<String, dynamic>> maps = await db.query('works', orderBy: 'created_at DESC');
-    setState(() { _jobs = maps; _filteredJobs = maps; _isLoading = false; });
+    if (mounted) {
+      setState(() { _jobs = maps; _filteredJobs = maps; _isLoading = false; });
+    }
   }
 
   void _filterJobs(String query) {
@@ -48,7 +51,17 @@ class _JobsTabState extends State<JobsTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FadeInDown(child: KineticHeader(title: 'Panel de Control', subtitle: 'Órdenes Activas', trailing: IconButton.filled(onPressed: () {}, icon: const Icon(LucideIcons.plus), style: IconButton.styleFrom(backgroundColor: const Color(0xFF0F172A))))),
+              FadeInDown(
+                child: KineticHeader(
+                  title: 'Panel de Control', 
+                  subtitle: 'Órdenes Activas', 
+                  trailing: IconButton.filled(
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CreateWorkOrderScreen())).then((_) => _loadJobs()), 
+                    icon: const Icon(LucideIcons.plus), 
+                    style: IconButton.styleFrom(backgroundColor: const Color(0xFF0F172A))
+                  )
+                )
+              ),
               const SizedBox(height: 24),
               KineticSearch(onChanged: _filterJobs, hint: 'Buscar bólido por nombre o cliente...'),
               const SizedBox(height: 16),

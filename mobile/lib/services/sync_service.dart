@@ -22,24 +22,56 @@ class SyncService {
   Future<void> _syncPendingData() async {
     final db = await _db.database;
     
+    // --- 1. Sincronizar Trabajos (Works) ---
     final List<Map<String, dynamic>> pendingWorks = await db.query('works', where: 'sync_status = ?', whereArgs: [0]);
     for (var work in pendingWorks) {
       try {
-        final res = await _api.post('/job', {
-          'carInfo': work['car_info'],
+        final res = await _api.post('/work', {
+          'title': work['title'] ?? 'Trabajo sin título',
+          'clientName': work['client_name'] ?? 'Cliente Público',
+          'clientPhone': work['client_phone'],
+          'vehicleLicensePlate': work['car_info'], // Usamos car_info como patente
           'laborPrice': work['labor_price'],
-          'partsPrice': work['parts_price'],
-          'totalPrice': work['total_price'],
-          'status': work['status'],
+          'currency': work['currency'] ?? 'USD',
+          'status': work['status'] ?? 'OPEN',
+          'description': 'Generado desde Kinetic Mobile App',
         });
-        if (res.statusCode == 201) {
+        
+        if (res.statusCode == 201 || res.statusCode == 200) {
           await db.update('works', {'sync_status': 1}, where: 'id = ?', whereArgs: [work['id']]);
+          print('########## SYNC SUCCESS: Work ${work['id']}');
+        } else {
+          print('########## SYNC FAILED (Work): ${res.statusCode} - ${res.body}');
         }
       } catch (e) {
         print('Sync work failed: $e');
       }
     }
 
+    // --- 2. Sincronizar Repuestos (Inventory) ---
+    final List<Map<String, dynamic>> pendingParts = await db.query('inventory', where: 'sync_status = ?', whereArgs: [0]);
+    for (var part in pendingParts) {
+      try {
+        final res = await _api.post('/part', {
+          'name': part['name'],
+          'sku': part['sku'],
+          'price': part['price'],
+          'quantity': part['quantity'],
+          'currency': part['currency'] ?? 'USD',
+          'description': part['description'],
+        });
+        if (res.statusCode == 201 || res.statusCode == 200) {
+          await db.update('inventory', {'sync_status': 1}, where: 'id = ?', whereArgs: [part['id']]);
+          print('########## SYNC SUCCESS: Part ${part['id']}');
+        } else {
+          print('########## SYNC FAILED (Part): ${res.statusCode} - ${res.body}');
+        }
+      } catch (e) {
+        print('Sync part failed: $e');
+      }
+    }
+
+    // --- 3. Perfil del Taller (Workshop Settings) ---
     final List<Map<String, dynamic>> pendingSettings = await db.query('workshop_settings', where: 'sync_status = ?', whereArgs: [0]);
     for (var setting in pendingSettings) {
       try {

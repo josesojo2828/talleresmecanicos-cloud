@@ -155,16 +155,21 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 ),
-                onPressed: (selectedCountry != null && selectedCity != null)
+                onPressed: (selectedCountry != null)
                     ? () async {
                         final prefs = await SharedPreferences.getInstance();
                         await prefs.setString('user_country', selectedCountry!);
-                        await prefs.setString('user_city', selectedCity!);
+                        if (selectedCity != null) {
+                          await prefs.setString('user_city', selectedCity!);
+                        } else {
+                          await prefs.remove('user_city');
+                        }
+                        
                         setState(() {
                           _country = selectedCountry;
                           _city = selectedCity;
                         });
-                        Navigator.pop(context);
+                        if (mounted) Navigator.pop(context);
                         _fetchWorkshops();
                       }
                     : null,
@@ -214,10 +219,111 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
     );
   }
 
+  void _showQuickLinksMenu() async {
+    final role = await _auth.getUserRole();
+    
+    if (!mounted) return;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        padding: const EdgeInsets.fromLTRB(32, 12, 32, 48),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(48)),
+          boxShadow: [
+            BoxShadow(color: Colors.black26, blurRadius: 40, spreadRadius: 0)
+          ]
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(10))),
+            const SizedBox(height: 32),
+            Text('ACCESO RÁPIDO', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, color: const Color(0xFF0F172A), letterSpacing: 4, fontSize: 10)),
+            const SizedBox(height: 40),
+            GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 2,
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 20,
+              childAspectRatio: 1.2,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                _buildMenuButton(LucideIcons.layout_list, 'DIRECTORIO', () => Navigator.pop(context), color: const Color(0xFF10B981)),
+                _buildMenuButton(LucideIcons.map, 'MAPA', () {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Mapa en desarrollo...')));
+                }, color: const Color(0xFF3B82F6)),
+                if (!_isLoggedIn) ...[
+                  _buildMenuButton(LucideIcons.log_in, 'LOGIN', () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/login').then((_) => _initData());
+                  }, color: const Color(0xFF0F172A)),
+                  _buildMenuButton(LucideIcons.user_plus, 'REGISTRO', () {
+                     Navigator.pop(context);
+                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Registro en desarrollo...')));
+                  }, color: const Color(0xFFF59E0B)),
+                ] else ...[
+                  _buildMenuButton(LucideIcons.layout_dashboard, 'DASHBOARD', () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support');
+                  }, color: const Color(0xFF0F172A)),
+                  _buildMenuButton(LucideIcons.log_out, 'CERRAR SESIÓN', () async {
+                    Navigator.pop(context);
+                    await _auth.logout();
+                    _initData();
+                  }, color: const Color(0xFFF43F5E)),
+                ],
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuButton(IconData icon, String label, VoidCallback onTap, {required Color color}) {
+    return Material(
+      color: color.withOpacity(0.05),
+      borderRadius: BorderRadius.circular(24),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: color.withOpacity(0.1)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: color, size: 28),
+              const SizedBox(height: 12),
+              Text(label, style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 13, color: color)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
+      floatingActionButton: FadeInRight(
+        child: FloatingActionButton.extended(
+          onPressed: _showQuickLinksMenu,
+          backgroundColor: const Color(0xFF0F172A),
+          elevation: 4,
+          icon: const Icon(LucideIcons.compass, color: Colors.white, size: 20),
+          label: Text('NAVEGAR', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, color: Colors.white, fontSize: 13, letterSpacing: 1)),
+        ),
+      ),
       body: RefreshIndicator(
         onRefresh: _fetchWorkshops,
         color: const Color(0xFF10B981),
@@ -230,7 +336,6 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
           ],
         ),
       ),
-      floatingActionButton: _buildFloatingButtons(),
     );
   }
 
@@ -422,54 +527,5 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
     );
   }
 
-  Widget _buildFloatingButtons() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        FloatingActionButton.small(
-          heroTag: 'map',
-          elevation: 2,
-          backgroundColor: Colors.white,
-          child: const Icon(LucideIcons.map, color: Color(0xFF0F172A)),
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Mapa en tiempo real (Próximamente)')),
-            );
-          },
-        ),
-        const SizedBox(height: 8),
-        FloatingActionButton.small(
-          heroTag: 'forum',
-          elevation: 2,
-          backgroundColor: Colors.white,
-          child: const Icon(LucideIcons.message_square, color: Color(0xFF0F172A)),
-          onPressed: () => Navigator.pushNamed(context, '/dashboard/workshop'),
-        ),
-        const SizedBox(height: 8),
-        FloatingActionButton.extended(
-          heroTag: 'auth',
-          elevation: 4,
-          backgroundColor: const Color(0xFF0F172A),
-          icon: Icon(_isLoggedIn ? LucideIcons.layout_dashboard : LucideIcons.user, color: Colors.white),
-          label: Text(
-            _isLoggedIn ? 'DASHBOARD' : 'CUENTA', 
-            style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: Colors.white)
-          ),
-          onPressed: () async {
-            if (_isLoggedIn) {
-              final role = await _auth.getRole();
-              if (!mounted) return;
-              if (role == 'ADMIN' || role == 'SUPPORT') {
-                Navigator.pushNamed(context, '/dashboard/support');
-              } else {
-                Navigator.pushNamed(context, '/dashboard/workshop');
-              }
-            } else {
-              Navigator.pushNamed(context, '/login');
-            }
-          },
-        ),
-      ],
-    );
-  }
+
 }

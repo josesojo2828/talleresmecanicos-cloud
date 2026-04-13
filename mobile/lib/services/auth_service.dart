@@ -70,6 +70,18 @@ class AuthService {
     }
   }
 
+  Future<Map<String, dynamic>?> getUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final fullName = prefs.getString('user_name');
+    if (fullName == null) return null;
+    
+    return {
+      'firstName': fullName.split(' ').first,
+      'fullName': fullName,
+      'role': prefs.getString('user_role'),
+    };
+  }
+
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();

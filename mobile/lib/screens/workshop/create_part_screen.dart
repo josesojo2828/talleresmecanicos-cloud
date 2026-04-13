@@ -13,8 +13,14 @@ class CreatePartScreen extends StatefulWidget {
 
 class _CreatePartScreenState extends State<CreatePartScreen> {
   final _nameController = TextEditingController();
-  final _priceController = TextEditingController();
-  final _quantityController = TextEditingController();
+  final _skuController = TextEditingController();
+  final _priceController = TextEditingController(text: '0');
+  final _quantityController = TextEditingController(text: '1');
+  final _descController = TextEditingController();
+  
+  String _currency = 'USD';
+  final List<String> _currencies = ['USD', 'COP', 'ARS', 'MXN', 'JPY'];
+  
   final _inventoryService = InventoryService();
   bool _isLoading = false;
 
@@ -31,18 +37,20 @@ class _CreatePartScreenState extends State<CreatePartScreen> {
     setState(() => _isLoading = true);
     
     await _inventoryService.addPartOffline({
-      'id': DateTime.now().millisecondsSinceEpoch.toString(), // ID provisional local
       'name': name,
+      'sku': _skuController.text.trim(),
       'price': price,
       'quantity': quantity,
-      'category': 'GENERAL',
+      'currency': _currency,
+      'description': _descController.text.trim(),
+      'category': 'REPUESTOS',
     });
 
     if (mounted) {
       setState(() => _isLoading = false);
-      Navigator.pop(context, true); // Volvemos avisando que hubo cambio
+      Navigator.pop(context, true);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Stock agregado localmente - Sincronizando...'), backgroundColor: Color(0xFF3B82F6)),
+        const SnackBar(content: Text('Stock registrado - Sincronizando'), backgroundColor: Color(0xFF3B82F6)),
       );
     }
   }
@@ -53,29 +61,33 @@ class _CreatePartScreenState extends State<CreatePartScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('ALTA DE STOCK', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16, letterSpacing: 2)),
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF0F172A),
+        elevation: 0, backgroundColor: Colors.white, foregroundColor: const Color(0xFF0F172A),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FadeInDown(child: _buildField('DETALLE DEL REPUESTO', LucideIcons.package, _nameController, 'Nombre, Marca o Ref')),
-            const SizedBox(height: 32),
-            _buildSectionTitle('VALORES DE STOCK'),
+            FadeInDown(child: _buildField('NOMBRE DEL REPUESTO', LucideIcons.package, _nameController, 'Ej: Pastillas de Freno')),
+            const SizedBox(height: 24),
+            FadeInDown(delay: const Duration(milliseconds: 100), child: _buildField('SKU / CÓDIGO', LucideIcons.barcode, _skuController, 'Referencia técnica')),
+            const SizedBox(height: 48),
+            _buildSectionTitle('VALORES Y CANTIDAD'),
             const SizedBox(height: 24),
             Row(
               children: [
-                Expanded(child: FadeInLeft(delay: const Duration(milliseconds: 100), child: _buildNumericField('PRECIO VENTA', LucideIcons.dollar_sign, _priceController))),
-                const SizedBox(width: 16),
-                Expanded(child: FadeInRight(delay: const Duration(milliseconds: 100), child: _buildNumericField('CANTIDAD', LucideIcons.layers, _quantityController))),
+                Expanded(flex: 2, child: FadeInLeft(delay: const Duration(milliseconds: 200), child: _buildNumericField('PRECIO UNIT.', LucideIcons.dollar_sign, _priceController))),
+                const SizedBox(width: 12),
+                Expanded(flex: 1, child: FadeInRight(delay: const Duration(milliseconds: 200), child: _buildDropdown('MONEDA', _currencies, _currency, (v) => setState(() => _currency = v!)))),
               ],
             ),
+            const SizedBox(height: 24),
+            FadeInUp(delay: const Duration(milliseconds: 300), child: _buildNumericField('STOCK DISPONIBLE', LucideIcons.layers, _quantityController)),
+            const SizedBox(height: 24),
+            FadeInUp(delay: const Duration(milliseconds: 400), child: _buildField('DESCRIPCIÓN', LucideIcons.align_left, _descController, 'Detalles adicionales...', maxLines: 3)),
             const SizedBox(height: 64),
             FadeInUp(
-              delay: const Duration(milliseconds: 200),
+              delay: const Duration(milliseconds: 500),
               child: SizedBox(
                 width: double.infinity,
                 height: 64,
@@ -97,12 +109,13 @@ class _CreatePartScreenState extends State<CreatePartScreen> {
     );
   }
 
-  Widget _buildField(String label, IconData icon, TextEditingController controller, String hint) {
+  Widget _buildField(String label, IconData icon, TextEditingController controller, String hint, {int maxLines = 1}) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(label, style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 2)),
       const SizedBox(height: 12),
       TextField(
         controller: controller,
+        maxLines: maxLines,
         style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
         decoration: InputDecoration(
           prefixIcon: Icon(icon, size: 20, color: const Color(0xFF64748B)),
@@ -126,6 +139,27 @@ class _CreatePartScreenState extends State<CreatePartScreen> {
           prefixIcon: Icon(icon, size: 18),
           filled: true, fillColor: const Color(0xFFF8FAFC),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
+        ),
+      ),
+    ]);
+  }
+
+  Widget _buildDropdown(String label, List<String> options, String value, Function(String?) onChanged) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(label, style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 1)),
+      const SizedBox(height: 12),
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(color: const Color(0xFFF8FAFC), borderRadius: BorderRadius.circular(20)),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            value: value,
+            isExpanded: true,
+            icon: const Icon(LucideIcons.chevron_down, size: 16),
+            style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: const Color(0xFF0F172A)),
+            items: options.map((opt) => DropdownMenuItem(value: opt, child: Text(opt))).toList(),
+            onChanged: onChanged,
+          ),
         ),
       ),
     ]);
