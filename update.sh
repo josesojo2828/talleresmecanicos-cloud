@@ -19,13 +19,15 @@ docker compose --profile prod build --no-cache
 echo "🚀 Levantando servicios..."
 docker compose --profile prod up -d
 
-# 4. Actualización de Base de Datos (Opcional)
-echo "🗄️ ¿Deseas aplicar las migraciones de la base de datos ahora mismo? (s/n)"
+# 4. Actualización de Base de Datos
+echo "🗄️ ¿Cómo deseas actualizar la base de datos? (m: migration / s: sync-db-push / n: nada)"
 read -r response
-if [[ "$response" =~ ^([sS][yY]|[sS])$ ]]; then
+if [[ "$response" =~ ^([mM])$ ]]; then
     echo "🔄 Ejecutando prisma migrate deploy..."
-    # Usamos el nombre del contenedor de producción
     docker compose --profile prod exec backend npx prisma migrate deploy
+elif [[ "$response" =~ ^([sS])$ ]]; then
+    echo "🔄 Ejecutando prisma db push (Sincronización directa)..."
+    docker compose --profile prod exec backend npx prisma db push --accept-data-loss
 fi
 
 # 5. Limpiar imágenes huérfanas
