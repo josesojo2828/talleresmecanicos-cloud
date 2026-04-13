@@ -84,11 +84,11 @@ export const WorkshopDashboard = ({ user, workshopStats }: WorkshopDashboardProp
                                 <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.25em] mt-2 italic">Flujo de trabajos de los últimos 30 días</p>
                             </div>
                             <div className="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-xs font-black italic shadow-sm">
-                                +{timeline.reduce((acc: number, curr: any) => acc + curr.count, 0)} Mes
+                                +{timeline?.reduce((acc: number, curr: any) => acc + curr.count, 0) || 0} Mes
                             </div>
                         </div>
                         <div className="flex-grow min-h-[200px]">
-                            <DashboardChart data={timeline} />
+                            <DashboardChart data={timeline || []} />
                         </div>
                         <div className="mt-8 pt-6 border-t border-slate-50">
                             <Link href="/dashboard/work" className="flex items-center justify-between group/link">

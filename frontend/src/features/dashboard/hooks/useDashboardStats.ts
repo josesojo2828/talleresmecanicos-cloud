@@ -29,7 +29,7 @@ export const useDashboardStats = () => {
         try {
             if (user.role === 'TALLER') {
                 const res = await apiClient.get('/my-workshop/dashboard-stats');
-                setWorkshopStats(res.data.body);
+                setWorkshopStats(res.data?.body || res.data || null);
             } else if (user.role === 'ADMIN' || user.role === 'SUPPORT') {
                 const res = await apiClient.get('/admin/dashboard/summary');
                 setAdminStats(res.data.body);

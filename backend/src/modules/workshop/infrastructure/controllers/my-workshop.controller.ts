@@ -11,7 +11,7 @@ import { StorageService } from "src/modules/storage/storage.service";
 
 @Controller('my-workshop')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(UserRole.TALLER)
+@Roles(UserRole.TALLER, UserRole.ADMIN, UserRole.SUPPORT)
 export class MyWorkshopController {
     constructor(
         private readonly useCase: WorkshopUCase,

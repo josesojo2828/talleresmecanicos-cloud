@@ -141,7 +141,22 @@ export class WorkshopUCase extends WorkshopModel {
 
     async getDashboardStats(user: any) {
         const workshop = await this.persistence.find({ userId: user.id });
-        if (!workshop) throw new ForbiddenException("No taller asociado");
+        if (!workshop) {
+            return {
+                workshop: null,
+                stats: {
+                    works: { total: 0, breakdown: {} },
+                    appointments: { total: 0, last: null },
+                    inventory: { total: 0 }
+                },
+                timeline: [],
+                recent: {
+                    appointments: [],
+                    works: [],
+                    publications: []
+                }
+            };
+        }
 
         const workshopId = workshop.id;
 
