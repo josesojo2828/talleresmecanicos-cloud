@@ -1,3 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:workshops_mobile/services/pdf_service.dart';
+
 class JobDetailScreen extends StatefulWidget {
   final Map<String, dynamic> job;
   const JobDetailScreen({super.key, required this.job});

@@ -92,10 +92,12 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                 const SizedBox(height: 16),
                 Text(
                   'Elige tu zona',
+                  textAlign: TextAlign.center,
                   style: GoogleFonts.outfit(color: const Color(0xFF0F172A), fontWeight: FontWeight.bold),
                 ),
                 Text(
                   'Para mostrarte talleres cercanos',
+                  textAlign: TextAlign.center,
                   style: GoogleFonts.outfit(color: Colors.grey, fontSize: 13),
                 ),
               ],
@@ -137,46 +139,53 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
               ],
             ),
             actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  setState(() {
-                    _country = null;
-                    _city = null;
-                  });
-                  _fetchWorkshops();
-                },
-                child: Text('SALTAR', style: GoogleFonts.outfit(color: Colors.grey)),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF10B981),
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ),
-                onPressed: (selectedCountry != null)
-                    ? () async {
-                        final prefs = await SharedPreferences.getInstance();
-                        await prefs.setString('user_country', selectedCountry!);
-                        if (selectedCity != null) {
-                          await prefs.setString('user_city', selectedCity!);
-                        } else {
-                          await prefs.remove('user_city');
-                        }
-                        
-                        setState(() {
-                          _country = selectedCountry;
-                          _city = selectedCity;
-                        });
-                        if (mounted) Navigator.pop(context);
-                        _fetchWorkshops();
-                      }
-                    : null,
-                child: Text('BUSCAR', style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 8,
+                runSpacing: 12,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        _country = null;
+                        _city = null;
+                      });
+                      _fetchWorkshops();
+                    },
+                    child: Text('SALTAR', style: GoogleFonts.outfit(color: Colors.grey)),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF10B981),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                    onPressed: (selectedCountry != null)
+                        ? () async {
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setString('user_country', selectedCountry!);
+                            if (selectedCity != null) {
+                              await prefs.setString('user_city', selectedCity!);
+                            } else {
+                              await prefs.remove('user_city');
+                            }
+                            
+                            setState(() {
+                              _country = selectedCountry;
+                              _city = selectedCity;
+                            });
+                            if (mounted) Navigator.pop(context);
+                            _fetchWorkshops();
+                          }
+                        : null,
+                    child: Text('BUSCAR', style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                ],
               ),
             ],
-            actionsAlignment: MainAxisAlignment.spaceBetween,
           );
         },
       ),
@@ -212,7 +221,11 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
       items: items.map((String item) {
         return DropdownMenuItem<String>(
           value: item,
-          child: Text(item),
+          child: Text(
+            item,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.outfit(fontSize: 14),
+          ),
         );
       }).toList(),
       onChanged: onChanged,

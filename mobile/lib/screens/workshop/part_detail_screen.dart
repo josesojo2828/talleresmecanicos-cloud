@@ -90,7 +90,7 @@ class _PartDetailScreenState extends State<PartDetailScreen> {
                 Text('INVENTARIO DE REPUESTOS', style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w900, color: const Color(0xFF10B981), letterSpacing: 0.5)),
               ],
             ),
-            Text('SKU: ${_part['sku'] ?? 'N/A'}', style: GoogleFonts.outfit(fontSize: 8, color: Colors.slate, fontWeight: FontWeight.bold)),
+            Text('SKU: ${_part['sku'] ?? 'N/A'}', style: GoogleFonts.outfit(fontSize: 8, color: const Color(0xFF64748B), fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -125,7 +125,7 @@ class _PartDetailScreenState extends State<PartDetailScreen> {
             Expanded(
               child: Column(
                 children: [
-                  _buildInsightCard('STOCK ACTUAL', '${qty.toInt()} UNIDADES', LucideIcons.bar_chart_3, Colors.white),
+                  _buildInsightCard('STOCK ACTUAL', '${qty.toInt()} UNIDADES', LucideIcons.trending_up, Colors.white),
                   const SizedBox(height: 16),
                   _buildInsightCard('PATRIMONIO EN ARTÍCULO', '\$${totalValue.toInt()}', LucideIcons.trending_up, Colors.white),
                 ],

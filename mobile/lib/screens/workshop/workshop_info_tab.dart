@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:workshops_mobile/database/database_service.dart';
+import 'package:workshops_mobile/services/workshop_service.dart';
 import 'package:workshops_mobile/widgets/kinetic_header.dart';
 import 'package:workshops_mobile/widgets/kinetic_input.dart';
 import 'package:workshops_mobile/widgets/kinetic_button.dart';
@@ -167,7 +167,7 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeading(LucideIcons.fingerprint, 'IDENTIDAD CORPORATIVA'),
+          _buildHeading(LucideIcons.contact_round, 'IDENTIDAD CORPORATIVA'),
           const SizedBox(height: 16),
           _buildCardForm([
             KineticInput(controller: _nameController, label: 'Nombre Comercial', icon: LucideIcons.building_2),

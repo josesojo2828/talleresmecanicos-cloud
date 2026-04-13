@@ -81,7 +81,10 @@ export class PartUCase extends PartModel {
         const parsedFilters = typeof filters === 'string' ? JSON.parse(filters) : (filters || {});
 
         if (user.role === UserRole.TALLER) {
-            parsedFilters.workshopId = user.workshop?.id;
+            if (!user.workshop?.id) {
+                throw new ForbiddenException("Debes configurar primero tu perfil de taller");
+            }
+            parsedFilters.workshopId = user.workshop.id;
         }
 
         const where = this.getWhere(parsedFilters, search);
@@ -121,7 +124,10 @@ export class PartUCase extends PartModel {
         const parsedFilters = typeof filters === 'string' ? JSON.parse(filters) : (filters || {});
 
         if (user.role === UserRole.TALLER) {
-            parsedFilters.workshopId = user.workshop?.id;
+            if (!user.workshop?.id) {
+                throw new ForbiddenException("Debes configurar primero tu perfil de taller");
+            }
+            parsedFilters.workshopId = user.workshop.id;
         }
 
         const where = this.categoryModel.getWhere(parsedFilters, search);

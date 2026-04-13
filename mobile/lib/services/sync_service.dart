@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:workshops_mobile/database/database_service.dart';
 import 'package:workshops_mobile/services/api_client.dart';
 import 'dart:convert';

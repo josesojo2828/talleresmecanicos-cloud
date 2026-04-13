@@ -17,6 +17,7 @@ class ProfileTab extends StatefulWidget {
 
 class _ProfileTabState extends State<ProfileTab> {
   String _userName = 'Cargando...';
+  String _userEmail = '';
   String _userRole = 'Taller';
 
   @override
@@ -26,41 +27,89 @@ class _ProfileTabState extends State<ProfileTab> {
   }
 
   Future<void> _loadUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() { _userName = prefs.getString('user_name') ?? 'Piloto'; _userRole = prefs.getString('user_role') ?? 'Mecánico'; });
+    final auth = AuthService();
+    final user = await auth.getUser();
+    if (mounted && user != null) {
+      setState(() {
+        _userName = '${user['firstName']} ${user['lastName']}';
+        _userEmail = user['email'] ?? '';
+        _userRole = user['role'] ?? 'Taller';
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final auth = AuthService();
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: const Color(0xFFF1F5F9),
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FadeInDown(child: Row(children: [
-                    const CircleAvatar(radius: 30, backgroundColor: Color(0xFF10B981), child: Icon(LucideIcons.user, color: Colors.white, size: 30)),
-                    const SizedBox(width: 16),
-                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(_userName, style: GoogleFonts.outfit(fontSize: 24, fontWeight: FontWeight.w900)),
-                      Text('Rol: $_userRole', style: GoogleFonts.outfit(color: const Color(0xFF64748B), fontWeight: FontWeight.bold, fontSize: 12)),
-                    ]),
-                  ])),
-              const SizedBox(height: 48),
-              _buildSectionTitle('COMUNIDAD'),
+              FadeInDown(
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0F172A),
+                    borderRadius: BorderRadius.circular(32),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(color: Color(0xFF10B981), shape: BoxShape.circle),
+                        child: const CircleAvatar(radius: 28, backgroundColor: Color(0xFF0F172A), child: Icon(LucideIcons.user, color: Colors.white, size: 28)),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(_userName.toUpperCase(), style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: 0.5)),
+                            Text(_userEmail, style: GoogleFonts.outfit(color: const Color(0xFF94A3B8), fontSize: 11, fontWeight: FontWeight.w500)),
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(color: const Color(0xFF10B981).withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                              child: Text(_userRole, style: GoogleFonts.outfit(color: const Color(0xFF10B981), fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
+
+              _buildSectionHeader('ADMINISTRACIÓN CENTRAL'),
               const SizedBox(height: 16),
-              KineticLinkCard(icon: LucideIcons.message_square, title: 'Foro de Mecánicos', subtitle: 'Discusión y tips del sector', color: const Color(0xFF10B981), onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ForumScreen()))),
+              _buildOptionCard(LucideIcons.trending_up, 'FINANZAS', 'Balance, ingresos y egresos', const Color(0xFF10B981), () {}),
               const SizedBox(height: 12),
-              KineticLinkCard(icon: LucideIcons.messages_square, title: 'Chat Público', subtitle: 'Habla con otros talleres ahora', color: const Color(0xFF3B82F6), onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatScreen()))),
-              const SizedBox(height: 48),
-              _buildSectionTitle('SISTEMA'),
+              _buildOptionCard(LucideIcons.calendar_clock, 'GESTIÓN DE CITAS', 'Calendario completo de reservas', const Color(0xFF3B82F6), () {}),
+              const SizedBox(height: 12),
+              _buildOptionCard(LucideIcons.layout_grid, 'MIS PUBLICACIONES', 'Gestión del marketplace', const Color(0xFF8B5CF6), () {}),
+
+              const SizedBox(height: 40),
+              _buildSectionHeader('COMUNICACIÓN'),
               const SizedBox(height: 16),
-              KineticLinkCard(icon: LucideIcons.settings, title: 'Configuración', subtitle: 'Ajustes de la cuenta', color: const Color(0xFF94A3B8)),
+              _buildOptionCard(LucideIcons.message_circle, 'CHAT GENERAL', 'Canal oficial de la red', const Color(0xFFF59E0B), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatScreen()))),
+
+              const SizedBox(height: 40),
+              _buildSectionHeader('CUENTA'),
+              const SizedBox(height: 16),
+              _buildOptionCard(LucideIcons.shield_check, 'PERFIL (DATOS DE ACCESO)', 'Seguridad y credenciales', const Color(0xFF64748B), () {}),
               const SizedBox(height: 12),
-              KineticLinkCard(icon: LucideIcons.log_out, title: 'Cerrar Sesión', subtitle: 'Salir del sistema', color: Colors.redAccent, onTap: () async { await auth.logout(); Navigator.pushReplacementNamed(context, '/login'); }),
+              _buildOptionCard(LucideIcons.log_out, 'CERRAR SESIÓN', 'Finalizar ciclo de trabajo', Colors.redAccent, () async {
+                await auth.logout();
+                if (mounted) Navigator.pushReplacementNamed(context, '/login');
+              }),
+              
+              const SizedBox(height: 50),
             ],
           ),
         ),
@@ -68,5 +117,46 @@ class _ProfileTabState extends State<ProfileTab> {
     );
   }
 
-  Widget _buildSectionTitle(String title) => Text(title, style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 2));
+  Widget _buildSectionHeader(String title) {
+    return FadeInLeft(
+      child: Text(title, style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 1.5)),
+    );
+  }
+
+  Widget _buildOptionCard(IconData icon, String title, String sub, Color color, VoidCallback onTap) {
+    return FadeInUp(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: const Color(0xFFF1F5F9)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(16)),
+                child: Icon(icon, color: color, size: 20),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.bold, color: const Color(0xFF0F172A))),
+                    Text(sub, style: GoogleFonts.outfit(fontSize: 11, color: const Color(0xFF94A3B8), fontWeight: FontWeight.w500)),
+                  ],
+                ),
+              ),
+              const Icon(LucideIcons.chevron_right, size: 16, color: Color(0xFFCBD5E1)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

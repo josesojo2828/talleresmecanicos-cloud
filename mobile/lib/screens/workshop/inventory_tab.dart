@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:workshops_mobile/database/database_service.dart';
+import 'package:workshops_mobile/services/workshop_service.dart';
 import 'package:workshops_mobile/screens/workshop/part_detail_screen.dart';
 import 'package:workshops_mobile/screens/workshop/edit_part_screen.dart';
 import 'package:workshops_mobile/widgets/kinetic_header.dart';
@@ -104,9 +104,9 @@ class _InventoryTabState extends State<InventoryTab> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(LucideIcons.package_x, size: 48, color: Colors.slate.shade300),
+                              Icon(LucideIcons.package_x, size: 48, color: const Color(0xFFCBD5E1)),
                               const SizedBox(height: 16),
-                              Text('No hay repuestos en stock', style: GoogleFonts.outfit(color: Colors.slate, fontWeight: FontWeight.bold)),
+                              Text('No hay repuestos en stock', style: GoogleFonts.outfit(color: const Color(0xFF64748B), fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ),

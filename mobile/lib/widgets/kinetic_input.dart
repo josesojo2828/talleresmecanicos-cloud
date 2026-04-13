@@ -7,6 +7,8 @@ class KineticInput extends StatelessWidget {
   final TextEditingController controller;
   final bool isPassword;
   final TextInputType keyboardType;
+  final String? hint;
+  final int maxLines;
 
   const KineticInput({
     super.key, 
@@ -14,7 +16,9 @@ class KineticInput extends StatelessWidget {
     required this.icon, 
     required this.controller,
     this.isPassword = false,
-    this.keyboardType = TextInputType.text
+    this.keyboardType = TextInputType.text,
+    this.hint,
+    this.maxLines = 1,
   });
 
   @override
@@ -30,8 +34,14 @@ class KineticInput extends StatelessWidget {
         controller: controller,
         obscureText: isPassword,
         keyboardType: keyboardType,
+        maxLines: maxLines,
         style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 16, color: const Color(0xFF0F172A)),
-        decoration: const InputDecoration(border: InputBorder.none, contentPadding: EdgeInsets.symmetric(vertical: 8)),
+        decoration: InputDecoration(
+          border: InputBorder.none, 
+          hintText: hint,
+          hintStyle: GoogleFonts.outfit(color: const Color(0xFFCBD5E1), fontSize: 14, fontWeight: FontWeight.w500),
+          contentPadding: const EdgeInsets.symmetric(vertical: 8)
+        ),
       ),
       const Divider(height: 1, color: Color(0xFFF1F5F9)),
     ]);

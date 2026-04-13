@@ -77,7 +77,10 @@ export class AppointmentUCase extends AppointmentModel {
         
         // Apply scope filters
         if (user.role === UserRole.TALLER) {
-            parsedFilters.workshopId = user.workshop?.id;
+            if (!user.workshop?.id) {
+                throw new ForbiddenException("Debes configurar primero tu perfil de taller");
+            }
+            parsedFilters.workshopId = user.workshop.id;
         } else if (user.role === UserRole.CLIENT) {
             parsedFilters.clientId = user.id;
         }

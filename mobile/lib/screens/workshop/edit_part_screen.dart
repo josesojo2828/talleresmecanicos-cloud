@@ -203,7 +203,7 @@ class _EditPartScreenState extends State<EditPartScreen> {
                   ),
                   const SizedBox(height: 20),
                   
-                  KineticInput(label: 'DESCRIPCIÓN', controller: _descController, icon: LucideIcons.align_left, maxLines: 4),
+                  KineticInput(label: 'DESCRIPCIÓN', controller: _descController, icon: LucideIcons.quote, maxLines: 4),
                   
                   const SizedBox(height: 48),
                   

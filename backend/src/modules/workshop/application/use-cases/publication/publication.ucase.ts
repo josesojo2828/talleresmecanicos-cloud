@@ -110,7 +110,10 @@ export class PublicationUCase extends PublicationModel {
         
         if (user && user.role !== UserRole.ADMIN) {
             if (user.role === UserRole.TALLER) {
-                scopeWhere.workshopId = user.workshop?.id;
+                if (!user.workshop?.id) {
+                    throw new ForbiddenException("Debes configurar primero tu perfil de taller");
+                }
+                scopeWhere.workshopId = user.workshop.id;
                 delete scopeWhere.workshop; // Override geographic filter with specific workshop ownership
             } else if (user.role === UserRole.CLIENT) {
                 scopeWhere.userId = user.id;
