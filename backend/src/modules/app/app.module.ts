@@ -4,6 +4,7 @@ import { RegionsModule } from "../regions/regions.module";
 import SecurityModule from "../security/security.module";
 import { UserModule } from "../user/user.module";
 import { PartModule } from "../part/part.module";
+import { WorkshopModule } from "../workshop/workshop.module";
 
 @Module({
     imports: [
@@ -11,6 +12,7 @@ import { PartModule } from "../part/part.module";
         SecurityModule,
         UserModule,
         PartModule,
+        WorkshopModule,
     ],
     controllers: [AppicationController],
     providers: [],

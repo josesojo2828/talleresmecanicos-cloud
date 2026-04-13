@@ -5,6 +5,7 @@ import FindCountryPersistence from "src/modules/regions/infrastructure/persisten
 import { IUserWhereType } from "src/modules/user/application/dtos/user.schema";
 import FindUserPersistence from "src/modules/user/infrastructure/persistence/user/find.persistence";
 import PartPersistence from "src/modules/part/infrastructure/persistence/persistence";
+import WorkshopClientPersistence from "src/modules/workshop/infrastructure/persistence/workshop-client.persistence";
 import { ObjectSelect, SUPPORT_SELECT } from "src/types/support";
 // import VehiclePersistence from "src/modules/client/infrastructure/persistence/vehicle/persistence";
 
@@ -15,7 +16,8 @@ export default class AppicationController {
         private readonly countryService: FindCountryPersistence,
         private readonly cityService: FindCityPersistence,
         private readonly userService: FindUserPersistence,
-        private readonly partService: PartPersistence
+        private readonly partService: PartPersistence,
+        private readonly workshopClientService: WorkshopClientPersistence
     ) { }
 
     @Get('check')
@@ -77,6 +79,7 @@ export default class AppicationController {
                 ]
             }
             // return this.vehicleService.select({ where: wh });
+            return [];
         }
         else if (slug === 'PART') {
             const wh: any = {
@@ -112,5 +115,24 @@ export default class AppicationController {
             });
             return data.data.map(i => ({ id: i.id, label: i.name }));
         }
+        else if (slug === 'WORKSHOP_CLIENT') {
+            const wh: any = {
+                AND: [
+                    { workshopId: query.parentId }
+                ]
+            }
+            if (query.param) {
+                wh.AND.push({
+                    OR: [
+                        { firstName: { contains: query.param, mode: 'insensitive' } },
+                        { lastName: { contains: query.param, mode: 'insensitive' } },
+                        { email: { contains: query.param, mode: 'insensitive' } },
+                        { phone: { contains: query.param, mode: 'insensitive' } },
+                    ]
+                });
+            }
+            return await this.workshopClientService.select({ where: wh });
+        }
+        return [];
     }
 }

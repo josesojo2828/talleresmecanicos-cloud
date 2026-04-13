@@ -52,4 +52,16 @@ export default class WorkshopClientPersistence {
 
         return { data, total };
     }
+
+    async select(params: { where: Prisma.WorkshopClientWhereInput }) {
+        const data = await this.prisma.workshopClient.findMany({
+            where: params.where,
+            take: 20
+        });
+
+        return data.map(item => ({
+            id: item.id,
+            label: `${item.firstName} ${item.lastName}`.trim() || 'Sin nombre'
+        }));
+    }
 }

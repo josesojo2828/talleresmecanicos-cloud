@@ -58,6 +58,7 @@ import WorkshopClientPersistence from "./infrastructure/persistence/workshop-cli
         WorkshopPersistence,
         WorkshopCategoryPersistence,
         PublicationPersistence,
+        WorkshopClientPersistence,
     ]
 })
 export class WorkshopModule { }

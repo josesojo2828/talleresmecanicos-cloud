@@ -14,7 +14,8 @@ export type SUPPORT_SELECT =
     | 'CATEGORY_ITEMS'
     | 'VEHICLE'
     | 'PART'
-    | 'PART_CATEGORY';
+    | 'PART_CATEGORY'
+    | 'WORKSHOP_CLIENT';
 
 export interface ObjectSelect {
     id: string,
