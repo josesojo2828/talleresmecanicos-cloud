@@ -80,13 +80,13 @@ export const Hero = () => {
                     <div className="flex flex-col gap-4 w-full max-w-lg">
                         {/* Botones Secundarios: Mapa y Directorio */}
                         <div className="flex gap-4 w-full">
-                            <Link href="/directorio" className="flex-1">
+                            <Link href="/directorio?view=map" className="flex-1">
                                 <button className="w-full group px-6 py-6 bg-white border border-slate-200 text-slate-950 text-[10px] font-black uppercase tracking-[.2em] hover:bg-slate-50 transition-all duration-300 flex items-center justify-center gap-3 shadow-sm">
                                     <Map className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
                                     {t("cta_map") || "MAPA"}
                                 </button>
                             </Link>
-                            <Link href="/directorio" className="flex-1">
+                            <Link href="/directorio?view=list" className="flex-1">
                                 <button className="w-full group px-6 py-6 bg-white border border-slate-200 text-slate-950 text-[10px] font-black uppercase tracking-[.2em] hover:bg-slate-50 transition-all duration-300 flex items-center justify-center gap-3 shadow-sm">
                                     <Search className="w-4 h-4 text-emerald-600 group-hover:rotate-12 transition-transform" />
                                     {t("cta_directory") || "DIRECTORIO"}

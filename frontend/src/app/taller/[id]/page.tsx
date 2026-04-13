@@ -2,13 +2,14 @@ import { Metadata } from 'next';
 import WorkshopClient from './WorkshopClient';
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://backend:3001/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
 async function getWorkshop(id: string) {
     try {
-        const res = await axios.get(`${API_URL}/workshop/${id}`);
+        const res = await axios.get(`${API_URL}/workshop/${id}`, { timeout: 2000 });
         return res.data?.body?.data || res.data?.data || res.data;
     } catch (error) {
+        console.error("[SSR] Error fetching workshop:", id);
         return null;
     }
 }
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
     if (!workshop) {
         return {
-            title: 'Taller No Encontrado | Red de Talleres',
+            title: 'Taller Mecánico | Red de Talleres',
         };
     }
 

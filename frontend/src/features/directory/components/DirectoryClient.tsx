@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -58,7 +59,8 @@ interface DirectoryClientProps {
   initialCityId?: string;
 }
 
-export default function DirectoryClient({ initialCountryId, initialCityId }: DirectoryClientProps) {
+function DirectoryContent({ initialCountryId, initialCityId }: DirectoryClientProps) {
+  const searchParams = useSearchParams();
   const { user, isAuthenticated, logout } = useAuthStore();
   // -- States --
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
@@ -82,6 +84,23 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [showMobileList, setShowMobileList] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+  // -- Handling Search Params --
+  useEffect(() => {
+    const view = searchParams.get('view');
+    const search = searchParams.get('search');
+    
+    if (view === 'map') {
+      setMobileView('map');
+    } else if (view === 'list') {
+      setMobileView('list');
+      setShowMobileList(true);
+    }
+
+    if (search) {
+      setSearchQuery(search);
+    }
+  }, [searchParams]);
 
   // -- Initial Load --
   useEffect(() => {
@@ -370,7 +389,14 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
 
         {/* Navigation & Search Bar */}
         <header className="hidden lg:flex flex-col md:flex-row items-stretch md:items-center gap-4 md:gap-6">
-          <div className="flex-1 bg-white/80 backdrop-blur-2xl border border-white shadow-xl rounded-[2.5rem] px-6 md:px-8 py-4 md:py-5 flex items-center group focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all">
+          <div className="flex-1 bg-white/80 backdrop-blur-2xl border border-white shadow-xl rounded-[2.5rem] px-6 md:px-8 py-3 flex items-center group focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all">
+            <button 
+              onClick={() => setShowCountryModal(true)}
+              className="flex items-center gap-2 pr-4 border-r border-slate-200 mr-4 hover:bg-slate-50 transition-all py-2 rounded-xl"
+            >
+               <span className="text-lg leading-none">{selectedCountry?.flag || '🌎'}</span>
+               <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{selectedCountry?.name || 'País'}</span>
+            </button>
             <Search className="text-slate-300 group-focus-within:text-emerald-500 transition-colors" size={20} />
             <input
               type="text"
@@ -874,5 +900,17 @@ export default function DirectoryClient({ initialCountryId, initialCityId }: Dir
         </div>
       )}
     </div>
+  );
+}
+
+export default function DirectoryClient(props: DirectoryClientProps) {
+  return (
+    <Suspense fallback={
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-slate-50 gap-4">
+        <div className="w-16 h-16 border-4 border-emerald-500/10 border-t-emerald-500 rounded-full animate-spin" />
+      </div>
+    }>
+      <DirectoryContent {...props} />
+    </Suspense>
   );
 }
