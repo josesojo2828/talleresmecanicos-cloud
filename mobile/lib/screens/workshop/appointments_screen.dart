@@ -174,45 +174,57 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     }
 
     return FadeInUp(
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: const Color(0xFFF1F5F9)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(DateFormat('dd/MM/yyyy').format(date), style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 13, color: const Color(0xFF0F172A))),
-                    Text(DateFormat('hh:mm a').format(date), style: GoogleFonts.outfit(fontSize: 10, color: const Color(0xFF94A3B8), fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(color: statusColor.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                  child: Text(statusLabel, style: GoogleFonts.outfit(color: statusColor, fontSize: 8, fontWeight: FontWeight.w900, letterSpacing: 0.5)),
-                ),
-              ],
+      child: InkWell(
+        onTap: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => WorkshopCreateAppointmentScreen(appointment: appointment),
             ),
-            const Divider(height: 24, color: Color(0xFFF8FAFC)),
-            Row(
-              children: [
-                CircleAvatar(radius: 12, backgroundColor: const Color(0xFFF1F5F9), child: const Icon(LucideIcons.user, size: 12, color: Color(0xFF64748B))),
-                const SizedBox(width: 12),
-                Text(client, style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 13, color: const Color(0xFF0F172A))),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(desc, maxLines: 2, overflow: TextOverflow.ellipsis, style: GoogleFonts.outfit(fontSize: 12, color: const Color(0xFF64748B))),
-          ],
+          );
+          if (result == true) _loadData();
+        },
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: const Color(0xFFF1F5F9)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(DateFormat('dd/MM/yyyy').format(date), style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 13, color: const Color(0xFF0F172A))),
+                      Text(DateFormat('hh:mm a').format(date), style: GoogleFonts.outfit(fontSize: 10, color: const Color(0xFF94A3B8), fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(color: statusColor.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+                    child: Text(statusLabel, style: GoogleFonts.outfit(color: statusColor, fontSize: 8, fontWeight: FontWeight.w900, letterSpacing: 0.5)),
+                  ),
+                ],
+              ),
+              const Divider(height: 24, color: Color(0xFFF8FAFC)),
+              Row(
+                children: [
+                  CircleAvatar(radius: 12, backgroundColor: const Color(0xFFF1F5F9), child: const Icon(LucideIcons.user, size: 12, color: Color(0xFF64748B))),
+                  const SizedBox(width: 12),
+                  Text(client, style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 13, color: const Color(0xFF0F172A))),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(desc, maxLines: 2, overflow: TextOverflow.ellipsis, style: GoogleFonts.outfit(fontSize: 12, color: const Color(0xFF64748B))),
+            ],
+          ),
         ),
       ),
     );

@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:workshops_mobile/services/workshop_service.dart';
 import 'package:workshops_mobile/widgets/kinetic_header.dart';
 import 'package:workshops_mobile/widgets/kinetic_input.dart';
 import 'package:workshops_mobile/widgets/kinetic_button.dart';
+import 'package:workshops_mobile/screens/workshop/map_picker_screen.dart';
+import 'dart:io';
 
 class WorkshopInfoTab extends StatefulWidget {
   const WorkshopInfoTab({super.key});
@@ -16,6 +20,8 @@ class WorkshopInfoTab extends StatefulWidget {
 
 class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
   final _workshopService = WorkshopService();
+  final _picker = ImagePicker();
+  
   bool _isLoading = true;
   bool _isSaving = false;
 
@@ -29,6 +35,14 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
   final _instagramController = TextEditingController();
   final _facebookController = TextEditingController();
   final _twitterController = TextEditingController();
+
+  // Multimedia & Location
+  XFile? _logoFile;
+  final List<XFile> _extraPhotos = [];
+  double? _lat;
+  double? _lng;
+  String? _currentLogoUrl;
+  List<String> _currentImagesUrls = [];
 
   Map<String, dynamic> _openingHours = {
     'monday': {'enabled': true, 'open': '08:00', 'close': '18:00'},
@@ -65,8 +79,44 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
         if (data['openingHours'] != null) {
           _openingHours = Map<String, dynamic>.from(data['openingHours']);
         }
+
+        _lat = (data['lat'] as num?)?.toDouble();
+        _lng = (data['lng'] as num?)?.toDouble();
+        _currentLogoUrl = data['logo'];
+        _currentImagesUrls = List<String>.from(data['images'] ?? []);
         
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _pickLogo() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) setState(() => _logoFile = image);
+  }
+
+  Future<void> _pickExtraPhoto() async {
+    if (_extraPhotos.length + _currentImagesUrls.length >= 5) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Límite de 5 fotos extra alcanzado')));
+      return;
+    }
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) setState(() => _extraPhotos.add(image));
+  }
+
+  Future<void> _pickLocation() async {
+    final LatLng? result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MapPickerScreen(
+          initialPosition: LatLng(_lat ?? -34.6037, _lng ?? -58.3816), // Default to Buenos Aires if null
+        ),
+      ),
+    );
+    if (result != null) {
+      setState(() {
+        _lat = result.latitude;
+        _lng = result.longitude;
       });
     }
   }
@@ -87,8 +137,12 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
         'twitter': _twitterController.text,
       },
       'openingHours': _openingHours,
+      'lat': _lat,
+      'lng': _lng,
     };
 
+    // Note: Image upload to server would happen here
+    // For now we just update the text fields
     final success = await _workshopService.updateWorkshop(payload);
     
     if (mounted) {
@@ -115,7 +169,11 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
             padding: const EdgeInsets.all(24),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
+                _buildMultimediaSeccion(),
+                const SizedBox(height: 24),
                 _buildIdentidadSeccion(),
+                const SizedBox(height: 24),
+                _buildLocationSeccion(),
                 const SizedBox(height: 24),
                 _buildDigitalChannelsSeccion(),
                 const SizedBox(height: 24),
@@ -141,7 +199,11 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
       backgroundColor: const Color(0xFF0F172A),
       pinned: true,
       elevation: 0,
-      automaticallyImplyLeading: false,
+      automaticallyImplyLeading: true,
+      leading: IconButton(
+        icon: const Icon(LucideIcons.arrow_left, color: Colors.white),
+        onPressed: () => Navigator.pop(context),
+      ),
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: false,
         titlePadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -162,6 +224,145 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
     );
   }
 
+  Widget _buildMultimediaSeccion() {
+    return FadeInUp(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeading(LucideIcons.image, 'MULTIMEDIA Y MARCA'),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(32), border: Border.all(color: const Color(0xFFF1F5F9))),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: _pickLogo,
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF1F5F9),
+                          borderRadius: BorderRadius.circular(20),
+                          image: _logoFile != null 
+                            ? DecorationImage(image: FileImage(File(_logoFile!.path)), fit: BoxFit.cover)
+                            : (_currentLogoUrl != null ? DecorationImage(image: NetworkImage(_currentLogoUrl!), fit: BoxFit.cover) : null),
+                        ),
+                        child: (_logoFile == null && _currentLogoUrl == null) ? const Icon(LucideIcons.camera, color: Color(0xFF94A3B8)) : null,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('LOGO DEL TALLER', style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.w900, color: const Color(0xFF0F172A))),
+                          Text('Imagen circular o cuadrada para el perfil principal', style: GoogleFonts.outfit(fontSize: 10, color: const Color(0xFF94A3B8))),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const Divider(height: 40),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('FOTOS DE LAS INSTALACIONES (HASTA 5)', style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.w900, color: const Color(0xFF0F172A))),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  height: 80,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      GestureDetector(
+                        onTap: _pickExtraPhoto,
+                        child: Container(
+                          width: 80,
+                          margin: const EdgeInsets.only(right: 12),
+                          decoration: BoxDecoration(color: const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(16)),
+                          child: const Icon(LucideIcons.plus, color: Color(0xFF94A3B8)),
+                        ),
+                      ),
+                      ..._extraPhotos.map((f) => Container(
+                        width: 80,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          image: DecorationImage(image: FileImage(File(f.path)), fit: BoxFit.cover),
+                        ),
+                      )),
+                      ..._currentImagesUrls.map((url) => Container(
+                        width: 80,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          image: DecorationImage(image: NetworkImage(url), fit: BoxFit.cover),
+                        ),
+                      )),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLocationSeccion() {
+    return FadeInUp(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeading(LucideIcons.map_pin, 'UBICACIÓN GEOGRÁFICA'),
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: _pickLocation,
+            child: Container(
+              height: 150,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(32),
+                border: Border.all(color: const Color(0xFFF1F5F9)),
+                image: _lat != null ? null : const DecorationImage(
+                  image: AssetImage('assets/images/map_placeholder.png'), // Need to add or use a stack
+                  fit: BoxFit.cover,
+                  opacity: 0.1
+                ),
+              ),
+              child: _lat != null 
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: AbsorbPointer(
+                      child: GoogleMap(
+                        initialCameraPosition: CameraPosition(target: LatLng(_lat!, _lng!), zoom: 15),
+                        markers: {Marker(markerId: const MarkerId('workshop'), position: LatLng(_lat!, _lng!))},
+                        zoomControlsEnabled: false,
+                        mapToolbarEnabled: false,
+                      ),
+                    ),
+                  )
+                : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(LucideIcons.map, color: Color(0xFF10B981), size: 32),
+                        const SizedBox(height: 8),
+                        Text('CONFIGURAR PUNTO EN EL MAPA', style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.w900, color: const Color(0xFF10B981))),
+                      ],
+                    ),
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildIdentidadSeccion() {
     return FadeInUp(
       child: Column(
@@ -174,7 +375,7 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
             const SizedBox(height: 20),
             KineticInput(controller: _descController, label: 'Descripción del Servicio', icon: LucideIcons.text_select, maxLines: 3),
             const SizedBox(height: 20),
-            KineticInput(controller: _addressController, label: 'Dirección Física', icon: LucideIcons.map_pin),
+            KineticInput(controller: _addressController, label: 'Dirección Física', icon: LucideIcons.home),
           ]),
         ],
       ),

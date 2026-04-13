@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:workshops_mobile/services/api_client.dart';
 
@@ -16,6 +18,7 @@ class _ChatScreenState extends State<ChatScreen> {
   late IO.Socket _socket;
   final List<Map<String, dynamic>> _messages = [];
   bool _isConnected = false;
+  String? _myId;
 
   @override
   void initState() {
@@ -23,12 +26,20 @@ class _ChatScreenState extends State<ChatScreen> {
     _initSocket();
   }
 
-  void _initSocket() {
-    final baseUrl = ApiClient().baseUrl.replaceAll('/api', '');
+  Future<void> _initSocket() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final userJson = prefs.getString('user');
+    if (userJson != null) {
+      final user = jsonDecode(userJson);
+      _myId = user['id'];
+    }
+
+    final baseUrl = ApiClient().baseUrl.replaceAll('/api/v1', '');
     
-    // FIX: Proper socket configuration without setNamespace
     _socket = IO.io('$baseUrl/chat', IO.OptionBuilder()
       .setTransports(['websocket'])
+      .setAuth({'token': token})
       .disableAutoConnect()
       .build());
 
@@ -42,13 +53,29 @@ class _ChatScreenState extends State<ChatScreen> {
       if (mounted) setState(() => _isConnected = false);
     });
 
-    _socket.on('message', (data) {
+    _socket.on('history', (data) {
+      if (mounted) {
+        final List<dynamic> history = data;
+        setState(() {
+          _messages.clear();
+          for (var msg in history) {
+            _messages.add({
+              'user': '${msg['user']?['firstName']} ${msg['user']?['lastName']}',
+              'text': msg['content'] ?? '',
+              'isMe': msg['userId'] == _myId,
+            });
+          }
+        });
+      }
+    });
+
+    _socket.on('newMessage', (data) {
       if (mounted) {
         setState(() {
           _messages.add({
-            'user': data['user'] ?? 'Anónimo',
-            'text': data['text'] ?? '',
-            'isMe': false,
+             'user': '${data['user']?['firstName']} ${data['user']?['lastName']}',
+            'text': data['content'] ?? '',
+            'isMe': data['userId'] == _myId,
           });
         });
       }
@@ -56,12 +83,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _sendMessage() {
-    if (_msgController.text.isNotEmpty) {
-      final msg = {'text': _msgController.text, 'user': 'Piloto'};
-      _socket.emit('message', msg);
-      setState(() {
-        _messages.add({'user': 'Yo', 'text': _msgController.text, 'isMe': true});
-      });
+    if (_msgController.text.isNotEmpty && _isConnected) {
+      _socket.emit('sendMessage', _msgController.text);
       _msgController.clear();
     }
   }

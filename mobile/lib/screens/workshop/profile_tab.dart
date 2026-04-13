@@ -7,9 +7,10 @@ import 'package:workshops_mobile/screens/workshop/appointments_screen.dart';
 import 'package:workshops_mobile/screens/workshop/finance_tab.dart';
 import 'package:workshops_mobile/screens/workshop/workshop_info_tab.dart';
 import 'package:workshops_mobile/screens/workshop/chat_screen.dart';
-import 'package:workshops_mobile/screens/workshop/forum_screen.dart';
+import 'package:workshops_mobile/screens/workshop/publications_screen.dart';
+import 'package:workshops_mobile/screens/workshop/user_profile_screen.dart';
 import 'package:workshops_mobile/services/auth_service.dart';
-import 'package:workshops_mobile/widgets/kinetic_card.dart';
+import 'dart:convert';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
@@ -94,7 +95,7 @@ class _ProfileTabState extends State<ProfileTab> {
               _buildOptionCard(LucideIcons.trending_up, 'FINANZAS', 'Balance, ingresos y egresos', const Color(0xFF10B981), () {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => Scaffold(
                   appBar: AppBar(title: Text('FINANZAS', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: 1))),
-                  body: const FinanceTab(),
+                  body: FinanceTab(),
                 )));
               }),
               const SizedBox(height: 12),
@@ -103,7 +104,7 @@ class _ProfileTabState extends State<ProfileTab> {
               }),
               const SizedBox(height: 12),
               _buildOptionCard(LucideIcons.layout_grid, 'MIS PUBLICACIONES', 'Gestión del marketplace', const Color(0xFF8B5CF6), () {
-                 Navigator.push(context, MaterialPageRoute(builder: (_) => const ForumScreen()));
+                 Navigator.push(context, MaterialPageRoute(builder: (_) => const PublicationsScreen()));
               }),
 
               const SizedBox(height: 40),
@@ -114,8 +115,8 @@ class _ProfileTabState extends State<ProfileTab> {
               const SizedBox(height: 40),
               _buildSectionHeader('CUENTA'),
               const SizedBox(height: 16),
-              _buildOptionCard(LucideIcons.shield_check, 'PERFIL (FICHA TALLER)', 'Información pública y contacto', const Color(0xFF64748B), () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const WorkshopInfoTab()));
+              _buildOptionCard(LucideIcons.user_cog, 'MI PERFIL Y SEGURIDAD', 'Datos personales y biometría', const Color(0xFF64748B), () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const UserProfileScreen()));
               }),
               const SizedBox(height: 12),
               _buildOptionCard(LucideIcons.log_out, 'CERRAR SESIÓN', 'Finalizar ciclo de trabajo', Colors.redAccent, () async {

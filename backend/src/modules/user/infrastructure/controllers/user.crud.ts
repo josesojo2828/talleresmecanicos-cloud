@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { CurrentUser } from "src/modules/auth/decorators/current-user.decorator";
 import CreateUserUCase from "../../application/use-cases/user/create.ucase";
 import UpdateUserUCase from "../../application/use-cases/user/update.ucase";
@@ -28,8 +28,14 @@ export class UserCrudController {
         return await this.createUseCase.execute({ data: body });
     }
 
-    @Put(':id')
+    @Patch('profile')
     @Roles(UserRole.ADMIN, UserRole.SUPPORT, UserRole.TALLER, UserRole.CLIENT)
+    async updateProfile(@CurrentUser() user: any, @Body() body: IUpdateUserDto) {
+        return await this.updateUseCase.execute({ data: body, id: user.id });
+    }
+
+    @Put(':id')
+    @Roles(UserRole.ADMIN)
     async update(@Param('id') id: string, @Body() body: IUpdateUserDto) {
         return await this.updateUseCase.execute({ data: body, id });
     }

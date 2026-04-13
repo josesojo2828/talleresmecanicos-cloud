@@ -124,6 +124,16 @@ class WorkshopService {
     }
   }
 
+  Future<bool> updateAppointment(String id, Map<String, dynamic> data) async {
+    try {
+      final response = await _api.put('/appointment/$id', data);
+      return response.statusCode == 200 || response.statusCode == 204;
+    } catch (e) {
+      print('Error actualizando cita: $e');
+      return false;
+    }
+  }
+
   // --- Módulo Gestión de Perfil de Taller ---
 
   Future<Map<String, dynamic>?> getMyWorkshop() async {

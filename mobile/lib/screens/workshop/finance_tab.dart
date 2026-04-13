@@ -8,7 +8,7 @@ import 'package:workshops_mobile/widgets/kinetic_header.dart';
 import 'package:intl/intl.dart';
 
 class FinanceTab extends StatefulWidget {
-  const FinanceTab({super.key});
+  FinanceTab({super.key});
 
   @override
   State<FinanceTab> createState() => _FinanceTabState();

@@ -20,11 +20,11 @@ class _WorkshopTabsState extends State<WorkshopTabs> {
   int _selectedIndex = 0;
 
   final List<Widget> _tabs = [
-    const DashboardTab(),
-    const JobsTab(),
-    const FinanceTab(),
-    const InventoryTab(),
-    const ProfileTab(),
+    DashboardTab(),
+    JobsTab(),
+    InventoryTab(),
+    WorkshopInfoTab(),
+    ProfileTab(),
   ];
 
   @override
@@ -44,11 +44,11 @@ class _WorkshopTabsState extends State<WorkshopTabs> {
           unselectedLabelStyle: GoogleFonts.outfit(fontSize: 10),
           elevation: 0,
           items: const [
-            BottomNavigationBarItem(icon: Icon(LucideIcons.layout_dashboard, size: 20), label: 'Taller'),
-            BottomNavigationBarItem(icon: Icon(LucideIcons.wrench, size: 20), label: 'Labores'),
-            BottomNavigationBarItem(icon: Icon(LucideIcons.trending_up, size: 20), label: 'Finanzas'),
-            BottomNavigationBarItem(icon: Icon(LucideIcons.package, size: 20), label: 'Boxes'),
-            BottomNavigationBarItem(icon: Icon(LucideIcons.circle_user, size: 20), label: 'Perfil'),
+            BottomNavigationBarItem(icon: Icon(LucideIcons.layout_dashboard, size: 20), label: 'Dashboard'),
+            BottomNavigationBarItem(icon: Icon(LucideIcons.wrench, size: 20), label: 'Ordenes de trabajo'),
+            BottomNavigationBarItem(icon: Icon(LucideIcons.package, size: 20), label: 'Inventario'),
+            BottomNavigationBarItem(icon: Icon(LucideIcons.settings, size: 20), label: 'Perfil de taller'),
+            BottomNavigationBarItem(icon: Icon(LucideIcons.circle_user, size: 20), label: 'Perfil de trabajo'),
           ],
         ),
       ),

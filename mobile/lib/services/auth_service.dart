@@ -25,6 +25,7 @@ class AuthService {
         await prefs.setString('token', token);
         await prefs.setString('user_name', '${data['user']['firstName']} ${data['user']['lastName']}');
         await prefs.setString('user_role', data['user']['role']);
+        await prefs.setString('user_email', data['user']['email'] ?? '');
         
         if (data['user']['country'] != null) await prefs.setString('user_country', data['user']['country'].toString());
         if (data['user']['city'] != null) await prefs.setString('user_city', data['user']['city'].toString());
@@ -77,9 +78,27 @@ class AuthService {
     
     return {
       'firstName': fullName.split(' ').first,
+      'lastName': fullName.contains(' ') ? fullName.split(' ').sublist(1).join(' ') : '',
       'fullName': fullName,
+      'email': prefs.getString('user_email') ?? '',
       'role': prefs.getString('user_role'),
     };
+  }
+
+  Future<bool> updateProfile(Map<String, dynamic> data) async {
+    try {
+      final response = await _api.patch('/user/profile', data);
+      if (response.statusCode == 200) {
+        final prefs = await SharedPreferences.getInstance();
+        if (data.containsKey('firstName') && data.containsKey('lastName')) {
+          await prefs.setString('user_name', '${data['firstName']} ${data['lastName']}');
+        }
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<void> logout() async {

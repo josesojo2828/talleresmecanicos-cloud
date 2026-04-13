@@ -11,6 +11,7 @@ import 'package:workshops_mobile/widgets/kinetic_button.dart';
 import 'package:workshops_mobile/screens/workshop/create_work_order_screen.dart';
 import 'package:workshops_mobile/screens/workshop/job_detail_screen.dart';
 import 'package:workshops_mobile/screens/workshop/create_appointment_screen.dart';
+import 'package:workshops_mobile/screens/workshop/finance_tab.dart';
 
 class DashboardTab extends StatefulWidget {
   const DashboardTab({super.key});
@@ -141,7 +142,13 @@ class _DashboardTabState extends State<DashboardTab> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                _buildStatCard('INVENTARIO / STOCK', '${stats?['inventory']?['total'] ?? 0}', LucideIcons.package, const Color(0xFF8B5CF6)),
+                _buildStatCard(
+                  'FINANZAS / SALDO', 
+                  '\$${stats?['finance']?['balance'] ?? 0}', 
+                  LucideIcons.trending_up, 
+                  const Color(0xFF8B5CF6),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FinanceTab())),
+                ),
 
                 const SizedBox(height: 32),
 
@@ -164,31 +171,35 @@ class _DashboardTabState extends State<DashboardTab> {
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatCard(String label, String value, IconData icon, Color color, {VoidCallback? onTap}) {
     return FadeInUp(
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: const Color(0xFFF1F5F9)),
-          boxShadow: [
-            BoxShadow(color: const Color(0xFF0F172A).withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 5))
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-              child: Icon(icon, color: color, size: 20),
-            ),
-            const SizedBox(height: 16),
-            Text(value, style: GoogleFonts.outfit(fontSize: 28, fontWeight: FontWeight.w900, color: const Color(0xFF0F172A), height: 1)),
-            const SizedBox(height: 4),
-            Text(label, style: GoogleFonts.outfit(fontSize: 9, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 1.5)),
-          ],
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: const Color(0xFFF1F5F9)),
+            boxShadow: [
+              BoxShadow(color: const Color(0xFF0F172A).withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 5))
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+                child: Icon(icon, color: color, size: 20),
+              ),
+              const SizedBox(height: 16),
+              Text(value, style: GoogleFonts.outfit(fontSize: 28, fontWeight: FontWeight.w900, color: const Color(0xFF0F172A), height: 1)),
+              const SizedBox(height: 4),
+              Text(label, style: GoogleFonts.outfit(fontSize: 9, fontWeight: FontWeight.w900, color: const Color(0xFF94A3B8), letterSpacing: 1.5)),
+            ],
+          ),
         ),
       ),
     );

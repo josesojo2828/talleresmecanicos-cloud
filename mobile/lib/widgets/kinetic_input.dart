@@ -6,6 +6,7 @@ class KineticInput extends StatelessWidget {
   final IconData icon;
   final TextEditingController controller;
   final bool isPassword;
+  final bool enabled;
   final TextInputType keyboardType;
   final String? hint;
   final int maxLines;
@@ -16,6 +17,7 @@ class KineticInput extends StatelessWidget {
     required this.icon, 
     required this.controller,
     this.isPassword = false,
+    this.enabled = true,
     this.keyboardType = TextInputType.text,
     this.hint,
     this.maxLines = 1,
@@ -33,9 +35,14 @@ class KineticInput extends StatelessWidget {
       TextField(
         controller: controller,
         obscureText: isPassword,
+        enabled: enabled,
         keyboardType: keyboardType,
         maxLines: maxLines,
-        style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 16, color: const Color(0xFF0F172A)),
+        style: GoogleFonts.outfit(
+          fontWeight: FontWeight.bold, 
+          fontSize: 16, 
+          color: enabled ? const Color(0xFF0F172A) : const Color(0xFF94A3B8)
+        ),
         decoration: InputDecoration(
           border: InputBorder.none, 
           hintText: hint,

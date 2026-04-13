@@ -7,7 +7,8 @@ import 'package:workshops_mobile/widgets/kinetic_button.dart';
 import 'package:workshops_mobile/widgets/kinetic_input.dart';
 
 class WorkshopCreateAppointmentScreen extends StatefulWidget {
-  const WorkshopCreateAppointmentScreen({super.key});
+  final Map<String, dynamic>? appointment;
+  const WorkshopCreateAppointmentScreen({super.key, this.appointment});
 
   @override
   State<WorkshopCreateAppointmentScreen> createState() => _WorkshopCreateAppointmentScreenState();
@@ -21,6 +22,21 @@ class _WorkshopCreateAppointmentScreenState extends State<WorkshopCreateAppointm
   TimeOfDay _selectedTime = TimeOfDay.now();
   String _status = 'PENDING';
   bool _isLoading = false;
+  bool _isEditing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.appointment != null) {
+      _isEditing = true;
+      _descriptionController.text = widget.appointment!['description'] ?? '';
+      _status = widget.appointment!['status'] ?? 'PENDING';
+      
+      final date = DateTime.parse(widget.appointment!['date']);
+      _selectedDate = date;
+      _selectedTime = TimeOfDay(hour: date.hour, minute: date.minute);
+    }
+  }
 
   final List<Map<String, String>> _statusOptions = [
     {'value': 'PENDING', 'label': 'Pendiente'},
@@ -48,14 +64,23 @@ class _WorkshopCreateAppointmentScreenState extends State<WorkshopCreateAppointm
       _selectedTime.minute,
     );
 
-    // Nota: El taller no necesita pasar workshopId si el backend lo deduce del token, 
-    // pero el servicio actual lo pide. Para el taller lo ideal es que el backend lo maneje.
-    // Usaremos un placeholder o ajustaremos el servicio.
-    final success = await _workshopService.createAppointmentStatus(
-      dateTime,
-      _descriptionController.text,
-      _status,
-    );
+    bool success;
+    if (_isEditing) {
+      success = await _workshopService.updateAppointment(
+        widget.appointment!['id'],
+        {
+          'date': dateTime.toIso8601String(),
+          'description': _descriptionController.text,
+          'status': _status,
+        },
+      );
+    } else {
+      success = await _workshopService.createAppointmentStatus(
+        dateTime,
+        _descriptionController.text,
+        _status,
+      );
+    }
 
     setState(() => _isLoading = false);
 
@@ -63,9 +88,9 @@ class _WorkshopCreateAppointmentScreenState extends State<WorkshopCreateAppointm
       if (mounted) {
         Navigator.pop(context, true);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Entrada creada con éxito'),
-            backgroundColor: Color(0xFF10B981),
+          SnackBar(
+            content: Text(_isEditing ? 'Cita actualizada con éxito' : 'Entrada creada con éxito'),
+            backgroundColor: const Color(0xFF10B981),
           ),
         );
       }
@@ -73,7 +98,7 @@ class _WorkshopCreateAppointmentScreenState extends State<WorkshopCreateAppointm
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Error al crear la entrada en el sistema'),
+            content: Text('Error al procesar la solicitud en la central'),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -98,12 +123,12 @@ class _WorkshopCreateAppointmentScreenState extends State<WorkshopCreateAppointm
           children: [
             Container(
               padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(color: const Color(0xFF10B981), borderRadius: BorderRadius.circular(8)),
-              child: const Icon(LucideIcons.plus, color: Colors.white, size: 14),
+              decoration: BoxDecoration(color: _isEditing ? const Color(0xFF3B82F6) : const Color(0xFF10B981), borderRadius: BorderRadius.circular(8)),
+              child: Icon(_isEditing ? LucideIcons.pencil : LucideIcons.plus, color: Colors.white, size: 14),
             ),
             const SizedBox(width: 12),
             Text(
-              'CREAR ENTRADA',
+              _isEditing ? 'DETALLE DE CITA' : 'CREAR ENTRADA',
               style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w900, color: const Color(0xFF0F172A), letterSpacing: 1),
             ),
           ],
@@ -195,7 +220,7 @@ class _WorkshopCreateAppointmentScreenState extends State<WorkshopCreateAppointm
                 Expanded(
                   flex: 2,
                   child: KineticButton(
-                    label: 'CREAR ENTRADA',
+                    label: _isEditing ? 'ACTUALIZAR CITA' : 'CREAR ENTRADA',
                     onPressed: _isLoading ? null : _submit,
                     isLoading: _isLoading,
                     color: const Color(0xFF0F172A),
