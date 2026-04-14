@@ -27,12 +27,14 @@ export class AdminMetricsUCase {
         // Specific scope for entities related to workshops
         const workScope = getScopeFilter(user, 'workshop');
         
+        const regions = user && (user.regions || user.assignments) || [];
+        
         // Resolve Support regions (only real non-null assignments)
         const countryIds = user && user.role === UserRole.SUPPORT 
-            ? [...new Set(user.regions?.map((a: any) => a.countryId).filter((id: any) => id != null))] as string[]
+            ? [...new Set(regions.map((a: any) => a.countryId).filter((id: any) => id != null))] as string[]
             : [];
         const cityIds = user && user.role === UserRole.SUPPORT 
-            ? [...new Set(user.regions?.map((a: any) => a.cityId).filter((id: any) => id != null))] as string[]
+            ? [...new Set(regions.map((a: any) => a.cityId).filter((id: any) => id != null))] as string[]
             : [];
 
         // Scope for users (by country if available)

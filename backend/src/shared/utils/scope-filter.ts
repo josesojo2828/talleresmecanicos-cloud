@@ -8,7 +8,7 @@ export function getScopeFilter(user: any, relation?: string) {
     }
 
     if (user.role === UserRole.SUPPORT) {
-        const regions = user.regions || [];
+        const regions = user.regions || user.assignments || [];
         if (regions.length === 0) return { id: 'none' };
 
         const countryIds = [...new Set(

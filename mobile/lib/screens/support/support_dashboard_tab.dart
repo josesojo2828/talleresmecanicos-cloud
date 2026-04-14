@@ -49,15 +49,15 @@ class _SupportDashboardTabState extends State<SupportDashboardTab> {
       );
     }
 
-    // Datos extraídos del dashboard (basado en la estructura del web/screenshot)
+    // Datos extraídos del dashboard (alineados con backend AdminMetricsUCase)
     final stats = _adminStats?['stats'] ?? {};
-    final countriesCount = stats['countries'] ?? 0;
-    final citiesCount = stats['cities'] ?? 0;
-    final workshopsCount = stats['workshops'] ?? 0;
-    final publicationsCount = stats['publications'] ?? 0;
+    final countriesCount = stats['totalCountries'] ?? 0;
+    final citiesCount = stats['totalCities'] ?? 0;
+    final workshopsCount = stats['totalWorkshops'] ?? 0;
+    final publicationsCount = stats['totalPublications'] ?? 0;
     
-    final activeCities = _adminStats?['activeCities'] as List? ?? [];
-    final recentOrders = _adminStats?['recentOrders'] as List? ?? [];
+    final activeCities = _adminStats?['recentCities'] as List? ?? [];
+    final recentOrders = _adminStats?['recentWorks'] as List? ?? [];
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -244,7 +244,7 @@ class _SupportDashboardTabState extends State<SupportDashboardTab> {
                   ),
                 ),
                 Text(
-                  city['country'] ?? 'Región',
+                  city['country']?['name'] ?? 'Región',
                   style: GoogleFonts.outfit(
                     fontSize: 11,
                     color: const Color(0xFF94A3B8),
