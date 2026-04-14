@@ -29,6 +29,9 @@ class AuthService {
         
         if (data['user']['country'] != null) await prefs.setString('user_country', data['user']['country'].toString());
         if (data['user']['city'] != null) await prefs.setString('user_city', data['user']['city'].toString());
+        if (data['user']['regions'] != null) {
+          await prefs.setString('user_regions', jsonEncode(data['user']['regions']));
+        }
         return true;
       }
       return false;
@@ -56,6 +59,9 @@ class AuthService {
         
         if (data['user']['country'] != null) await prefs.setString('user_country', data['user']['country'].toString());
         if (data['user']['city'] != null) await prefs.setString('user_city', data['user']['city'].toString());
+        if (data['user']['regions'] != null) {
+          await prefs.setString('user_regions', jsonEncode(data['user']['regions']));
+        }
         
         return true;
       }
@@ -111,6 +117,17 @@ class AuthService {
       'email': prefs.getString('user_email') ?? '',
       'role': prefs.getString('user_role'),
     };
+  }
+
+  Future<List<dynamic>> getUserRegions() async {
+    final prefs = await SharedPreferences.getInstance();
+    final regionsJson = prefs.getString('user_regions');
+    if (regionsJson == null) return [];
+    try {
+      return jsonDecode(regionsJson) as List<dynamic>;
+    } catch (_) {
+      return [];
+    }
   }
 
   Future<bool> updateProfile(Map<String, dynamic> data) async {

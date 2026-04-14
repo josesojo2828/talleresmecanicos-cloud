@@ -3,6 +3,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:workshops_mobile/services/api_client.dart';
+import 'package:workshops_mobile/services/auth_service.dart';
 
 class CreateUserScreen extends StatefulWidget {
   const CreateUserScreen({super.key});
@@ -14,16 +15,82 @@ class CreateUserScreen extends StatefulWidget {
 class _CreateUserScreenState extends State<CreateUserScreen> {
   final _formKey = GlobalKey<FormState>();
   final _api = ApiClient();
+  final _auth = AuthService();
   
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  
   String _selectedRole = 'CLIENT';
+  String? _selectedCountryId;
+  String? _selectedCityId;
+  
+  List<dynamic> _allRegions = [];
+  List<dynamic> _availableCountries = [];
+  List<dynamic> _availableCities = [];
+  
   bool _isLoading = false;
+  bool _isDataLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRegions();
+  }
+
+  Future<void> _loadRegions() async {
+    final regions = await _auth.getUserRegions();
+    setState(() {
+      _allRegions = regions;
+      
+      // Extraer países únicos habilitados
+      final countriesMap = <String, dynamic>{};
+      for (var reg in regions) {
+        final c = reg['country'];
+        if (c != null && c['enabled'] == true) {
+          countriesMap[c['id']] = c;
+        }
+      }
+      _availableCountries = countriesMap.values.toList();
+      
+      // Si solo hay un país, seleccionarlo por defecto
+      if (_availableCountries.length == 1) {
+        _selectedCountryId = _availableCountries[0]['id'];
+        _onCountryChanged(_selectedCountryId);
+      }
+      
+      _isDataLoading = false;
+    });
+  }
+
+  void _onCountryChanged(String? countryId) {
+    setState(() {
+      _selectedCountryId = countryId;
+      _selectedCityId = null; // Reset ciudad al cambiar país
+      
+      // Filtrar ciudades del país seleccionado que estén habilitadas
+      _availableCities = _allRegions.where((reg) {
+        final sameCountry = reg['country'] != null && reg['country']['id'] == countryId;
+        final cityEnabled = reg['city'] != null && reg['city']['enabled'] == true;
+        return sameCountry && cityEnabled;
+      }).map((reg) => reg['city']).toList();
+      
+      // Si solo hay una ciudad, seleccionarla
+      if (_availableCities.length == 1) {
+        _selectedCityId = _availableCities[0]['id'];
+      }
+    });
+  }
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+    if (_selectedCountryId == null || _selectedCityId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Debes seleccionar País y Ciudad')),
+      );
+      return;
+    }
 
     setState(() => _isLoading = true);
     try {
@@ -34,7 +101,8 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
         'passwordHash': _passwordController.text,
         'role': _selectedRole,
         'enabled': true,
-        'country': 'MEXICO', // Restringido a México según pedido
+        'country': _selectedCountryId,
+        'city': _selectedCityId,
       });
 
       if (response.statusCode == 201 || response.statusCode == 200) {
@@ -60,6 +128,8 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool canProceed = _availableCountries.isNotEmpty;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -70,7 +140,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'CREAR ENTRADA',
+          'CREAR USUARIO',
           style: GoogleFonts.outfit(
             fontSize: 16,
             fontWeight: FontWeight.w900,
@@ -79,31 +149,97 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildFieldLabel('NOMBRE'),
-              _buildTextField(_firstNameController, 'Ej. Juan', LucideIcons.user),
-              const SizedBox(height: 20),
-              _buildFieldLabel('APELLIDO'),
-              _buildTextField(_lastNameController, 'Ej. Pérez', LucideIcons.user),
-              const SizedBox(height: 20),
-              _buildFieldLabel('CORREO ELECTRÓNICO'),
-              _buildTextField(_emailController, 'usuario@ejemplo.com', LucideIcons.mail, keyboardType: TextInputType.emailAddress),
-              const SizedBox(height: 20),
-              _buildFieldLabel('CONTRASEÑA'),
-              _buildTextField(_passwordController, '••••••••', LucideIcons.lock, isPassword: true),
-              const SizedBox(height: 20),
-              _buildFieldLabel('PERMISOS / ROL'),
-              _buildRoleDropdown(),
-              const SizedBox(height: 48),
-              _buildSubmitButton(),
-            ],
-          ),
+      body: _isDataLoading 
+        ? const Center(child: CircularProgressIndicator())
+        : !canProceed
+          ? _buildNoRegionsInfo()
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildFieldLabel('NOMBRE'),
+                    _buildTextField(_firstNameController, 'Ej. Juan', LucideIcons.user),
+                    const SizedBox(height: 20),
+                    _buildFieldLabel('APELLIDO'),
+                    _buildTextField(_lastNameController, 'Ej. Pérez', LucideIcons.user),
+                    const SizedBox(height: 20),
+                    _buildFieldLabel('CORREO ELECTRÓNICO'),
+                    _buildTextField(_emailController, 'usuario@ejemplo.com', LucideIcons.mail, keyboardType: TextInputType.emailAddress),
+                    const SizedBox(height: 20),
+                    _buildFieldLabel('CONTRASEÑA'),
+                    _buildTextField(_passwordController, '••••••••', LucideIcons.lock, isPassword: true),
+                    const SizedBox(height: 20),
+                    
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildFieldLabel('PAÍS'),
+                              _buildDropdown(
+                                value: _selectedCountryId,
+                                items: _availableCountries,
+                                onChanged: _onCountryChanged,
+                                icon: LucideIcons.globe,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildFieldLabel('CIUDAD'),
+                              _buildDropdown(
+                                value: _selectedCityId,
+                                items: _availableCities,
+                                onChanged: (v) => setState(() => _selectedCityId = v),
+                                icon: LucideIcons.map_pin,
+                                enabled: _selectedCountryId != null,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    
+                    const SizedBox(height: 20),
+                    _buildFieldLabel('PERMISOS / ROL'),
+                    _buildRoleDropdown(),
+                    const SizedBox(height: 48),
+                    _buildSubmitButton(),
+                  ],
+                ),
+              ),
+            ),
+    );
+  }
+
+  Widget _buildNoRegionsInfo() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(LucideIcons.map_pin_off, size: 64, color: Color(0xFFCBD5E1)),
+            const SizedBox(height: 24),
+            Text(
+              'SIN REGIONES ASIGNADAS',
+              style: GoogleFonts.outfit(fontWeight: FontWeight.w900, color: const Color(0xFF0F172A)),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'No tienes territorios habilitados para crear usuarios. Contacta al administrador.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.outfit(color: const Color(0xFF64748B), fontSize: 13),
+            ),
+          ],
         ),
       ),
     );
@@ -138,6 +274,49 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
         fillColor: const Color(0xFFF8FAFC),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      ),
+    );
+  }
+
+  Widget _buildDropdown({
+    required String? value, 
+    required List<dynamic> items, 
+    required void Function(String?) onChanged,
+    required IconData icon,
+    bool enabled = true,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: enabled ? const Color(0xFFF8FAFC) : const Color(0xFFF1F5F9),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: value,
+          isExpanded: true,
+          hint: Text('Seleccionar...', style: GoogleFonts.outfit(fontSize: 12, color: const Color(0xFF94A3B8))),
+          icon: const Icon(LucideIcons.chevron_down, size: 14),
+          onChanged: enabled ? onChanged : null,
+          items: items.map<DropdownMenuItem<String>>((item) {
+            return DropdownMenuItem<String>(
+              value: item['id'],
+              child: Row(
+                children: [
+                   Icon(icon, size: 14, color: const Color(0xFF64748B)),
+                   const SizedBox(width: 8),
+                   Expanded(
+                     child: Text(
+                        item['name'],
+                        style: GoogleFonts.outfit(fontSize: 13, color: const Color(0xFF0F172A)),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                   ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -185,7 +364,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
         child: _isLoading
             ? const CircularProgressIndicator(color: Colors.white)
             : Text(
-                'CREAR ENTRADA',
+                'CREAR USUARIO',
                 style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
               ),
       ),
