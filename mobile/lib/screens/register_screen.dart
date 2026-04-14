@@ -18,7 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final AuthService _authService = AuthService();
   
   int _currentStep = 0;
-  String _selectedRole = 'CLIENT';
+  final String _selectedRole = 'CLIENT'; // Forzado a Cliente
   bool _isLoading = false;
   bool _acceptTerms = false;
 
@@ -28,8 +28,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _workshopNameController = TextEditingController();
-  final _workshopAddressController = TextEditingController();
 
   void _nextStep() {
     if (_currentStep < 2) {
@@ -70,22 +68,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       'email': _emailController.text,
       'password': _passwordController.text,
       'role': _selectedRole,
-      'workshopName': _workshopNameController.text,
-      'workshopAddress': _workshopAddressController.text,
       'acceptTerms': _acceptTerms,
-      'country': 'México', // Default para esta fase
+      'country': 'México', 
       'city': 'CDMX',
     });
 
     setState(() => _isLoading = false);
 
     if (success) {
-      final role = await _authService.getUserRole();
       if (mounted) {
-        String route = '/dashboard/client';
-        if (role == 'SUPPORT') route = '/dashboard/support';
-        if (role == 'TALLER') route = '/dashboard/workshop';
-        Navigator.pushReplacementNamed(context, route);
+        Navigator.pushReplacementNamed(context, '/dashboard/client');
       }
     } else {
       if (mounted) {
@@ -178,80 +170,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(height: 48),
           FadeInDown(
-            child: Text(
-              '¿Cómo quieres usar la App?',
-              style: GoogleFonts.outfit(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Selecciona tu perfil para personalizar tu experiencia.',
-            style: GoogleFonts.outfit(color: const Color(0xFF64748B)),
-          ),
-          const SizedBox(height: 32),
-          _buildRoleCard(
-            'CLIENT', 
-            'Soy Cliente', 
-            'Busco talleres para reparar mi vehículo', 
-            LucideIcons.user
-          ),
-          const SizedBox(height: 16),
-          _buildRoleCard(
-            'TALLER', 
-            'Soy Dueño de Taller', 
-            'Quiero gestionar mi negocio y clientes', 
-            LucideIcons.wrench
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRoleCard(String role, String title, String subtitle, IconData icon) {
-    bool isSelected = _selectedRole == role;
-    
-    return GestureDetector(
-      onTap: () => setState(() => _selectedRole = role),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF10B981) : const Color(0xFFE2E8F0),
-            width: 2,
-          ),
-          boxShadow: isSelected ? [
-            BoxShadow(color: const Color(0xFF10B981).withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 10))
-          ] : null,
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
+            child: Container(
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFF10B981) : const Color(0xFFF1F5F9),
+                color: const Color(0xFF10B981).withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: isSelected ? Colors.white : const Color(0xFF64748B)),
+              child: const Icon(LucideIcons.user, color: Color(0xFF10B981), size: 64),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text(subtitle, style: GoogleFonts.outfit(fontSize: 12, color: const Color(0xFF64748B))),
-                ],
-              ),
+          ),
+          const SizedBox(height: 32),
+          FadeInDown(
+            child: Text(
+              '¡Bienvenido!',
+              style: GoogleFonts.outfit(fontSize: 28, fontWeight: FontWeight.bold),
             ),
-            if (isSelected)
-              const Icon(LucideIcons.circle_check, color: Color(0xFF10B981)),
-          ],
-        ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Crea tu cuenta de cliente para empezar a gestionar tus reparaciones de forma inteligente.',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.outfit(color: const Color(0xFF64748B), fontSize: 16),
+          ),
+        ],
       ),
     );
   }
@@ -264,7 +209,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         children: [
           FadeInDown(
             child: Text(
-              'Cuéntanos sobre ti',
+              'Datos Personales',
               style: GoogleFonts.outfit(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
@@ -287,7 +232,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         children: [
           FadeInDown(
             child: Text(
-              'Seguridad y más',
+              'Seguridad',
               style: GoogleFonts.outfit(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
@@ -295,12 +240,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           KineticInput(label: 'Contraseña', icon: LucideIcons.lock, controller: _passwordController, isPassword: true),
           const SizedBox(height: 16),
           KineticInput(label: 'Confirmar Contraseña', icon: LucideIcons.circle_check, controller: _confirmPasswordController, isPassword: true),
-          if (_selectedRole == 'TALLER') ...[
-            const SizedBox(height: 16),
-            KineticInput(label: 'Nombre del Taller', icon: LucideIcons.briefcase, controller: _workshopNameController),
-            const SizedBox(height: 16),
-            KineticInput(label: 'Dirección del Taller', icon: LucideIcons.map, controller: _workshopAddressController),
-          ],
           const SizedBox(height: 24),
           Row(
             children: [
@@ -328,7 +267,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       padding: const EdgeInsets.all(24.0),
       child: KineticIconButton(
         icon: _currentStep == 2 ? LucideIcons.rocket : LucideIcons.arrow_right,
-        label: _isLoading ? 'PROCESANDO...' : (_currentStep == 2 ? '¡CREAR CUENTA!' : 'CONTINUAR'),
+        label: _isLoading ? 'PROCESANDO...' : (_currentStep == 0 ? 'COMENZAR' : (_currentStep == 2 ? '¡CREAR CUENTA!' : 'CONTINUAR')),
         onPressed: _isLoading ? null : _nextStep,
         isLarge: true,
       ),

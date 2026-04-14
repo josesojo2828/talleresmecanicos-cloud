@@ -145,68 +145,26 @@ export const RegisterForm = () => {
                     </div>
                 )}
 
-                {/* --- PASO 1: SELECCIÓN DE PERFIL --- */}
+                {/* --- PASO 1: INFO INICIAL (Sustituye a selección de rol) --- */}
                 {step === 1 && (
                     <div className="space-y-6 animate-fade-in">
-                        <div className="space-y-2">
-                            <h3 className="text-xl font-black text-slate-900 tracking-tight italic uppercase">Primer Paso</h3>
-                            <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">{t("role_selection") || "Selecciona tu perfil de usuario"}</p>
+                        <div className="space-y-2 text-center">
+                            <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                                <User size={40} />
+                            </div>
+                            <h3 className="text-2xl font-black text-slate-900 tracking-tight italic uppercase">¡Bienvenido!</h3>
+                            <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Estás a un paso de gestionar tus vehículos con la mejor tecnología.</p>
                         </div>
-
-                        <div className="grid grid-cols-1 gap-4">
-                            <button
-                                type="button"
+                        
+                        <div className="pt-4">
+                            <Button 
+                                type="button" 
+                                variant="PRIMARY" 
+                                className="w-full h-14 rounded-2xl shadow-xl shadow-emerald-500/20"
                                 onClick={() => { setValue("role", 'CLIENT'); nextStep(); }}
-                                className={cn(
-                                    "flex items-center gap-6 p-6 border-2 rounded-[2rem] transition-all duration-300 group relative overflow-hidden text-left",
-                                    watch("role") === 'CLIENT' 
-                                        ? "border-emerald-500 bg-emerald-50/50" 
-                                        : "border-slate-50 bg-slate-50/30 hover:border-slate-200"
-                                )}
                             >
-                                <div className={cn(
-                                    "w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 shrink-0",
-                                    watch("role") === 'CLIENT' ? "bg-emerald-500 text-white scale-110" : "bg-white text-slate-400 group-hover:text-emerald-500 shadow-sm"
-                                )}>
-                                    <User size={28} />
-                                </div>
-                                <div className="space-y-1">
-                                    <span className={cn("text-xs font-black uppercase tracking-widest block transition-colors", watch("role") === 'CLIENT' ? "text-emerald-600" : "text-slate-600")}>
-                                        {t("role_client") || "Soy Cliente"}
-                                    </span>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Busco talleres para reparar mi vehículo</p>
-                                </div>
-                                <div className="ml-auto">
-                                    <ArrowRight size={18} className={cn("transition-all", watch("role") === 'CLIENT' ? "text-emerald-500 translate-x-1" : "text-slate-200")} />
-                                </div>
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => { setValue("role", 'TALLER'); nextStep(); }}
-                                className={cn(
-                                    "flex items-center gap-6 p-6 border-2 rounded-[2rem] transition-all duration-300 group relative overflow-hidden text-left",
-                                    watch("role") === 'TALLER' 
-                                        ? "border-emerald-500 bg-emerald-50/50" 
-                                        : "border-slate-50 bg-slate-50/30 hover:border-slate-200"
-                                )}
-                            >
-                                <div className={cn(
-                                    "w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 shrink-0",
-                                    watch("role") === 'TALLER' ? "bg-emerald-500 text-white scale-110" : "bg-white text-slate-400 group-hover:text-emerald-500 shadow-sm"
-                                )}>
-                                    <Wrench size={28} />
-                                </div>
-                                <div className="space-y-1">
-                                    <span className={cn("text-xs font-black uppercase tracking-widest block transition-colors", watch("role") === 'TALLER' ? "text-emerald-600" : "text-slate-600")}>
-                                        {t("role_workshop") || "Soy Taller"}
-                                    </span>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Quiero gestionar mi negocio y recibir clientes</p>
-                                </div>
-                                <div className="ml-auto">
-                                    <ArrowRight size={18} className={cn("transition-all", watch("role") === 'TALLER' ? "text-emerald-500 translate-x-1" : "text-slate-200")} />
-                                </div>
-                            </button>
+                                COMENCER EL REGISTRO
+                            </Button>
                         </div>
                     </div>
                 )}
