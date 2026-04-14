@@ -8,15 +8,15 @@ export function getScopeFilter(user: any, relation?: string) {
     }
 
     if (user.role === UserRole.SUPPORT) {
-        const assignments = user.assignments || [];
-        if (assignments.length === 0) return { id: 'none' };
+        const regions = user.regions || [];
+        if (regions.length === 0) return { id: 'none' };
 
         const countryIds = [...new Set(
-            assignments.map((a: any) => a.countryId).filter((id: any) => id != null)
+            regions.map((a: any) => a.countryId).filter((id: any) => id != null)
         )] as string[];
         
         const cityIds = [...new Set(
-            assignments.map((a: any) => a.cityId).filter((id: any) => id != null)
+            regions.map((a: any) => a.cityId).filter((id: any) => id != null)
         )] as string[];
 
         const filters: any[] = [];

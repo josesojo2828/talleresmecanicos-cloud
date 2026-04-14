@@ -28,6 +28,14 @@ class _SupportRegionsTabState extends State<SupportRegionsTab> {
 
   Future<void> _loadAssignments() async {
     setState(() => _isLoading = true);
+    
+    // Carga inicial rápida desde caché local
+    final cachedRegions = await _api.auth.getUserRegions();
+    if (cachedRegions.isNotEmpty) {
+      _processAssignments(cachedRegions);
+      setState(() => _isLoading = false);
+    }
+
     try {
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getString('user_id');
@@ -37,26 +45,32 @@ class _SupportRegionsTabState extends State<SupportRegionsTab> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final user = data['body'] ?? data;
-        final assignments = user['supportAssignments'] ?? [];
+        final assignments = user['regions'] ?? [];
         
-        setState(() {
-          _assignedCountries = assignments
-              .where((a) => a['country'] != null && a['city'] == null)
-              .map((a) => a['country'])
-              .toList();
-          
-          _assignedCities = assignments
-              .where((a) => a['city'] != null)
-              .map((a) => a['city'])
-              .toList();
-          
-          _isLoading = false;
-        });
+        // Guardar en caché para la próxima vez
+        await prefs.setString('user_regions', jsonEncode(assignments));
+        
+        _processAssignments(assignments);
       }
     } catch (e) {
       print('Error cargando regiones: $e');
-      setState(() => _isLoading = false);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  void _processAssignments(List<dynamic> assignments) {
+    setState(() {
+      _assignedCountries = assignments
+          .where((a) => a['country'] != null && a['city'] == null)
+          .map((a) => a['country'])
+          .toList();
+      
+      _assignedCities = assignments
+          .where((a) => a['city'] != null)
+          .map((a) => a['city'])
+          .toList();
+    });
   }
 
   @override
