@@ -70,10 +70,14 @@ class WorkshopService {
       final response = await _api.get('/public/locations/countries');
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
-        return decoded['body']?['data'] ?? decoded['data'] ?? [];
+        final data = decoded['body']?['data'] ?? decoded['data'] ?? [];
+        print('🗺️ Países cargados: ${data.length}');
+        return data;
       }
+      print('⚠️ Error cargando países: ${response.statusCode}');
       return [];
     } catch (e) {
+      print('❌ Falló fetch de países: $e');
       return [];
     }
   }
@@ -83,10 +87,14 @@ class WorkshopService {
       final response = await _api.get('/public/locations/cities?country=$country');
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
-        return decoded['body']?['data'] ?? decoded['data'] ?? [];
+        final data = decoded['body']?['data'] ?? decoded['data'] ?? [];
+        print('🏙️ Ciudades cargadas para $country: ${data.length}');
+        return data;
       }
+      print('⚠️ Error cargando ciudades: ${response.statusCode}');
       return [];
     } catch (e) {
+      print('❌ Falló fetch de ciudades: $e');
       return [];
     }
   }

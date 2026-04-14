@@ -9,7 +9,18 @@ import 'package:workshops_mobile/screens/workshop/workshop_tabs.dart';
 import 'package:workshops_mobile/screens/support/support_tabs.dart';
 import 'package:workshops_mobile/services/sync_service.dart';
 
+import 'dart:io';
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 void main() async {
+  HttpOverrides.global = MyHttpOverrides();
   // Aseguramos que los widgets de Flutter estén cargados antes del SyncService
   WidgetsFlutterBinding.ensureInitialized();
   

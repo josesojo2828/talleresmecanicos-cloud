@@ -200,6 +200,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
     required Function(String?) onChanged,
   }) {
     return DropdownButtonFormField<String>(
+      isExpanded: true,
       value: value,
       dropdownColor: Colors.white,
       style: const TextStyle(color: Color(0xFF0F172A)),

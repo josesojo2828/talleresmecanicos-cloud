@@ -27,13 +27,23 @@ class ApiClient {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
-    final response = await _client.get(
-      Uri.parse('$_baseUrl$endpoint'),
-      headers: {
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-    );
-    return response;
+    final url = '$_baseUrl$endpoint';
+    print('🌐 API GET: $url');
+
+    try {
+      final response = await _client.get(
+        Uri.parse(url),
+        headers: {
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 15));
+      
+      print('✅ API RESPONSE [${response.statusCode}]: $url');
+      return response;
+    } catch (e) {
+      print('❌ API ERR [$url]: $e');
+      rethrow;
+    }
   }
 
   Future<http.Response> put(String endpoint, Map<String, dynamic> body) async {
