@@ -23,7 +23,7 @@ export class UserCrudController {
     ) { }
 
     @Post()
-    @Roles(UserRole.ADMIN)
+    @Roles(UserRole.ADMIN, UserRole.SUPPORT)
     async create(@Body() body: ICreateUserDto) {
         return await this.createUseCase.execute({ data: body });
     }
@@ -35,7 +35,7 @@ export class UserCrudController {
     }
 
     @Put(':id')
-    @Roles(UserRole.ADMIN)
+    @Roles(UserRole.ADMIN, UserRole.SUPPORT)
     async update(@Param('id') id: string, @Body() body: IUpdateUserDto) {
         return await this.updateUseCase.execute({ data: body, id });
     }

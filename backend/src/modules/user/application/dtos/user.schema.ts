@@ -14,7 +14,12 @@ export type IUserIncludeType = Prisma.UserInclude;
 export const IDefaultUserInclude: IUserIncludeType = {
     profile: true,
     workshop: true,
-    supportAssignments: true,
+    supportAssignments: {
+        include: {
+            country: true,
+            city: true
+        }
+    },
     forumLikes: {
         include: {
             post: true
