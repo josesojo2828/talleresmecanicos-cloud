@@ -16,6 +16,7 @@ class SupportRegionsTab extends StatefulWidget {
 
 class _SupportRegionsTabState extends State<SupportRegionsTab> {
   final _api = ApiClient();
+  final _auth = AuthService();
   bool _isLoading = true;
   List<dynamic> _assignedCountries = [];
   List<dynamic> _assignedCities = [];
@@ -30,7 +31,7 @@ class _SupportRegionsTabState extends State<SupportRegionsTab> {
     setState(() => _isLoading = true);
     
     // Carga inicial rápida desde caché local
-    final cachedRegions = await _api.auth.getUserRegions();
+    final cachedRegions = await _auth.getUserRegions();
     if (cachedRegions.isNotEmpty) {
       _processAssignments(cachedRegions);
       setState(() => _isLoading = false);
