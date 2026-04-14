@@ -13,6 +13,7 @@ export class UserMapper {
             profile: raw.profile ? raw.profile : null,
             address: raw.address ? raw.address : null,
             permissions: raw.permissions ? raw.permissions : null,
+            regions: raw.supportAssignments || [],
         };
     }
 }
