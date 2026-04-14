@@ -43,7 +43,7 @@ export class MainSeedService implements OnApplicationBootstrap {
             // // await this.inventory.execute();
 
             // 6. Mario Demo Account (Complete flow)
-            await this.mario.execute();
+            // await this.mario.execute();
 
             this.logger.log('--- SEEDING FINALIZADO CON ÉXITO ---');
         } catch (error) {

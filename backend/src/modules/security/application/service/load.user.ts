@@ -51,58 +51,7 @@ export class LoadUserService {
             }
         })
 
-        const supportUser = await this.prisma.user.upsert({
-            where: { email: 'soporte2@talleres.com' },
-            update: {
-                passwordHash,
-                role: 'SUPPORT',
-            },
-            create: {
-                email: 'soporte2@talleres.com',
-                passwordHash,
-                firstName: 'Soporte',
-                lastName: 'Regional',
-                role: 'SUPPORT',
-                profile: {
-                    create: {}
-                }
-            }
-        })
-
-        // --- ASIGNACIONES REGIONALES ---
-        const cdmx = await this.prisma.city.findFirst({ where: { name: 'Ciudad de México' } });
-
-        if (cdmx) {
-            const exists = await this.prisma.supportAssignment.findFirst({
-                where: { userId: supportUser.id, countryId: null, cityId: cdmx.id }
-            });
-            if (!exists) {
-                await this.prisma.supportAssignment.create({
-                    data: { userId: supportUser.id, countryId: null, cityId: cdmx.id }
-                });
-                this.logger.log(`Asignado [CDMX] a soporte2@talleres.com`);
-            }
-        }
-
-        const clientUser = await this.prisma.user.upsert({
-            where: { email: 'cliente@example.com' },
-            update: {
-                passwordHash,
-                role: 'CLIENT',
-            },
-            create: {
-                email: 'cliente@example.com',
-                passwordHash,
-                firstName: 'Cliente',
-                lastName: 'Demo',
-                role: 'CLIENT',
-                profile: {
-                    create: {}
-                }
-            }
-        })
-
-        const users = [superadmin, admin, supportUser, clientUser];
+        const users = [superadmin, admin];
 
         console.log('\n' + '='.repeat(60));
         this.logger.log('CREDENCIALES DE ACCESO (SEED)');
