@@ -37,6 +37,10 @@ export interface AuthResponse {
     user: User;
     token: string;
     refreshToken?: string;
+    dashboard?: {
+        pages: ObjectPage[];
+        sidebar: ObjectSidebar[];
+    }
 }
 
 // API Response types

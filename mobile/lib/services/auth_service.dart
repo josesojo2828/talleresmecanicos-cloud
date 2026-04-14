@@ -37,6 +37,34 @@ class AuthService {
     }
   }
 
+  Future<bool> register(Map<String, dynamic> userData) async {
+    try {
+      final response = await _api.post('/auth/register', userData);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final rawData = jsonDecode(response.body);
+        final data = rawData['body'] ?? rawData;
+        
+        final token = data['access_token'] ?? data['token'];
+        if (token == null) return false;
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+        await prefs.setString('user_name', '${data['user']['firstName']} ${data['user']['lastName']}');
+        await prefs.setString('user_role', data['user']['role']);
+        await prefs.setString('user_email', data['user']['email'] ?? '');
+        
+        if (data['user']['country'] != null) await prefs.setString('user_country', data['user']['country'].toString());
+        if (data['user']['city'] != null) await prefs.setString('user_city', data['user']['city'].toString());
+        
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<bool> isLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.containsKey('token');

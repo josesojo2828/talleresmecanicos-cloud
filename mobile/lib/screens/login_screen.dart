@@ -140,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () => Navigator.pushNamed(context, '/register'),
                 child: RichText(
                   text: TextSpan(
-                    style: GoogleFonts.outfit(color: Colors.slate, fontSize: 13),
+                    style: GoogleFonts.outfit(color: const Color(0xFF64748B), fontSize: 13),
                     children: [
                       const TextSpan(text: '¿No tienes cuenta? '),
                       TextSpan(

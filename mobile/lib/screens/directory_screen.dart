@@ -384,6 +384,25 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
           icon: const Icon(LucideIcons.map_pinned, color: Color(0xFF10B981)),
           onPressed: _showLocationDialog,
         ),
+        IconButton(
+          icon: Icon(
+            _isLoggedIn ? LucideIcons.circle_user : LucideIcons.user_plus, 
+            color: const Color(0xFF334155)
+          ),
+          onPressed: () async {
+            if (_isLoggedIn) {
+              final role = await _auth.getRole();
+              if (mounted) {
+                Navigator.pushReplacementNamed(
+                  context, 
+                  role == 'SUPPORT' ? '/dashboard/support' : '/dashboard/workshop'
+                );
+              }
+            } else {
+              Navigator.pushNamed(context, '/register');
+            }
+          },
+        ),
       ],
     );
   }

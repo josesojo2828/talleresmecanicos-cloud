@@ -36,11 +36,12 @@ export const register = async (data: RegisterData): Promise<AuthResponse> => {
                 role: data.role,
                 country: data.country,
                 city: data.city,
+                workshopName: data.workshopName,
+                workshopAddress: data.workshopAddress,
             },
         );
 
-        const responseData: AuthResponse = response.data;
-        return responseData;
+        return response.data.body;
     } catch (error) {
         if (error instanceof Error) {
             throw error;

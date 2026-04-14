@@ -47,7 +47,7 @@ class _ClientTabsState extends State<ClientTabs> {
           unselectedLabelStyle: GoogleFonts.outfit(fontSize: 12),
           elevation: 0,
           items: const [
-            BottomNavigationBarItem(icon: Icon(LucideIcons.home), label: 'Inicio'),
+            BottomNavigationBarItem(icon: Icon(LucideIcons.house), label: 'Inicio'),
             BottomNavigationBarItem(icon: Icon(LucideIcons.wrench), label: 'Trabajos'),
             BottomNavigationBarItem(icon: Icon(LucideIcons.calendar_clock), label: 'Citas'),
             BottomNavigationBarItem(icon: Icon(LucideIcons.user), label: 'Perfil'),

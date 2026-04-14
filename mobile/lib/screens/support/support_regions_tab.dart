@@ -153,7 +153,7 @@ class _SupportRegionsTabState extends State<SupportRegionsTab> {
                 const SizedBox(width: 16),
                 Text(c['name'], style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: const Color(0xFF0F172A))),
                 const Spacer(),
-                const Icon(LucideIcons.check_circle_2, color: Color(0xFF10B981), size: 16),
+                const Icon(LucideIcons.circle_check, color: Color(0xFF10B981), size: 16),
               ],
             ),
           ),
