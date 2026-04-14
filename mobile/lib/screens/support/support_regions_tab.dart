@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workshops_mobile/services/api_client.dart';
+import 'package:workshops_mobile/services/auth_service.dart';
 import 'package:workshops_mobile/screens/support/create_city_screen.dart';
 import 'dart:convert';
 
