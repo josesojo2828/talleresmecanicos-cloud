@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:workshops_mobile/screens/support/support_dashboard_tab.dart';
-import 'package:workshops_mobile/screens/support/support_workshops_tab.dart';
+import 'package:workshops_mobile/screens/support/support_user_list_tab.dart';
+import 'package:workshops_mobile/screens/support/support_regions_tab.dart';
 import 'package:workshops_mobile/screens/support/support_profile_tab.dart';
 
 class SupportTabs extends StatefulWidget {
@@ -16,7 +17,8 @@ class _SupportTabsState extends State<SupportTabs> {
 
   final List<Widget> _tabs = [
     const SupportDashboardTab(),
-    const SupportWorkshopsTab(),
+    const SupportUserListTab(),
+    const SupportRegionsTab(),
     const SupportProfileTab(),
   ];
 
@@ -29,7 +31,15 @@ class _SupportTabsState extends State<SupportTabs> {
         children: _tabs,
       ),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 40, offset: const Offset(0, -10))]),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 40,
+              offset: const Offset(0, -10),
+            )
+          ],
+        ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
@@ -43,9 +53,22 @@ class _SupportTabsState extends State<SupportTabs> {
           selectedLabelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
           unselectedLabelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
           items: const [
-            BottomNavigationBarItem(icon: Icon(LucideIcons.activity, size: 20), label: 'Monitor'),
-            BottomNavigationBarItem(icon: Icon(LucideIcons.building_2, size: 20), label: 'Talleres'),
-            BottomNavigationBarItem(icon: Icon(LucideIcons.user_cog, size: 20), label: 'Admin'),
+            BottomNavigationBarItem(
+              icon: Icon(LucideIcons.layout_dashboard, size: 20),
+              label: 'Dashboard',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(LucideIcons.users, size: 20),
+              label: 'Usuarios',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(LucideIcons.map, size: 20),
+              label: 'Regiones',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(LucideIcons.user_cog, size: 20),
+              label: 'Perfil',
+            ),
           ],
         ),
       ),
