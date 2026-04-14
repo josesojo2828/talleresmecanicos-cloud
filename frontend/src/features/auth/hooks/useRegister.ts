@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { RegisterData } from "../types/auth.types";
 import { register as registerService } from "../services/authService";
-import { setToken, setUser } from "../utils/tokenManager";
+import { useAuthStore } from "@/store/useAuthStore";
 import { validateRegisterForm } from "../utils/validation";
 
 export const useRegister = () => {
@@ -68,15 +68,32 @@ export const useRegister = () => {
         }
 
         console.log("✅ Validación manual exitosa. Llamando al servicio API...");
+        
+        // Acciones del Store
+        const loginInStore = useAuthStore.getState().login;
 
         try {
             const response = await registerService(data);
-            // Save token and user
-            setToken(response.token, true); // Remember user after registration
-            setUser(response.user);
-            // Redirect to dashboard or home
-            router.push("/");
+            
+            // Extraer datos según la estructura del backend
+            const backendUser = response.user;
+            const token = response.token;
+            const sidebar = response.dashboard?.sidebar || [];
+            const pages = response.dashboard?.pages || [];
+            
+            // Guardar en el store global (Zustand + Persistence)
+            loginInStore(
+                backendUser,
+                token,
+                'es',
+                sidebar,
+                pages
+            );
+
+            // Redirigir al dashboard
+            router.push("/dashboard");
         } catch (err) {
+            console.error("❌ Error en registro:", err);
             if (err instanceof Error) {
                 setError(err.message);
             } else {

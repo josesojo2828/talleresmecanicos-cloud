@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form"; 
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { User, Wrench, ArrowLeft, ArrowRight, CheckCircle2, Mail, Lock, Briefcase, Map as MapIcon } from "lucide-react";
+import { User, Wrench, ArrowLeft, ArrowRight, CheckCircle2, Mail, Lock, Briefcase, Map as MapIcon, AlertCircle } from "lucide-react";
 
 import { Button } from "@/components/atoms/Button";
 import { Typography } from "@/components/atoms/Typography";
@@ -65,10 +65,30 @@ export const RegisterForm = () => {
     const isStep1Valid = !!currentRole;
     const isStep2Valid = watch("firstName") && watch("lastName") && watch("email") && watch("password") && watch("confirmPassword") && (watch("password") === watch("confirmPassword"));
 
+    // --- LÓGICA DE ERRORES POR PASO ---
+    const getErrorsForStep = (s: number) => {
+        if (s === 1) return fieldErrors.role ? [fieldErrors.role] : [];
+        if (s === 2) {
+            const fields = ['firstName', 'lastName', 'email', 'password', 'confirmPassword'];
+            return fields.map(f => fieldErrors[f]).filter(Boolean);
+        }
+        if (s === 3) {
+            const fields = ['country', 'city', 'workshopName', 'workshopAddress', 'acceptTerms'];
+            return fields.map(f => fieldErrors[f]).filter(Boolean);
+        }
+        return [];
+    };
+
+    const stepHasErrors = (s: number) => getErrorsForStep(s).length > 0;
+    const totalFieldsWithErrors = Object.keys(fieldErrors).length;
+
     // --- MANEJADOR DE ENVÍO (SUBMIT) ---
     const onSubmit = async (data: any) => {
         console.log("🚀 Submit Iniciado con datos:", data);
-        if (!data.role) return; 
+        if (!data.role) {
+            console.error("Error: No se detectó un rol seleccionado.");
+            return;
+        } 
         await handleRegister(data);
     };
 
@@ -90,22 +110,38 @@ export const RegisterForm = () => {
                     <div 
                         key={s} 
                         className={cn(
-                            "relative z-10 w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black transition-all duration-500",
-                            step === s ? "bg-emerald-500 text-white scale-125 shadow-lg shadow-emerald-500/20" : 
+                            "relative z-10 w-10 h-10 rounded-full flex items-center justify-center text-xs font-black transition-all duration-500",
+                            step === s ? (stepHasErrors(s) ? "bg-red-500 text-white scale-125 shadow-lg shadow-red-500/20" : "bg-emerald-500 text-white scale-125 shadow-lg shadow-emerald-500/20") : 
+                            stepHasErrors(s) ? "bg-red-500 text-white shadow-md animate-pulse" :
                             step > s ? "bg-emerald-500 text-white" : "bg-white border-2 border-slate-100 text-slate-300"
                         )}
                     >
-                        {step > s ? <CheckCircle2 size={14} /> : s}
+                        {step > s && !stepHasErrors(s) ? <CheckCircle2 size={14} /> : s}
                     </div>
                 ))}
             </div>
 
             <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-6 text-left">
-                {/* Error Global (Backend) */}
-                {error && (
-                    <div role="alert" className="alert alert-error text-sm rounded-xl shadow-inner text-white font-semibold">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>{error}</span>
+                {/* --- BANNER DE ERRORES GLOBAL (MEJORADO) --- */}
+                {(error || totalFieldsWithErrors > 0) && (
+                    <div className="bg-red-50 border-2 border-red-100 p-5 rounded-[2rem] space-y-3 animate-fade-in shadow-sm">
+                        <div className="flex items-center gap-3 text-red-600 font-black uppercase tracking-widest text-[10px]">
+                             <AlertCircle className="w-4 h-4" />
+                             Atención: Revisa los siguientes puntos
+                        </div>
+                        <div className="space-y-2">
+                            {error && <p className="text-xs text-red-700 font-bold">{error}</p>}
+                            {totalFieldsWithErrors > 0 && (
+                                <ul className="grid grid-cols-1 gap-1">
+                                    {Object.entries(fieldErrors).map(([key, msg]) => (
+                                        <li key={key} className="text-[10px] text-red-500 font-bold uppercase tracking-tight flex items-center gap-2">
+                                            <div className="w-1 h-1 rounded-full bg-red-400" />
+                                            {msg}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
                     </div>
                 )}
 
@@ -305,6 +341,11 @@ export const RegisterForm = () => {
                                         validation: { required: "Elegí tu país" },
                                     } as any}
                                 />
+                                {fieldErrors.country && (
+                                    <p className="text-[10px] text-error font-black uppercase tracking-widest mt-1 px-1">
+                                        {fieldErrors.country}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-1.5">
@@ -319,6 +360,11 @@ export const RegisterForm = () => {
                                         validation: { required: "Elegí tu ciudad" },
                                     } as any}
                                 />
+                                {fieldErrors.city && (
+                                    <p className="text-[10px] text-error font-black uppercase tracking-widest mt-1 px-1">
+                                        {fieldErrors.city}
+                                    </p>
+                                )}
                             </div>
                         </div>
 
