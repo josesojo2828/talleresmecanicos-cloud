@@ -26,38 +26,37 @@ class _LoginScreenState extends State<LoginScreen> {
     _checkBiometrics();
   }
 
+  String _getRouteByRole(String role) {
+    switch (role) {
+      case 'TALLER': return '/dashboard/workshop';
+      case 'SUPPORT': return '/dashboard/support';
+      case 'CLIENT': return '/dashboard/client';
+      case 'ADMIN': return '/dashboard/support'; // Admin usa soporte por ahora
+      default: return '/directory';
+    }
+  }
+
   Future<void> _checkBiometrics() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    debugPrint('########## TOKEN ALMACENADO: $token ##########');
-
-    if (token == null) {
-      debugPrint('########## SIN SESIÓN PREVIA: No se intenta biometría ##########');
-      return;
-    }
+    if (token == null) return;
 
     final authenticated = await _auth.authenticateWithBiometrics();
-    debugPrint('########## RESULTADO BIOMETRÍA: $authenticated ##########');
-
     if (authenticated && mounted) {
       final role = await _auth.getUserRole();
-      debugPrint('########## ROL RECUPERADO: $role ##########');
-      Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support');
+      Navigator.pushReplacementNamed(context, _getRouteByRole(role));
     }
   }
 
   Future<void> _login() async {
     setState(() => _isLoading = true);
-    debugPrint('########## INTENTANDO LOGIN: ${_emailController.text} ##########');
     final success = await _auth.login(_emailController.text, _passwordController.text);
     
     if (success && mounted) {
       final role = await _auth.getUserRole();
-      debugPrint('########## LOGIN EXITOSO: ROL: $role ##########');
       _showBiometricSetupIfNeeded(role);
     } else {
-      debugPrint('########## LOGIN FALLIDO: Credenciales o Respuesta Inválida ##########');
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Credenciales incorrectas balín. Ponete las pilas.')));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Credenciales incorrectas. Verificá los datos.')));
       setState(() => _isLoading = false);
     }
   }
@@ -67,17 +66,17 @@ class _LoginScreenState extends State<LoginScreen> {
     if (canBiometric && mounted) {
       showDialog(context: context, builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
-        title: Text('¿ACTIVAR DEDO?', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
-        content: const Text('Para la próxima vuelta podés entrar con tu huella digital.'),
+        title: Text('¿ACTIVAR BIOMETRÍA?', style: GoogleFonts.outfit(fontWeight: FontWeight.w900)),
+        content: const Text('Podrás ingresar más rápido usando tu huella o rostro.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support'), child: const Text('LUEGO')),
+          TextButton(onPressed: () => Navigator.pushReplacementNamed(context, _getRouteByRole(role)), child: const Text('LUEGO')),
           ElevatedButton(
             onPressed: () async {
               final verified = await _auth.authenticateWithBiometrics();
               if (verified && mounted) {
-                Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support');
+                Navigator.pushReplacementNamed(context, _getRouteByRole(role));
               } else {
-                if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No se pudo verificar la huella.')));
+                if (mounted) Navigator.pushReplacementNamed(context, _getRouteByRole(role));
               }
             }, 
             child: const Text('ACTIVAR')
@@ -85,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ));
     } else {
-      if (mounted) Navigator.pushReplacementNamed(context, role == 'TALLER' ? '/dashboard/workshop' : '/dashboard/support');
+      if (mounted) Navigator.pushReplacementNamed(context, _getRouteByRole(role));
     }
   }
 
@@ -136,7 +135,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   textColor: Colors.white
                 )
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () => Navigator.pushNamed(context, '/register'),
+                child: RichText(
+                  text: TextSpan(
+                    style: GoogleFonts.outfit(color: Colors.slate, fontSize: 13),
+                    children: [
+                      const TextSpan(text: '¿No tienes cuenta? '),
+                      TextSpan(
+                        text: 'REGÍSTRATE AQUÍ', 
+                        style: GoogleFonts.outfit(color: const Color(0xFF10B981), fontWeight: FontWeight.w900)
+                      ),
+                    ]
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
               TextButton(
                 onPressed: () => Navigator.pushReplacementNamed(context, '/directory'),
                 child: Text('VOLVER AL DIRECTORIO', style: GoogleFonts.outfit(color: Colors.grey, fontWeight: FontWeight.bold))
