@@ -12,7 +12,7 @@ export default class AppointmentModel {
     }
 
     public getWhere(param: IAppointmentQueryFilter, search?: string): any {
-        const wh: any[] = [];
+        const wh: any[] = [{ deletedAt: null }];
 
         if (param.workshopId) wh.push({ workshopId: param.workshopId });
         if (param.clientId) wh.push({ clientId: param.clientId });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,7 +15,7 @@ class MapPickerScreen extends StatefulWidget {
 
 class _MapPickerScreenState extends State<MapPickerScreen> {
   late LatLng _selectedPosition;
-  late GoogleMapController _mapController;
+  final MapController _mapController = MapController();
 
   @override
   void initState() {
@@ -38,7 +39,7 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
     final position = await Geolocator.getCurrentPosition();
     setState(() {
       _selectedPosition = LatLng(position.latitude, position.longitude);
-      _mapController.animateCamera(CameraUpdate.newLatLng(_selectedPosition));
+      _mapController.move(_selectedPosition, 15);
     });
   }
 
@@ -46,7 +47,7 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SELECCIONAR UBICACIÓN', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 14)),
+        title: Text('UBICACIÓN (OPENMAP)', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 14)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, _selectedPosition),
@@ -56,15 +57,29 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
       ),
       body: Stack(
         children: [
-          GoogleMap(
-            initialCameraPosition: CameraPosition(target: _selectedPosition, zoom: 15),
-            onMapCreated: (controller) => _mapController = controller,
-            onTap: (position) => setState(() => _selectedPosition = position),
-            markers: {
-              Marker(markerId: const MarkerId('selected'), position: _selectedPosition),
-            },
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
+          FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              initialCenter: _selectedPosition,
+              initialZoom: 15,
+              onTap: (tapPosition, point) => setState(() => _selectedPosition = point),
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.workshops.workshops_mobile',
+              ),
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    point: _selectedPosition,
+                    width: 40,
+                    height: 40,
+                    child: const Icon(LucideIcons.map_pin, color: Colors.red, size: 40),
+                  ),
+                ],
+              ),
+            ],
           ),
           Positioned(
             bottom: 24,
@@ -75,6 +90,15 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
               child: const Icon(LucideIcons.locate, color: Color(0xFF0F172A)),
             ),
           ),
+          Positioned(
+            bottom: 24,
+            left: 24,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(color: Colors.white.withOpacity(0.9), borderRadius: BorderRadius.circular(8)),
+              child: Text('Toca el mapa para marcar', style: GoogleFonts.outfit(fontSize: 10, fontWeight: FontWeight.bold)),
+            ),
+          )
         ],
       ),
     );

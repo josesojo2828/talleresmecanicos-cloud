@@ -15,7 +15,10 @@ export default class WorkshopClientPersistence {
     }
 
     async delete(id: string) {
-        return await this.prisma.workshopClient.delete({ where: { id } });
+        return await this.prisma.workshopClient.update({ 
+            where: { id }, 
+            data: { deletedAt: new Date() } 
+        });
     }
 
     async find(where: Prisma.WorkshopClientWhereUniqueInput) {
@@ -61,7 +64,7 @@ export default class WorkshopClientPersistence {
 
         return data.map(item => ({
             id: item.id,
-            label: `${item.firstName} ${item.lastName}`.trim() || 'Sin nombre'
+            label: item.name.trim() || 'Sin nombre'
         }));
     }
 }

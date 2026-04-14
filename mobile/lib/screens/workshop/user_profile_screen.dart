@@ -116,7 +116,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   _buildSwitchTile(
                     'ACCESO BIOMÉTRICO', 
                     'Usar huella para ingresar a la app', 
-                    LucideIcons.fingerprint, 
+                    LucideIcons.user_check, 
                     _useBiometrics,
                     (val) => setState(() => _useBiometrics = val)
                   ),

@@ -36,7 +36,7 @@ export class WorkshopClientUCase {
     }
 
     async findOne(id: string, user: any) {
-        const entity = await this.persistence.find({ id });
+        const entity = await this.persistence.find({ id, deletedAt: null } as any);
         if (!entity) throw new NotFoundException("Cliente no encontrado");
 
         if (user.role === UserRole.TALLER && entity.workshopId !== user.workshop?.id) {
@@ -57,7 +57,7 @@ export class WorkshopClientUCase {
             parsedFilters.workshopId = user.workshop.id;
         }
 
-        const where: any = { ...parsedFilters };
+        const where: any = { ...parsedFilters, deletedAt: null };
         if (search) {
             where.OR = [
                 { name: { contains: search, mode: 'insensitive' } },

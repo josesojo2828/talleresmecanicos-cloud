@@ -9,7 +9,8 @@ export class FinanceUCase {
     async getStats(workshopId: string, start?: string, end?: string) {
         const where: any = {
             workshopId,
-            status: { in: [WorkStatus.COMPLETED, WorkStatus.DELIVERED] }
+            status: { in: [WorkStatus.COMPLETED, WorkStatus.DELIVERED] },
+            deletedAt: null
         };
 
         if (start || end) {

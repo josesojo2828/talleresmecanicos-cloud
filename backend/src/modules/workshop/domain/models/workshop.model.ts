@@ -12,7 +12,7 @@ export default class WorkshopModel {
     }
 
     public getWhere(param: IWorkshopQueryFilter, search?: string): IWorkshopWhereType {
-        const wh: any[] = [];
+        const wh: any[] = [{ deletedAt: null }];
 
         if (param.countryId) wh.push({ countryId: param.countryId });
         if (param.cityId) wh.push({ cityId: param.cityId });

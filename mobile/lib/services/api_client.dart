@@ -50,4 +50,19 @@ class ApiClient {
     );
     return response;
   }
+
+  Future<http.Response> patch(String endpoint, Map<String, dynamic> body) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    final response = await _client.patch(
+      Uri.parse('$_baseUrl$endpoint'),
+      headers: {
+        'Content-Type': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(body),
+    );
+    return response;
+  }
 }

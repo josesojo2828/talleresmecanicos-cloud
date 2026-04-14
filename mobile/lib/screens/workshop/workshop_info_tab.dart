@@ -3,7 +3,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:workshops_mobile/services/workshop_service.dart';
 import 'package:workshops_mobile/widgets/kinetic_header.dart';
 import 'package:workshops_mobile/widgets/kinetic_input.dart';
@@ -109,7 +110,7 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
       context,
       MaterialPageRoute(
         builder: (_) => MapPickerScreen(
-          initialPosition: LatLng(_lat ?? -34.6037, _lng ?? -58.3816), // Default to Buenos Aires if null
+          initialPosition: LatLng(_lat ?? -34.6037, _lng ?? -58.3816),
         ),
       ),
     );
@@ -141,8 +142,6 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
       'lng': _lng,
     };
 
-    // Note: Image upload to server would happen here
-    // For now we just update the text fields
     final success = await _workshopService.updateWorkshop(payload);
     
     if (mounted) {
@@ -199,11 +198,7 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
       backgroundColor: const Color(0xFF0F172A),
       pinned: true,
       elevation: 0,
-      automaticallyImplyLeading: true,
-      leading: IconButton(
-        icon: const Icon(LucideIcons.arrow_left, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
+      automaticallyImplyLeading: false,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: false,
         titlePadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -328,21 +323,29 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(32),
                 border: Border.all(color: const Color(0xFFF1F5F9)),
-                image: _lat != null ? null : const DecorationImage(
-                  image: AssetImage('assets/images/map_placeholder.png'), // Need to add or use a stack
-                  fit: BoxFit.cover,
-                  opacity: 0.1
-                ),
               ),
               child: _lat != null 
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(30),
                     child: AbsorbPointer(
-                      child: GoogleMap(
-                        initialCameraPosition: CameraPosition(target: LatLng(_lat!, _lng!), zoom: 15),
-                        markers: {Marker(markerId: const MarkerId('workshop'), position: LatLng(_lat!, _lng!))},
-                        zoomControlsEnabled: false,
-                        mapToolbarEnabled: false,
+                      child: FlutterMap(
+                        options: MapOptions(initialCenter: LatLng(_lat!, _lng!), initialZoom: 15),
+                        children: [
+                          TileLayer(
+                            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            userAgentPackageName: 'com.workshops.workshops_mobile',
+                          ),
+                          MarkerLayer(
+                            markers: [
+                              Marker(
+                                point: LatLng(_lat!, _lng!),
+                                width: 30,
+                                height: 30,
+                                child: const Icon(LucideIcons.map_pin, color: Colors.red, size: 30),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   )
@@ -375,7 +378,7 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
             const SizedBox(height: 20),
             KineticInput(controller: _descController, label: 'Descripción del Servicio', icon: LucideIcons.text_select, maxLines: 3),
             const SizedBox(height: 20),
-            KineticInput(controller: _addressController, label: 'Dirección Física', icon: LucideIcons.home),
+            KineticInput(controller: _addressController, label: 'Dirección Física', icon: LucideIcons.map_pin),
           ]),
         ],
       ),

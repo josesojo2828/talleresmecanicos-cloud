@@ -20,7 +20,7 @@ export default class UserModel {
     }
 
     public getWhere(param: IUserQueryFilter, search?: string): IUserWhereType {
-        const wh: any[] = [];
+        const wh: any[] = [{ deletedAt: null }];
 
         // 1. Filtros específicos
         if (param.role) wh.push({ role: (param.role as IUserRole) });

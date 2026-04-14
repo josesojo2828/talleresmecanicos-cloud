@@ -32,16 +32,19 @@ export const validatePassword = (password: string): string | null => {
         return "La contraseña debe tener al menos 8 caracteres";
     }
 
+    // Relaxed for now: Uppercase and special characters optional
+    /*
     if (!/[A-Z]/.test(password)) {
         return "La contraseña debe contener al menos una mayúscula";
     }
 
-    if (!/[0-9]/.test(password)) {
-        return "La contraseña debe contener al menos un número";
-    }
-
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
         return "La contraseña debe contener al menos un carácter especial";
+    }
+    */
+
+    if (!/[0-9]/.test(password)) {
+        return "La contraseña debe contener al menos un número";
     }
 
     return null;

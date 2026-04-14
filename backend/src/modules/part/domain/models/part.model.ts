@@ -12,7 +12,7 @@ export default class PartModel {
     }
 
     public getWhere(param: IPartQueryFilter, search?: string): any {
-        const wh: any[] = [];
+        const wh: any[] = [{ deletedAt: null }];
 
         if (param.workshopId) wh.push({ workshopId: param.workshopId });
         if (param.categoryId) wh.push({ categoryId: param.categoryId });

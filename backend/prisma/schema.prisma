@@ -368,6 +368,7 @@ model WorkshopClient {
   userId     String?  @map("user_id") // Opcional: si el cliente se registra
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
 
   workshop Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)
   user     User?    @relation(fields: [userId], references: [id])
