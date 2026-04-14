@@ -1,14 +1,6 @@
 import { ObjectPage, ObjectSidebar } from "@/types/user/dashboard";
 import { IUser } from "@/types/user/user";
 
-// User types
-export interface User {
-    id: string;
-    name: string;
-    email: string;
-    avatar?: string;
-    createdAt?: string;
-}
 
 // Login types
 export interface LoginCredentials {
@@ -34,7 +26,7 @@ export interface RegisterData {
 
 // API Response types
 export interface AuthResponse {
-    user: User;
+    user: IUser;
     token: string;
     refreshToken?: string;
     dashboard?: {
@@ -68,7 +60,7 @@ export interface ValidationError {
 
 // Auth State types
 export interface AuthState {
-    user: User | null;
+    user: IUser | null;
     token: string | null;
     isAuthenticated: boolean;
     isLoading: boolean;
