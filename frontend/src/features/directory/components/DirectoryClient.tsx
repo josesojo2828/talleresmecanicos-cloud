@@ -275,9 +275,6 @@ function DirectoryContent({ initialCountryId, initialCityId }: DirectoryClientPr
             <Link href="/auth/login" className="bg-emerald-500 hover:bg-emerald-400 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center transition-all active:scale-95 shadow-lg shadow-emerald-500/20">
               Iniciar Sesión
             </Link>
-            <Link href="/auth/register" className="bg-white/10 hover:bg-white/20 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center flex items-center justify-center gap-2 transition-all">
-              Crear Cuenta
-            </Link>
           </div>
         </div>
       );

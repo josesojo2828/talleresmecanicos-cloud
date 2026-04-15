@@ -57,7 +57,7 @@ export const ValueProposition = () => {
                                     </p>
                                 </div>
 
-                                <Link href="/register" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:text-slate-950 transition-colors">
+                                <Link href="/nosotros" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:text-slate-950 transition-colors">
                                     CONOCER MÁS <ArrowRight size={12} />
                                 </Link>
                             </div>

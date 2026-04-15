@@ -276,10 +276,6 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/login').then((_) => _initData());
                   }, color: const Color(0xFF0F172A)),
-                  _buildMenuButton(LucideIcons.user_plus, 'REGISTRO', () {
-                     Navigator.pop(context);
-                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Registro en desarrollo...')));
-                  }, color: const Color(0xFFF59E0B)),
                 ] else ...[
                   _buildMenuButton(LucideIcons.layout_dashboard, 'DASHBOARD', () {
                     Navigator.pop(context);
@@ -386,7 +382,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
         ),
         IconButton(
           icon: Icon(
-            _isLoggedIn ? LucideIcons.circle_user : LucideIcons.user_plus, 
+            _isLoggedIn ? LucideIcons.circle_user : LucideIcons.log_in, 
             color: const Color(0xFF334155)
           ),
           onPressed: () async {
@@ -399,7 +395,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                 );
               }
             } else {
-              Navigator.pushNamed(context, '/register');
+              Navigator.pushNamed(context, '/login');
             }
           },
         ),

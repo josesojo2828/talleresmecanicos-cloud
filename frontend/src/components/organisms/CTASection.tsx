@@ -49,11 +49,7 @@ export const CTASection = () => {
                             </p>
                         </div>
 
-                        <Link href="/register?role=workshop" className="w-full">
-                            <button className="w-full bg-white text-slate-950 px-10 py-6 text-xs font-black uppercase tracking-[0.3em] hover:bg-emerald-500 transition-all flex items-center justify-center gap-4">
-                                SOLICITAR ACCESO <ArrowRight size={16} />
-                            </button>
-                        </Link>
+
                     </div>
 
                 </div>

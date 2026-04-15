@@ -40,6 +40,7 @@ export class WorkshopCrudController {
     }
 
     @Get(':id')
+    @UseGuards(OptionalAuthGuard)
     async getById(@Param('id') id: string, @CurrentUser() user: any) {
         return await this.useCase.findOne(id, user);
     }

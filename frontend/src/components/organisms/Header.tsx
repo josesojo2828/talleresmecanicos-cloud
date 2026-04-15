@@ -125,12 +125,7 @@ export const Header = () => {
                                     {t("login")}
                                 </Button>
                             </Link>
-                            <Link href="/register">
-                                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white border-none rounded-xl px-6 h-10 font-bold text-sm shadow-md shadow-emerald-100 transition-all hover:scale-[1.02] flex items-center gap-2">
-                                    <LogIn size={16} />
-                                    Registrarse
-                                </Button>
-                            </Link>
+
                         </>
                     )}
                 </div>

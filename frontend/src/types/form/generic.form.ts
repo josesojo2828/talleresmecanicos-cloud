@@ -15,6 +15,7 @@ export type InputType =
     | 'image'
     | 'icon_picker'
     | 'color'
+    | 'location_picker'
     | 'hidden';
 
 export interface FormOption {

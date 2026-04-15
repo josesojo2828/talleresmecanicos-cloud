@@ -3,9 +3,11 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { useAlertStore } from '@/store/useAlertStore';
 
 const apiClient = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || '/api/v1',
+    baseURL: '/api/v1',
     headers: {},
 });
+
+console.log(process.env.NEXT_PUBLIC_API_URL);
 
 apiClient.interceptors.request.use(
     (config) => {

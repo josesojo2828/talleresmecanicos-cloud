@@ -59,20 +59,14 @@ export const Hero = () => {
                         ) : (
                             <>
                                 {/* Botón Cliente */}
-                                <Link href="/register?role=CLIENT" className="flex-1">
+                                <Link href="/directorio" className="flex-1">
                                     <button className="w-full group px-8 py-6 bg-emerald-600 text-white text-[11px] font-black uppercase tracking-[.25em] hover:bg-emerald-700 transition-all duration-300 flex items-center justify-center gap-4 shadow-xl shadow-emerald-900/20">
                                         {t("cta_client") || "ENCONTRAR TALLER"}
                                         <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
                                     </button>
                                 </Link>
 
-                                {/* Botón Taller */}
-                                <Link href="/register?role=TALLER" className="flex-1">
-                                    <button className="w-full group px-8 py-6 bg-slate-950 text-white text-[11px] font-black uppercase tracking-[.25em] hover:bg-slate-800 transition-all duration-300 flex items-center justify-center gap-4 shadow-xl shadow-slate-950/20">
-                                        {t("cta_workshop") || "REGISTRAR MI TALLER"}
-                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                    </button>
-                                </Link>
+
                             </>
                         )}
                     </div>

@@ -15,6 +15,8 @@ export class DataFixtures implements OnModuleInit {
     }
 
     private async seedLatAmRegions() {
+        console.log("DATABASEURL ACTUAL:", process.env.DATABASE_URL);
+
         const regions = [
             { name: "México", flag: "🇲🇽", latitude: 23.6345, longitude: -102.5528, cities: ["Ciudad de México", "Guadalajara", "Monterrey", "Puebla"] },
             { name: "Colombia", flag: "🇨🇴", latitude: 4.5709, longitude: -74.2973, cities: ["Bogotá", "Medellín", "Cali", "Barranquilla"] },

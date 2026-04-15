@@ -8,7 +8,6 @@ import 'package:workshops_mobile/screens/appointment_form_screen.dart';
 import 'package:workshops_mobile/screens/workshop/workshop_tabs.dart';
 import 'package:workshops_mobile/screens/support/support_tabs.dart';
 import 'package:workshops_mobile/screens/client/client_tabs.dart';
-import 'package:workshops_mobile/screens/register_screen.dart';
 import 'package:workshops_mobile/services/sync_service.dart';
 
 import 'dart:io';
@@ -54,7 +53,6 @@ class WorkshopsApp extends StatelessWidget {
         '/': (context) => const SplashScreen(),
         '/directory': (context) => const DirectoryScreen(),
         '/login': (context) => const LoginScreen(),
-        '/register': (context) => const RegisterScreen(),
         '/dashboard/workshop': (context) => const WorkshopTabs(),
         '/dashboard/support': (context) => const SupportTabs(),
         '/dashboard/client': (context) => const ClientTabs(),

@@ -69,7 +69,7 @@ export const Footer = () => {
                             {[
                                 { label: "DIRECTORIO", href: "/directorio" },
                                 { label: "COMUNIDAD", href: "/comunidad" },
-                                { label: "REGISTRO", href: "/register" },
+
                                 { label: "SOPORTE", href: "#" }
                             ].map(item => (
                                 <li key={item.label}>
@@ -106,11 +106,9 @@ export const Footer = () => {
                                 ÚNETE AL <br /> <span className="text-emerald-500 not-italic">FUTURO.</span>
                             </p>
                         </div>
-                        <Link href="/register" className="w-full">
-                            <button className="w-full bg-white text-slate-950 px-6 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 transition-all">
-                                EMPEZAR AHORA
-                            </button>
-                        </Link>
+                        <div className="w-full h-12 flex items-center justify-center text-white/20 text-[10px] uppercase font-black tracking-widest border border-white/10">
+                            PRÓXIMAMENTE
+                        </div>
                     </div>
                 </div>
 

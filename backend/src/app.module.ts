@@ -10,7 +10,7 @@ import { RegionsModule } from './modules/regions/regions.module';
 import SecurityModule from './modules/security/security.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
-import AppicationModule from './modules/app/app.module';
+import ApplicationModule from './modules/app/app.module';
 import { StorageModule } from './modules/storage/storage.module';
 import { WorkshopModule } from './modules/workshop/workshop.module';
 import { ForumModule } from './modules/forum/forum.module';
@@ -59,7 +59,7 @@ import { SystemModule } from './modules/system/system.module';
     SecurityModule,
 
     // APPLICATION
-    AppicationModule,
+    ApplicationModule,
 
     // STORAGE
     StorageModule,

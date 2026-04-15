@@ -8,15 +8,16 @@ export function getScopeFilter(user: any, relation?: string) {
     }
 
     if (user.role === UserRole.SUPPORT) {
-        const regions = user.regions || user.assignments || [];
+        const regions = user.supportAssignments || user.assignments || [];
         if (regions.length === 0) return { id: 'none' };
 
+        // Diferenciar asignaciones de país completo vs ciudades específicas
         const countryIds = [...new Set(
-            regions.map((a: any) => a.countryId).filter((id: any) => id != null)
+            regions.filter((a: any) => a.countryId && (a.cityId === null || a.cityId === undefined || a.cityId === '')).map((a: any) => a.countryId)
         )] as string[];
         
         const cityIds = [...new Set(
-            regions.map((a: any) => a.cityId).filter((id: any) => id != null)
+            regions.filter((a: any) => a.cityId && a.cityId !== null && a.cityId !== undefined && a.cityId !== '').map((a: any) => a.cityId)
         )] as string[];
 
         const filters: any[] = [];

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import AppicationController from "./infrastructure/controller/app.controller";
+import ApplicationController from "./infrastructure/controller/app.controller";
 import { RegionsModule } from "../regions/regions.module";
 import SecurityModule from "../security/security.module";
 import { UserModule } from "../user/user.module";
@@ -14,8 +14,8 @@ import { WorkshopModule } from "../workshop/workshop.module";
         PartModule,
         WorkshopModule,
     ],
-    controllers: [AppicationController],
+    controllers: [ApplicationController],
     providers: [],
     exports: [],
 })
-export default class AppicationModule { }
+export default class ApplicationModule { }

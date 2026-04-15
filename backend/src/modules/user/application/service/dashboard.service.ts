@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/config/prisma.service";
+import { UserRole } from "@prisma/client";
 import CityModel from "src/modules/regions/domain/models/city.model";
 import CountryModel from "src/modules/regions/domain/models/country.model";
-import { ObjectPage, ObjectSidebar, TableColumn } from "src/types/user/dashboard";
+import { ObjectPage, ObjectSidebar } from "src/types/user/dashboard";
 import ProfileModel from "../../domain/models/profile.model";
 import SessionModel from "../../domain/models/session.model";
 import UserModel from "../../domain/models/user.model";
@@ -78,10 +79,10 @@ export default class DashboardService {
         ];
 
         // ADMIN ACCESS ALL
-        const isAdmin = role === 'ADMIN';
-        const isSupport = role === 'SUPPORT';
-        const isTaller = role === 'TALLER';
-        const isClient = role === 'CLIENT';
+        const isAdmin = role === UserRole.ADMIN;
+        const isSupport = role === UserRole.SUPPORT;
+        const isTaller = role === UserRole.TALLER;
+        const isClient = role === UserRole.CLIENT;
 
         // PERFIL (TODOS)
         sidebar.push({
@@ -108,6 +109,9 @@ export default class DashboardService {
             slug: 'exit'
         });
 
+        const assignments = (user as any).regions || (user as any).supportAssignments || (user as any).assignments || [];
+        const hasCountryAssignment = isAdmin || assignments.some((a: any) => a.countryId && (!a.cityId || a.cityId === null || a.cityId === ''));
+
         // 1 & 2. ADMINISTRACIÓN (ADMIN & SUPPORT)
         if (isAdmin || isSupport) {
             const adminSidebar: ObjectSidebar = {
@@ -118,50 +122,52 @@ export default class DashboardService {
                 childs: []
             };
 
-            if (isAdmin || isSupport) {
-                adminSidebar.childs?.push({ icon: 'user', label: 'user.management', path: '/dashboard/user', slug: 'user' });
+            adminSidebar.childs?.push({ icon: 'user', label: 'user.management', path: '/dashboard/user', slug: 'user' });
+
+            if (hasCountryAssignment) {
+                adminSidebar.childs?.push({ icon: 'flag', label: 'nav.countries', path: '/dashboard/country', slug: 'country' });
             }
-            
-            adminSidebar.childs?.push({ icon: 'flag', label: 'nav.countries', path: '/dashboard/country', slug: 'country' });
             adminSidebar.childs?.push({ icon: 'map', label: 'nav.cities', path: '/dashboard/city', slug: 'city' });
 
             sidebar.push(adminSidebar);
 
-            if (isAdmin || isSupport) {
-                pages.push({
-                    slug: 'user',
-                    title: 'user.management',
-                    subtitle: 'user.subtitle.default',
-                    actions: (isAdmin || isSupport) ? [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }] : [],
-                    actionsRows: (isAdmin || isSupport) ? [
-                        { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
-                        isAdmin ? { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' } : null
-                    ].filter(Boolean) as any : [
-                        { icon: 'visibility', label: 'action.view', action: 'view', type: 'modal' }
-                    ],
-                    columns: [
-                        { key: 'firstName', label: 'headers.firstName', type: 'text' },
-                        { key: 'lastName', label: 'headers.lastName', type: 'text' },
-                        { key: 'email', label: 'headers.email', type: 'text' },
-                        { key: 'role', label: 'headers.role', type: 'badge' },
-                        { key: 'enabled', label: 'headers.status', type: 'boolean' }
-                    ],
-                    form: UserForms.UserCreateForm
-                });
-            }
-
             pages.push({
-                slug: 'country',
-                title: 'nav.countries',
-                subtitle: 'regions.country.subtitle',
-                actions: isAdmin ? [{ icon: "add", label: "action.add", action: "add", type: "page" }] : [],
-                actionsRows: isAdmin ? [{ icon: "edit", label: "action.edit", action: "edit", type: "modal" }] : [{ icon: "visibility", label: "action.view", action: "view", type: "modal" }],
+                slug: 'user',
+                title: 'user.management',
+                subtitle: 'user.subtitle.default',
+                actions: (isAdmin || isSupport)
+                    ? [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }]
+                    : [],
+                actionsRows: (isAdmin || isSupport) ? [
+                    { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
+                    isAdmin ? { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' } : null
+                ].filter(Boolean) as any : [
+                    { icon: 'visibility', label: 'action.view', action: 'view', type: 'modal' }
+                ],
                 columns: [
-                    { key: 'name', label: 'headers.name', type: 'text' },
+                    { key: 'firstName', label: 'headers.firstName', type: 'text' },
+                    { key: 'lastName', label: 'headers.lastName', type: 'text' },
+                    { key: 'email', label: 'headers.email', type: 'text' },
+                    { key: 'role', label: 'headers.role', type: 'badge' },
                     { key: 'enabled', label: 'headers.status', type: 'boolean' }
                 ],
-                form: RegionForms.CountryForm
+                form: UserForms.UserCreateForm
             });
+
+            if (hasCountryAssignment) {
+                pages.push({
+                    slug: 'country',
+                    title: 'nav.countries',
+                    subtitle: 'regions.country.subtitle',
+                    actions: isAdmin ? [{ icon: "add", label: "action.add", action: "add", type: "page" }] : [],
+                    actionsRows: isAdmin ? [{ icon: "edit", label: "action.edit", action: "edit", type: "modal" }] : [{ icon: "visibility", label: "action.view", action: "view", type: "modal" }],
+                    columns: [
+                        { key: 'name', label: 'headers.name', type: 'text' },
+                        { key: 'enabled', label: 'headers.status', type: 'boolean' }
+                    ],
+                    form: RegionForms.CountryForm
+                });
+            }
 
             const countries = await this.prisma.country.findMany({ where: { enabled: true } });
 
@@ -169,8 +175,8 @@ export default class DashboardService {
                 slug: 'city',
                 title: 'nav.cities',
                 subtitle: 'regions.city.subtitle',
-                actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
-                actionsRows: [{ icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' }],
+                actions: hasCountryAssignment ? [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }] : [],
+                actionsRows: isAdmin || isSupport ? [{ icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' }] : [{ icon: 'visibility', label: 'action.view', action: 'view', type: 'modal' }],
                 columns: [
                     { key: 'name', label: 'headers.name', type: 'text' },
                     { key: 'country.name', label: 'headers.country', type: 'text' },
@@ -214,7 +220,7 @@ export default class DashboardService {
             workshopSidebar.childs.push({ icon: 'post', label: 'nav.my_publications', path: '/dashboard/publication', slug: 'publication' });
         }
 
-        if (isAdmin || isTaller || (isSupport && (user as any).assignments?.length > 0)) {
+        if (isAdmin || isTaller || (isSupport && assignments.length > 0)) {
             sidebar.push(workshopSidebar);
         }
 
@@ -407,9 +413,6 @@ export default class DashboardService {
                 ]
             };
             sidebar.push(clientSidebar);
-
-
-
         }
 
         return {
@@ -417,6 +420,7 @@ export default class DashboardService {
             pages
         }
     }
+
     public async getClientDashboardStats(user: IUser) {
         const [statusCounts, recentWorks, upcomingAppointments] = await Promise.all([
             // Status breakdown for works
@@ -434,7 +438,7 @@ export default class DashboardService {
             }),
             // Upcoming appointments
             this.prisma.appointment.findMany({
-                where: { 
+                where: {
                     clientId: user.id,
                     dateTime: { gte: new Date() }
                 },

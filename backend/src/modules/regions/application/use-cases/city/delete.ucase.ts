@@ -1,7 +1,8 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, ForbiddenException } from "@nestjs/common";
 import CityModel from "../../../domain/models/city.model";
 import DeleteCityPersistence from "../../../infrastructure/persistence/city/delete.persistence";
 import FindCityPersistence from "../../../infrastructure/persistence/city/find.persistence";
+import { getScopeFilter } from "src/shared/utils/scope-filter";
 
 @Injectable()
 export default class DeleteCityUCase extends CityModel {
@@ -14,8 +15,9 @@ export default class DeleteCityUCase extends CityModel {
     }
 
     public async execute({ id, user }: { id: string, user: any }) {
-        const entity = await this.findPersistence.find({ where: { id } });
-        if (!entity) throw new BadRequestException("error.not_found");
+        const scope = getScopeFilter(user);
+        const entity = await this.findPersistence.find({ where: { id, ...scope } });
+        if (!entity) throw new ForbiddenException("No tienes permiso para eliminar esta ciudad o no existe");
 
         await this.deletePersistence.delete({ id });
 

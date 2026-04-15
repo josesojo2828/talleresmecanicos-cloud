@@ -18,11 +18,18 @@ export const WorkshopForm: FormStructure = {
         { name: 'description', label: 'workshop.description', type: 'textarea' },
         { name: 'logoUrl', label: 'workshop.logo', type: 'image' },
         { name: 'address', label: 'workshop.address', type: 'text', validation: { required: true } },
+        {
+            name: 'userId',
+            label: 'workshop.owner',
+            type: 'autocomplete',
+            remote: { slug: 'USER' },
+            validation: { required: true }
+        },
         { name: 'phone', label: 'workshop.phone', type: 'text', gridCols: 2 },
         { name: 'whatsapp', label: 'workshop.whatsapp', type: 'text', gridCols: 2 },
         { name: 'website', label: 'workshop.website', type: 'text' },
-        { name: 'latitude', label: 'workshop.latitude', type: 'number', gridCols: 2 },
-        { name: 'longitude', label: 'workshop.longitude', type: 'number', gridCols: 2 },
+        { name: 'latitude', label: 'workshop.location', type: 'location_picker', gridCols: 2 },
+        { name: 'longitude', label: 'workshop.longitude', type: 'hidden' },
         { name: 'openingHours', label: 'workshop.openingHours', type: 'text' },
         {
             name: 'countryId',

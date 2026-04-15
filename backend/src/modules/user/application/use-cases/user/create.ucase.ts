@@ -3,6 +3,7 @@ import UserModel from "src/modules/user/domain/models/user.model";
 import CreateUserPersistence from "src/modules/user/infrastructure/persistence/user/create.persistence";
 import FindUserPersistence from "src/modules/user/infrastructure/persistence/user/find.persistence";
 import { ICreateUserDto } from "src/modules/user/application/dtos/user.dto";
+import { PrismaService } from "src/config/prisma.service";
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -11,6 +12,7 @@ export default class CreateUserUCase extends UserModel {
     constructor(
         private readonly createPersistence: CreateUserPersistence,
         private readonly findPersistence: FindUserPersistence,
+        private readonly prisma: PrismaService,
     ) {
         super()
     }
@@ -26,10 +28,49 @@ export default class CreateUserUCase extends UserModel {
         const salt = await bcrypt.genSalt(10);
         const pass = await bcrypt.hash(passwordHash, salt);
 
-
         const emailLower = data.email.toLowerCase();
-        // const referralCode = await this.generateReferralCode(data.firstName);
+        const isTaller = data.role === 'TALLER';
 
+        // Si es TALLER y tiene país/ciudad, usamos transacción para crear User + Workshop atómicamente
+        if (isTaller && data.countryId && data.cityId) {
+            const result = await this.prisma.$transaction(async (tx) => {
+                const newUser = await tx.user.create({
+                    data: {
+                        email: emailLower,
+                        passwordHash: pass,
+                        firstName,
+                        lastName,
+                        phone,
+                        role: 'TALLER',
+                        enabled: data.enabled ?? true,
+                        country: { connect: { id: data.countryId } },
+                        city: { connect: { id: data.cityId } },
+                        profile: { create: {} },
+                    }
+                });
+
+                // Auto-crear el Workshop vinculado al usuario
+                await tx.workshop.create({
+                    data: {
+                        name: `Taller de ${firstName} ${lastName}`,
+                        address: 'Dirección pendiente',
+                        enabled: false, // Se habilita cuando complete su perfil
+                        user: { connect: { id: newUser.id } },
+                        country: { connect: { id: data.countryId } },
+                        city: { connect: { id: data.cityId } },
+                    }
+                });
+
+                return newUser;
+            });
+
+            return {
+                message: 'success.create',
+                data: result
+            };
+        }
+
+        // Para otros roles (SUPPORT, CLIENT, etc.) solo creamos el usuario
         const entityCreated = await this.createPersistence.save({
             data: {
                 email: emailLower,
@@ -50,15 +91,4 @@ export default class CreateUserUCase extends UserModel {
             data: entityCreated
         };
     }
-
-    // private async generateReferralCode(firstName: string): Promise<string> {
-    //     const base = firstName.substring(0, 3).toUpperCase().replace(/\s/g, 'X');
-
-    //     while (true) {
-    //         const random = Math.floor(1000 + Math.random() * 9000);
-    //         const code = `${base}${random}`;
-    //         const exists = await this.findPersistence.findFirst({ where: { referralCode: code } });
-    //         if (!exists) return code;
-    //     }
-    // }
 }

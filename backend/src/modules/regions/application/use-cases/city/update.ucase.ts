@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, ForbiddenException } from "@nestjs/common";
 import CityModel from "../../../domain/models/city.model";
 import UpdateCityPersistence from "../../../infrastructure/persistence/city/update.persistence";
 import FindCityPersistence from "../../../infrastructure/persistence/city/find.persistence";
 import { IUpdateCityDto } from "../../dtos/regions.dto";
 import { ICityUpdateType } from "../../dtos/regions.schema";
+import { getScopeFilter } from "src/shared/utils/scope-filter";
 
 @Injectable()
 export default class UpdateCityUCase extends CityModel {
@@ -16,8 +17,9 @@ export default class UpdateCityUCase extends CityModel {
     }
 
     public async execute({ id, data, user }: { id: string, data: IUpdateCityDto, user: any }) {
-        const entity = await this.findPersistence.find({ where: { id }, include: { country: true } });
-        if (!entity) throw new BadRequestException("error.not_found");
+        const scope = getScopeFilter(user);
+        const entity = await this.findPersistence.find({ where: { id, ...scope }, include: { country: true } });
+        if (!entity) throw new ForbiddenException("No tienes permiso para actualizar esta ciudad o no existe");
 
         const { name, countryId, enabled } = data;
 

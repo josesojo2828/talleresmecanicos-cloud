@@ -13,15 +13,30 @@ export const UserCreateForm: FormStructure = {
     fields: [
         { name: 'firstName', label: 'user.firstName', type: 'text', gridCols: 2, validation: { required: true } },
         { name: 'lastName', label: 'user.lastName', type: 'text', gridCols: 2, validation: { required: true } },
-        { name: 'email', label: 'user.email', type: 'email', validation: { required: true, pattern: '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$' } },
-        { name: 'passwordHash', label: 'user.password', type: 'password', validation: { required: true, minLength: 8 } },
+        { name: 'email', label: 'user.email', type: 'email', validation: { required: true, pattern: '^[\\\\w-\\\\.]+@([\\\\w-]+\\\\.)+[\\\\w-]{2,4}$' } },
+        { name: 'phone', label: 'user.phone', type: 'text', gridCols: 2 },
+        { name: 'passwordHash', label: 'user.password', type: 'password', validation: { required: true, minLength: 8 }, gridCols: 2 },
         {
             name: 'role', label: 'user.permission', type: 'select', validation: { required: true }, options: [
-                { label: 'user.role_labels.admin', value: 'ADMIN' },
-                { label: 'user.role_labels.support', value: 'SUPPORT' },
                 { label: 'user.role_labels.taller', value: 'TALLER' },
-                { label: 'user.role_labels.client', value: 'CLIENT' }
+                { label: 'user.role_labels.support', value: 'SUPPORT' }
             ]
+        },
+        {
+            name: 'countryId',
+            label: 'workshop.country',
+            type: 'autocomplete',
+            remote: { slug: 'COUNTRY' },
+            validation: { required: true },
+            gridCols: 2
+        },
+        {
+            name: 'cityId',
+            label: 'workshop.city',
+            type: 'autocomplete',
+            remote: { slug: 'CITY', dependsOn: 'countryId' },
+            validation: { required: true },
+            gridCols: 2
         }
     ]
 };
@@ -35,19 +50,11 @@ export const UserUpdateForm: FormStructure = {
         { name: 'enabled', label: 'user.status', type: 'switch', gridCols: 2 },
         {
             name: 'role', label: 'user.permission', type: 'select', gridCols: 2, options: [
-                { label: 'user.role_labels.admin', value: 'ADMIN' },
-                { label: 'user.role_labels.support', value: 'SUPPORT' },
                 { label: 'user.role_labels.taller', value: 'TALLER' },
+                { label: 'user.role_labels.support', value: 'SUPPORT' },
                 { label: 'user.role_labels.client', value: 'CLIENT' }
             ]
-        },
-        {
-            name: 'kycLevel', label: 'user.kyc.default', type: 'select', gridCols: 2, options: [
-                { label: 'user.kyc.none', value: 0 },
-                { label: 'user.kyc.verified', value: 1 }
-            ]
-        },
-        { name: 'twoFactorEnabled', label: 'user.2fa', type: 'switch' }
+        }
     ]
 };
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { Controller, Get, Param, Query, UseGuards } from "@nestjs/common";
 import { ICityWhereType, ICountryWhereType } from "src/modules/regions/application/dtos/regions.schema";
 import FindCityPersistence from "src/modules/regions/infrastructure/persistence/city/find.persistence";
 import FindCountryPersistence from "src/modules/regions/infrastructure/persistence/country/find.persistence";
@@ -7,10 +7,12 @@ import FindUserPersistence from "src/modules/user/infrastructure/persistence/use
 import PartPersistence from "src/modules/part/infrastructure/persistence/persistence";
 import WorkshopClientPersistence from "src/modules/workshop/infrastructure/persistence/workshop-client.persistence";
 import { ObjectSelect, SUPPORT_SELECT } from "src/types/support";
-// import VehiclePersistence from "src/modules/client/infrastructure/persistence/vehicle/persistence";
+import { JwtAuthGuard } from "src/modules/auth/guards/jwt-auth.guard";
+import { CurrentUser } from "src/modules/auth/decorators/current-user.decorator";
+import { getScopeFilter } from "src/shared/utils/scope-filter";
 
 @Controller('app')
-export default class AppicationController {
+export default class ApplicationController {
 
     constructor(
         private readonly countryService: FindCountryPersistence,
@@ -26,31 +28,73 @@ export default class AppicationController {
     }
 
     @Get('select/:slug')
-    private async select(@Param('slug') slug: SUPPORT_SELECT, @Query() query: { param: string, parentId?: string }): Promise<ObjectSelect[]> {
+    @UseGuards(JwtAuthGuard)
+    private async select(
+        @Param('slug') slug: SUPPORT_SELECT, 
+        @Query() query: { param: string, parentId?: string },
+        @CurrentUser() user: any
+    ): Promise<ObjectSelect[]> {
+        const scope = getScopeFilter(user) as any;
+
         if (slug === 'COUNTRY') {
-            const wh: ICountryWhereType = {
+            const countryFilters = scope.OR ? scope.OR.map((f: any) => {
+                if (f.countryId) return { id: f.countryId };
+                if (f.cityId) return { cities: { some: { id: f.cityId } } };
+                return f;
+            }) : [];
+
+            const wh: any = {
                 AND: [
-                    { name: { contains: query.param } },
+                    { name: { contains: query.param, mode: 'insensitive' } },
                     { enabled: true }
                 ]
+            }
+
+            if (countryFilters.length > 0) {
+                wh.AND.push({ OR: countryFilters });
             }
 
             const entity = await this.countryService.select({ where: wh });
             return entity;
         }
         else if (slug === 'CITY') {
+            const cityFilters = scope.OR ? scope.OR.map((f: any) => {
+                if (f.cityId) return { id: f.cityId };
+                if (f.countryId) return { countryId: f.countryId };
+                return f;
+            }) : [];
 
-            const wh: ICityWhereType[] = [{ name: { contains: query.param } }, { enabled: true }]
+            const wh: any[] = [{ name: { contains: query.param, mode: 'insensitive' } }, { enabled: true }]
             if (query.parentId) wh.push({ countryId: query.parentId });
-            return await this.cityService.select({ where: {AND:wh} });
+            
+            if (cityFilters.length > 0) {
+                wh.push({ OR: cityFilters });
+            }
+
+            return await this.cityService.select({ where: { AND: wh } });
         }
         else if (slug === 'USER') {
+            const userFilters = scope.OR ? scope.OR.map((f: any) => {
+                if (f.countryId) return { countryId: f.countryId };
+                if (f.cityId) return { 
+                    OR: [
+                        { cityId: f.cityId },
+                        { workshop: { cityId: f.cityId } }
+                    ]
+                };
+                return f;
+            }) : [];
+
             const wh: any = {
                 AND: [
                     { enabled: true },
                     { role: 'CLIENT' },
                 ]
             };
+
+            if (userFilters.length > 0) {
+                wh.AND.push({ OR: userFilters });
+            }
 
             if (query.param) {
                 wh.AND.push({

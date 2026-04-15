@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/utils/cn";
 import { DynamicIcon } from "@/components/atoms/DynamicIcon";
 import { IconPicker } from "./IconPicker";
+import { LocationPicker } from "./LocationPicker";
 import { useTranslations } from "next-intl";
 
 import { Save } from "lucide-react";
@@ -389,6 +390,20 @@ export function FormGenerator({ structure, defaultValues, isUpdate, onSubmit, on
                                                         disabled={field.disabled}
                                                     />
                                                 )}
+                                            />
+                                        );
+
+                                    case 'location_picker':
+                                        return (
+                                            <LocationPicker
+                                                value={{
+                                                    lat: Number(formValues.latitude || 0) || 0,
+                                                    lng: Number(formValues.longitude || 0) || 0
+                                                }}
+                                                onChange={(val) => {
+                                                    setValue('latitude', val.lat, { shouldDirty: true });
+                                                    setValue('longitude', val.lng, { shouldDirty: true });
+                                                }}
                                             />
                                         );
 

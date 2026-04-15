@@ -19,6 +19,12 @@ export default class QueryUserUCase extends UserModel {
         let where: any = { id };
 
         if (user && user.role === UserRole.SUPPORT) {
+            // ALWAYS allow support to see their own profile
+            if (id === user.id) {
+                const entity = await this.findPersistence.find({ where: { id } });
+                return entity;
+            }
+
             const scope = getScopeFilter(user) as any;
             if (scope && scope.OR) {
                 const userFilters = scope.OR.map((f: any) => {
@@ -31,7 +37,7 @@ export default class QueryUserUCase extends UserModel {
                     };
                     return f;
                 });
-                where = { AND: [{ id }, { OR: userFilters }] };
+                where = { AND: [{ id }, { OR: [...userFilters, { id: user.id }] }] };
             }
         }
 
@@ -59,7 +65,8 @@ export default class QueryUserUCase extends UserModel {
                     };
                     return f;
                 });
-                where.AND.push({ OR: userFilters });
+                // Include current support user in the list always
+                where.AND.push({ OR: [...userFilters, { id: user.id }] });
             }
         }
 

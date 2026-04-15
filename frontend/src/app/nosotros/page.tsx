@@ -155,7 +155,7 @@ export default function NosostrosPage() {
                         </p>
                         
                         <div className="pt-12">
-                            <Link href="/register">
+                            <Link href="/directorio">
                                 <button className="h-20 bg-emerald-500 px-12 text-slate-950 text-[11px] font-black uppercase tracking-[.4em] italic hover:bg-white transition-all flex items-center justify-center gap-6 mx-auto group">
                                     INICIALIZAR CONEXIÓN <ArrowUpRight className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                                 </button>

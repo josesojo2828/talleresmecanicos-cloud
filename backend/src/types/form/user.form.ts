@@ -14,7 +14,28 @@ export const UserCreateForm: FormStructure = {
         { name: 'firstName', label: 'user.firstName', type: 'text', gridCols: 2, validation: { required: true } },
         { name: 'lastName', label: 'user.lastName', type: 'text', gridCols: 2, validation: { required: true } },
         { name: 'email', label: 'user.email', type: 'email', validation: { required: true, pattern: '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$' } },
-        { name: 'phone', label: 'user.phone', type: 'text', gridCols: 2 }
+        { name: 'phone', label: 'user.phone', type: 'text', gridCols: 2 },
+        {
+            name: 'role', label: 'user.role', type: 'select', validation: { required: true }, options: [
+                { label: 'user.role.taller', value: 'TALLER' },
+                { label: 'user.role.support', value: 'SUPPORT' }
+            ]
+        },
+        { name: 'enabled', label: 'user.status', type: 'switch', defaultValue: true },
+        {
+            name: 'countryId',
+            label: 'workshop.country',
+            type: 'autocomplete',
+            remote: { slug: 'COUNTRY' },
+            gridCols: 2
+        },
+        {
+            name: 'cityId',
+            label: 'workshop.city',
+            type: 'autocomplete',
+            remote: { slug: 'CITY', dependsOn: 'countryId' },
+            gridCols: 2
+        }
     ]
 };
 
@@ -25,18 +46,14 @@ export const UserUpdateForm: FormStructure = {
         { name: 'firstName', label: 'user.firstName', type: 'text', gridCols: 2 },
         { name: 'lastName', label: 'user.lastName', type: 'text', gridCols: 2 },
         {
-            name: 'status', label: 'user.status', type: 'select', gridCols: 2, options: [
-                { label: 'user.status.active', value: 'ACTIVE' },
-                { label: 'user.status.inactive', value: 'INACTIVE' }
+            name: 'role', label: 'user.role', type: 'select', gridCols: 2, options: [
+                { label: 'user.role.client', value: 'CLIENT' },
+                { label: 'user.role.taller', value: 'TALLER' },
+                { label: 'user.role.support', value: 'SUPPORT' },
+                { label: 'user.role.admin', value: 'ADMIN' }
             ]
         },
-        {
-            name: 'kycLevel', label: 'user.kyc', type: 'select', gridCols: 2, options: [
-                { label: 'user.kyc.none', value: 0 },
-                { label: 'user.kyc.verified', value: 1 }
-            ]
-        },
-        { name: 'twoFactorEnabled', label: 'user.2fa', type: 'switch' }
+        { name: 'enabled', label: 'user.status', type: 'switch' }
     ]
 };
 

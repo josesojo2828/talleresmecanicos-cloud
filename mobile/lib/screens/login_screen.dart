@@ -136,20 +136,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 )
               ),
               const SizedBox(height: 16),
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/register'),
-                child: RichText(
-                  text: TextSpan(
-                    style: GoogleFonts.outfit(color: const Color(0xFF64748B), fontSize: 13),
-                    children: [
-                      const TextSpan(text: '¿No tienes cuenta? '),
-                      TextSpan(
-                        text: 'REGÍSTRATE AQUÍ', 
-                        style: GoogleFonts.outfit(color: const Color(0xFF10B981), fontWeight: FontWeight.w900)
-                      ),
-                    ]
-                  ),
-                ),
+              const Opacity(
+                opacity: 0.3,
+                child: Text('SOLO ACCESO AUTORIZADO', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
               ),
               const SizedBox(height: 8),
               TextButton(

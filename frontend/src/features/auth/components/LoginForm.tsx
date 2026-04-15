@@ -94,18 +94,7 @@ export const LoginForm = () => {
                 </span>
             </Button>
 
-            {/* Register Link */}
-            <div className="text-center">
-                <Typography variant="P" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                    {t("no_account")}{" "}
-                    <Link
-                        href="/register"
-                        className="text-primary hover:text-primary-600 transition-colors font-black"
-                    >
-                        {t("register")}
-                    </Link>
-                </Typography>
-            </div>
+
         </form>
     );
 };
