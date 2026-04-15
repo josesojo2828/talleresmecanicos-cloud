@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workshops_mobile/services/auth_service.dart';
 import 'package:workshops_mobile/services/workshop_service.dart';
+import 'package:workshops_mobile/screens/workshop_detail_screen.dart';
+import 'package:workshops_mobile/screens/map_screen.dart';
 
 class DirectoryScreen extends StatefulWidget {
   const DirectoryScreen({super.key});
@@ -269,7 +271,22 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                 _buildMenuButton(LucideIcons.layout_list, 'DIRECTORIO', () => Navigator.pop(context), color: const Color(0xFF10B981)),
                 _buildMenuButton(LucideIcons.map, 'MAPA', () {
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Mapa en desarrollo...')));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MapScreen(
+                        workshops: _workshops,
+                        onWorkshopTapped: (w) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => WorkshopDetailScreen(workshop: w),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
                 }, color: const Color(0xFF3B82F6)),
                 if (!_isLoggedIn) ...[
                   _buildMenuButton(LucideIcons.log_in, 'LOGIN', () {
