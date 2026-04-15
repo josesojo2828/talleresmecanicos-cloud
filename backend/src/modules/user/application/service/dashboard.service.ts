@@ -132,11 +132,11 @@ export default class DashboardService {
                     slug: 'user',
                     title: 'user.management',
                     subtitle: 'user.subtitle.default',
-                    actions: isAdmin ? [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }] : [],
-                    actionsRows: isAdmin ? [
+                    actions: (isAdmin || isSupport) ? [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }] : [],
+                    actionsRows: (isAdmin || isSupport) ? [
                         { icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' },
-                        { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' }
-                    ] : [
+                        isAdmin ? { icon: 'delete', label: 'action.delete', action: 'delete', type: 'modal' } : null
+                    ].filter(Boolean) as any : [
                         { icon: 'visibility', label: 'action.view', action: 'view', type: 'modal' }
                     ],
                     columns: [
@@ -154,8 +154,8 @@ export default class DashboardService {
                 slug: 'country',
                 title: 'nav.countries',
                 subtitle: 'regions.country.subtitle',
-                actions: [{ icon: 'add', label: 'action.add', action: 'add', type: 'page' }],
-                actionsRows: [{ icon: 'edit', label: 'action.edit', action: 'edit', type: 'modal' }],
+                actions: isAdmin ? [{ icon: "add", label: "action.add", action: "add", type: "page" }] : [],
+                actionsRows: isAdmin ? [{ icon: "edit", label: "action.edit", action: "edit", type: "modal" }] : [{ icon: "visibility", label: "action.view", action: "view", type: "modal" }],
                 columns: [
                     { key: 'name', label: 'headers.name', type: 'text' },
                     { key: 'enabled', label: 'headers.status', type: 'boolean' }
