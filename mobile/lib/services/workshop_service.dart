@@ -148,7 +148,9 @@ class WorkshopService {
     try {
       final response = await _api.get('/my-workshop');
       if (response.statusCode == 200) {
-        return jsonDecode(response.body)['body'];
+        final data = jsonDecode(response.body)['body'];
+        if (data is List && data.isNotEmpty) return data[0];
+        if (data is Map<String, dynamic>) return data;
       }
       return null;
     } catch (e) {
@@ -157,9 +159,9 @@ class WorkshopService {
     }
   }
 
-  Future<bool> updateWorkshop(Map<String, dynamic> data) async {
+  Future<bool> updateWorkshop(String id, Map<String, dynamic> data) async {
     try {
-      final response = await _api.put('/my-workshop', data);
+      final response = await _api.put('/my-workshop/$id', data);
       return response.statusCode == 200 || response.statusCode == 204;
     } catch (e) {
       print('Error actualizando taller: $e');

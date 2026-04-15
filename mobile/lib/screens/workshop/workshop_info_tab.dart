@@ -43,6 +43,7 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
   double? _lat;
   double? _lng;
   String? _currentLogoUrl;
+  String? _workshopId;
   List<String> _currentImagesUrls = [];
 
   Map<String, dynamic> _openingHours = {
@@ -65,6 +66,7 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
     final data = await _workshopService.getMyWorkshop();
     if (data != null && mounted) {
       setState(() {
+        _workshopId = data['id'];
         _nameController.text = data['name'] ?? '';
         _descController.text = data['description'] ?? '';
         _addressController.text = data['address'] ?? '';
@@ -78,12 +80,18 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
         _twitterController.text = social['twitter'] ?? '';
 
         if (data['openingHours'] != null) {
-          _openingHours = Map<String, dynamic>.from(data['openingHours']);
+          try {
+            _openingHours = Map<String, dynamic>.from(
+              data['openingHours'] is String ? jsonDecode(data['openingHours']) : data['openingHours']
+            );
+          } catch (e) {
+            print('Error parsing opening hours: $e');
+          }
         }
 
-        _lat = (data['lat'] as num?)?.toDouble();
-        _lng = (data['lng'] as num?)?.toDouble();
-        _currentLogoUrl = data['logo'];
+        _lat = (data['latitude'] as num?)?.toDouble() ?? (data['lat'] as num?)?.toDouble();
+        _lng = (data['longitude'] as num?)?.toDouble() ?? (data['lng'] as num?)?.toDouble();
+        _currentLogoUrl = data['logoUrl'] ?? data['logo'];
         _currentImagesUrls = List<String>.from(data['images'] ?? []);
         
         _isLoading = false;
@@ -123,6 +131,10 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
   }
 
   Future<void> _save() async {
+    if (_workshopId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No existe taller asociado')));
+      return;
+    }
     setState(() => _isSaving = true);
     
     final payload = {
@@ -138,11 +150,11 @@ class _WorkshopInfoTabState extends State<WorkshopInfoTab> {
         'twitter': _twitterController.text,
       },
       'openingHours': _openingHours,
-      'lat': _lat,
-      'lng': _lng,
+      'latitude': _lat,
+      'longitude': _lng,
     };
 
-    final success = await _workshopService.updateWorkshop(payload);
+    final success = await _workshopService.updateWorkshop(_workshopId!, payload);
     
     if (mounted) {
       setState(() => _isSaving = false);

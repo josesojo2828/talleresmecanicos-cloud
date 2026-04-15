@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workshops_mobile/screens/workshop/appointments_screen.dart';
 import 'package:workshops_mobile/screens/workshop/finance_tab.dart';
 import 'package:workshops_mobile/screens/workshop/workshop_info_tab.dart';
+import 'package:workshops_mobile/screens/workshop/forum_screen.dart';
 import 'package:workshops_mobile/screens/workshop/chat_screen.dart';
 import 'package:workshops_mobile/screens/workshop/publications_screen.dart';
 import 'package:workshops_mobile/screens/workshop/user_profile_screen.dart';
@@ -110,6 +111,8 @@ class _ProfileTabState extends State<ProfileTab> {
               const SizedBox(height: 40),
               _buildSectionHeader('COMUNICACIÓN'),
               const SizedBox(height: 16),
+              _buildOptionCard(LucideIcons.messages_square, 'FORO PÚBLICO', 'Comunidad y red de apoyo', const Color(0xFF8B5CF6), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ForumScreen()))),
+              const SizedBox(height: 12),
               _buildOptionCard(LucideIcons.message_circle, 'CHAT GENERAL', 'Canal oficial de la red', const Color(0xFFF59E0B), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatScreen()))),
 
               const SizedBox(height: 40),
