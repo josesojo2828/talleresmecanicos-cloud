@@ -511,7 +511,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
-                                shadow: [
+                                boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.1),
                                     blurRadius: 10,
