@@ -35,10 +35,12 @@ class _UserDetailScreenState extends State<UserDetailScreen> with SingleTickerPr
   }
 
   Future<void> _loadAllData() async {
-    await Future.wait([
+    final futures = <Future>[
       _loadAppointments(),
       _loadWorks(),
-    ]);
+    ];
+    if (_isTaller) futures.add(_loadParts());
+    await Future.wait(futures);
   }
 
   Future<void> _loadAppointments() async {
@@ -262,7 +264,53 @@ class _UserDetailScreenState extends State<UserDetailScreen> with SingleTickerPr
     );
   }
 
-  Widget _buildInventarioTab() => _buildEmptyPlaceholder('Inventario vacío o no disponible.');
+  List<dynamic> _parts = [];
+  bool _isLoadingParts = false;
+
+  Future<void> _loadParts() async {
+    setState(() => _isLoadingParts = true);
+    try {
+      final workshopId = widget.user['workshop']?['id'];
+      if (workshopId != null) {
+        final filters = jsonEncode({"workshopId": workshopId});
+        final res = await _api.get('/part?filters=$filters');
+        if (res.statusCode == 200) {
+          final decoded = jsonDecode(res.body);
+          setState(() => _parts = decoded['body']?['data'] ?? []);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error loading parts: $e');
+    } finally {
+      if (mounted) setState(() => _isLoadingParts = false);
+    }
+  }
+
+  Widget _buildInventarioTab() {
+    if (widget.user['role'] != 'TALLER') {
+      return _buildEmptyPlaceholder('El usuario no es un Taller y no tiene inventario.');
+    }
+    if (_isLoadingParts) return const Center(child: CircularProgressIndicator());
+    if (_parts.isEmpty) return _buildEmptyPlaceholder('El taller no tiene repuestos en su inventario.');
+    
+    return RefreshIndicator(
+      onRefresh: _loadParts,
+      child: ListView.separated(
+        padding: const EdgeInsets.all(24),
+        itemCount: _parts.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        itemBuilder: (context, index) {
+          final p = _parts[index];
+          return _buildInfoCard(
+            title: p['name'] ?? 'Repuesto',
+            subtitle: 'SKU: ${p['sku'] ?? '-'} | Stock: ${p['quantity'] ?? 0}',
+            status: '\$${p['price'] ?? 0} ${p['currency'] ?? 'USD'}',
+            icon: LucideIcons.package,
+          );
+        },
+      ),
+    );
+  }
 
   Widget _buildEmptyPlaceholder(String message) {
     return Center(
