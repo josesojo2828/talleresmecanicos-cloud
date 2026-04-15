@@ -11,6 +11,7 @@ import 'package:workshops_mobile/widgets/kinetic_input.dart';
 import 'package:workshops_mobile/widgets/kinetic_button.dart';
 import 'package:workshops_mobile/screens/workshop/map_picker_screen.dart';
 import 'dart:io';
+import 'dart:convert';
 
 class WorkshopInfoTab extends StatefulWidget {
   const WorkshopInfoTab({super.key});
