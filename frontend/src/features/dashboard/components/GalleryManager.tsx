@@ -6,6 +6,8 @@ import { useTranslations } from 'next-intl';
 import apiClient from '@/utils/api/api.client';
 import { useAlertStore } from '@/store/useAlertStore';
 
+import { getFullImagePath } from '@/utils/image';
+
 interface GalleryManagerProps {
     images: string[];
     onUpdate: (data: any) => Promise<any>;
@@ -86,9 +88,7 @@ export const GalleryManager = ({ images = [], onUpdate }: GalleryManagerProps) =
             ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {images.map((url, index) => {
-                        const displayUrl = url.startsWith('http') || url.startsWith('/') 
-                            ? url 
-                            : `/explorar-red/${url}`;
+                        const displayUrl = getFullImagePath(url);
                         
                         return (
                             <div key={index} className="group relative aspect-square rounded-[2rem] overflow-hidden border-4 border-white shadow-xl bg-slate-100">

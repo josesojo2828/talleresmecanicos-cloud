@@ -148,9 +148,14 @@ class WorkshopService {
     try {
       final response = await _api.get('/my-workshop');
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body)['body'];
-        if (data is List && data.isNotEmpty) return data[0];
-        if (data is Map<String, dynamic>) return data;
+        final bodyData = jsonDecode(response.body)['body'];
+        if (bodyData is List && bodyData.isNotEmpty) return bodyData[0];
+        if (bodyData is Map<String, dynamic>) {
+          if (bodyData.containsKey('data') && bodyData['data'] is List && bodyData['data'].isNotEmpty) {
+            return bodyData['data'][0];
+          }
+          return bodyData;
+        }
       }
       return null;
     } catch (e) {
