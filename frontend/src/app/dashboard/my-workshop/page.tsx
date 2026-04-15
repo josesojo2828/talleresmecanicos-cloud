@@ -256,6 +256,18 @@ export default function MyWorkshopPage() {
         );
     }
 
+    if (!workshop) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[500px] gap-4 text-center">
+                <AlertCircle size={48} className="text-rose-500" />
+                <h2 className="text-xl font-black uppercase text-slate-900">No se encontró información del taller</h2>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 max-w-sm">
+                    Inicie sesión nuevamente o comuníquese con soporte para inicializar su perfil.
+                </p>
+            </div>
+        );
+    }
+
     return (
         <div className="max-w-7xl mx-auto pb-20">
             {/* Admin Header */}
