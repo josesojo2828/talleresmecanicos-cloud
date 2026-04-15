@@ -416,17 +416,17 @@ export default function WorkshopClient() {
                             </div>
 
                             {/* MAP INTEGRATION */}
-                            <div className="h-[500px] lg:h-auto bg-slate-50 rounded-[48px] overflow-hidden border border-slate-200 shadow-2xl relative group">
+                            <div className="h-[500px] lg:h-[100%] min-h-[400px] bg-slate-50 rounded-[48px] overflow-hidden border border-slate-200 shadow-2xl relative group">
                                 <div className="absolute top-8 left-8 z-20 px-4 py-2 bg-white/90 backdrop-blur-md rounded-xl shadow-lg border border-slate-100 flex items-center gap-3">
                                     <Navigation size={14} className="text-slate-400" />
                                     <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest">{t('nav.map')} // GPS: ACTIVE</span>
                                 </div>
                                 <Map
-                                    center={[workshop.latitude || 0, workshop.longitude || 0]}
-                                    zoom={15}
+                                    center={[workshop.latitude || 19.4326, workshop.longitude || -99.1332]}
+                                    zoom={workshop.latitude ? 15 : 5}
                                     markers={[{
-                                        lat: workshop.latitude || 0,
-                                        lng: workshop.longitude || 0,
+                                        lat: workshop.latitude || 19.4326,
+                                        lng: workshop.longitude || -99.1332,
                                         title: workshop.name,
                                         address: workshop.address,
                                         logoUrl: getFullImagePath(workshop.logoUrl) || undefined

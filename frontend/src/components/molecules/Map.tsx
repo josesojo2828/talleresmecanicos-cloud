@@ -63,6 +63,17 @@ export const Map: React.FC<MapProps> = ({ className, center = [0, 0], zoom = 2, 
             map.current.on('load', () => {
                 if (isMounted) setMapReady(true);
             });
+            
+            // Fix: Force resize when container dimensions change (vital for grids/flex)
+            const resizeObserver = new ResizeObserver(() => {
+                if (map.current) map.current.resize();
+            });
+            resizeObserver.observe(mapContainer.current);
+
+            // Cleanup observer on destroy
+            map.current.on('remove', () => {
+                resizeObserver.disconnect();
+            });
         };
 
         initMap();
