@@ -27,8 +27,13 @@ export class AppointmentController {
             data.clientId = user.id;
         }
         
-        // Si es un TALLER y no especificó taller destino, usamos el de los parámetros o el suyo?
-        // En el directorio el workshopId viene en el body desde la App.
+        // Si es un TALLER y no especificó taller destino, usamos el suyo
+        if (user.role === UserRole.TALLER && !data.workshopId) {
+            if (!user.workshop?.id) {
+                throw new Error("Debes configurar primero tu perfil de taller");
+            }
+            data.workshopId = user.workshop.id;
+        }
         
         return await this.useCase.create(data);
     }
