@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, ForbiddenException } from "@nestjs/common";
 import CityModel from "../../../domain/models/city.model";
 import CreateCityPersistence from "../../../infrastructure/persistence/city/create.persistence";
 import { ICreateCityDto } from "../../dtos/regions.dto";
@@ -21,6 +21,14 @@ export default class CreateCityUCase extends CityModel {
             const country = await (this.createPersistence as any).prisma.country.findUnique({ where: { id: countryId } });
             if (country && !country.enabled) {
                 throw new BadRequestException("No se puede habilitar una ciudad si el país está deshabilitado");
+            }
+        }
+
+        // #2. Restricción para SOPORTE: solo puede crear ciudades en su país asignado
+        if (user.role === 'SUPPORT') {
+            const assignedCountryIds = user.regions?.map((r: any) => r.countryId) || [];
+            if (!assignedCountryIds.includes(countryId)) {
+                throw new ForbiddenException("No tienes permiso para crear ciudades en este país");
             }
         }
 

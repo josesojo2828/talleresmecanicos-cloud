@@ -101,8 +101,8 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
         'passwordHash': _passwordController.text,
         'role': _selectedRole,
         'enabled': true,
-        'country': _selectedCountryId,
-        'city': _selectedCityId,
+        'countryId': _selectedCountryId,
+        'cityId': _selectedCityId,
       });
 
       if (response.statusCode == 201 || response.statusCode == 200) {

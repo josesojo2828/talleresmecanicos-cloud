@@ -63,17 +63,22 @@ frontend/src/
 └── utils/              # One-off helper functions
 ```
 
-## Mobile (React Native Expo)
+## Mobile (Flutter)
 
-Similar to Frontend, using file-based routing (Expo Router).
+Built with Flutter for high-performance, native feel across platforms. Uses a custom architecture based on screens, services, and widgets.
 
 ```bash
-mobile/
-├── app/                # Expo Router screens
-├── src/
-│   ├── components/     # Shared UI
-│   ├── features/       # Feature modules
-│   ├── hooks/          # Global hooks
-│   ├── services/       # API services
-│   └── utils/          # Helpers
+mobile/lib/
+├── screens/            # Application screens (grouped by role/feature)
+│   ├── auth/           # Login, Register, Recovery
+│   ├── support/        # Support dashboard, regions, user & workshop management
+│   ├── client/         # Client dashboard, vehicle management
+│   └── workshop/       # Workshop management, gallery, work orders
+├── services/           # Business logic and external communication
+│   ├── api_client.dart # HTTP client foundation
+│   ├── auth_service.dart # Authentication & Session
+│   └── ...
+├── widgets/            # Reusable UI components (Kinetic Design System)
+├── database/           # Local persistence (SQFlite)
+└── main.dart           # Application entry point
 ```

@@ -13,8 +13,20 @@ export class WorkshopUCase extends WorkshopModel {
         super();
     }
 
-    async create(data: ICreateWorkshopDto) {
+    async create(data: ICreateWorkshopDto, user?: any) {
         const { countryId, cityId, categoryIds, userId, ...rest } = data;
+
+        if (user?.role === UserRole.SUPPORT) {
+            const assignedCountryIds = user.regions?.map((r: any) => r.countryId) || [];
+            const assignedCityIds = user.regions?.map((r: any) => r.cityId) || [];
+            
+            const isCountryAllowed = assignedCountryIds.includes(countryId);
+            const isCityAllowed = cityId && assignedCityIds.includes(cityId);
+
+            if (!isCountryAllowed && !isCityAllowed) {
+                throw new ForbiddenException("No tienes permiso para crear talleres fuera de tu región asignada");
+            }
+        }
 
         console.log(data);
 

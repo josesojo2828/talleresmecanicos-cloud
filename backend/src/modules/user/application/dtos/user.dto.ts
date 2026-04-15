@@ -7,6 +7,8 @@ export interface ICreateUserDto {
     phone?: string;
     role: any; // UserRole enum
     enabled?: boolean;
+    countryId?: string;
+    cityId?: string;
 }
 
 export interface IUpdateUserDto {

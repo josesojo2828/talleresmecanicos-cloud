@@ -13,6 +13,7 @@ import { cn } from '@/utils/cn';
 import { WorkshopSkeleton } from '@/components/atoms/Skeleton';
 import { Header } from '@/components/organisms/Header';
 import { Footer } from '@/components/organisms/Footer';
+import { getFullImagePath } from '@/utils/image';
 
 interface CityDetailClientProps {
   id: string;
@@ -110,19 +111,30 @@ export default function CityDetailClient({ id }: CityDetailClientProps) {
             <Link href={`/taller/${shop.id}`} key={shop.id}>
               <div className="group bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 p-2 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
                 <div className="aspect-[4/3] rounded-[2rem] bg-slate-50 relative overflow-hidden">
-                  {shop.logoUrl ? (
-                    <Image
-                      unoptimized 
-                      src={shop.logoUrl} 
-                      alt={shop.name} 
-                      fill 
-                      className="object-cover group-hover:scale-110 transition-transform duration-700" 
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-200">
-                      <Wrench size={48} />
-                    </div>
+                  {/* Banner / Main Image */}
+                  <Image
+                    unoptimized 
+                    src={getFullImagePath(shop.images?.[0] || shop.logoUrl) || 'https://placehold.co/400x300/f8fafc/94a3b8?text=...'} 
+                    alt={shop.name} 
+                    fill 
+                    className="object-cover group-hover:scale-110 transition-transform duration-700" 
+                  />
+                  
+                  {/* Logo Overlay */}
+                  {shop.logoUrl && shop.images?.[0] && (
+                     <div className="absolute bottom-4 left-4 w-12 h-12 rounded-xl bg-white p-1 shadow-2xl border border-white/20 z-10 transition-transform group-hover:scale-110">
+                        <div className="relative w-full h-full rounded-lg overflow-hidden">
+                           <Image
+                              unoptimized
+                              src={getFullImagePath(shop.logoUrl)}
+                              alt={`${shop.name} logo`}
+                              fill
+                              className="object-cover"
+                           />
+                        </div>
+                     </div>
                   )}
+
                   <div className="absolute top-4 right-4 px-4 py-2 bg-white/90 backdrop-blur-md rounded-xl shadow-lg flex items-center gap-1.5">
                     <Star size={14} className="text-amber-500 fill-amber-500" />
                     <span className="text-[10px] font-black text-slate-900">4.9</span>

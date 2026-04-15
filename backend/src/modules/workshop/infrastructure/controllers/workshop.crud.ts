@@ -16,13 +16,13 @@ export class WorkshopCrudController {
 
     @Post()
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(UserRole.ADMIN, UserRole.TALLER) // Only Admin can create for anyone, Taller for themselves
+    @Roles(UserRole.ADMIN, UserRole.SUPPORT, UserRole.TALLER) // Only Admin can create for anyone, Taller for themselves, Support for their regions
     async create(@Body() data: ICreateWorkshopDto, @CurrentUser() user: any) {
         // If Taller, force userId to their own id
         if (user.role === UserRole.TALLER) {
             data.userId = user.id;
         }
-        return await this.useCase.create(data);
+        return await this.useCase.create(data, user);
     }
 
     @Put(':id')

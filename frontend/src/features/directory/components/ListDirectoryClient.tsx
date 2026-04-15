@@ -287,21 +287,32 @@ export default function ListDirectoryClient() {
                   {workshops.map(shop => (
                      <Link key={shop.id} href={`/taller/${shop.id}`} className="group flex flex-col bg-white border border-slate-100 hover:border-slate-950 transition-all duration-300">
                         <div className="aspect-[16/10] bg-slate-100 relative overflow-hidden">
-                           {shop.images?.[0] || shop.logoUrl ? (
-                              <div className="relative w-full h-full">
-                                 <Image
-                                    unoptimized
-                                    src={getFullImagePath(shop.images?.[0] || shop.logoUrl) || 'https://placehold.co/800x600/020617/ffffff?text=TALLER'}
-                                    alt={shop.name}
-                                    fill
-                                    className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                                 />
-                              </div>
-                           ) : (
-                              <div className="w-full h-full flex items-center justify-center text-slate-200">
-                                 <Wrench size={40} />
+                           {/* Big Banner Image */}
+                           <div className="relative w-full h-full">
+                              <Image
+                                 unoptimized
+                                 src={getFullImagePath(shop.images?.[0] || shop.logoUrl) || 'https://placehold.co/800x600/020617/ffffff?text=TALLER'}
+                                 alt={shop.name}
+                                 fill
+                                 className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                              />
+                           </div>
+                           
+                           {/* Small Logo Overlay */}
+                           {shop.logoUrl && shop.images?.[0] && (
+                              <div className="absolute bottom-4 left-4 w-12 h-12 rounded-xl bg-white p-1 shadow-2xl border border-white/20 z-10 transition-transform group-hover:scale-110">
+                                 <div className="relative w-full h-full rounded-lg overflow-hidden">
+                                    <Image
+                                       unoptimized
+                                       src={getFullImagePath(shop.logoUrl)}
+                                       alt={`${shop.name} logo`}
+                                       fill
+                                       className="object-cover"
+                                    />
+                                 </div>
                               </div>
                            )}
+
                            <div className="absolute top-5 right-5">
                               <div className="bg-slate-950/90 text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest italic">
                                  {shop.specialty || 'GENERAL'}

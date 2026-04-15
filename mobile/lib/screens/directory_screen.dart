@@ -459,80 +459,138 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
               ),
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF0F172A).withOpacity(0.04),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF10B981).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(16),
-                          image: (workshop['logoUrl'] != null && workshop['logoUrl'].toString().isNotEmpty)
-                            ? DecorationImage(
-                                image: NetworkImage(workshop['logoUrl']),
-                                fit: BoxFit.cover,
-                              )
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(28),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF0F172A).withOpacity(0.06),
+                      blurRadius: 24,
+                      offset: const Offset(0, 12),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Banner Image
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          height: 140,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+                            image: (workshop['images'] != null && workshop['images'] is List && workshop['images'].isNotEmpty)
+                              ? DecorationImage(
+                                  image: NetworkImage(workshop['images'][0]),
+                                  fit: BoxFit.cover,
+                                )
+                              : (workshop['logoUrl'] != null && workshop['logoUrl'].toString().isNotEmpty)
+                                ? DecorationImage(
+                                    image: NetworkImage(workshop['logoUrl']),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
+                            color: const Color(0xFFF1F5F9),
+                          ),
+                          child: (workshop['images'] == null || workshop['images'].isEmpty) && (workshop['logoUrl'] == null || workshop['logoUrl'].isEmpty)
+                            ? const Center(child: Icon(LucideIcons.wrench, color: Color(0xFFCBD5E1), size: 40))
                             : null,
                         ),
-                        child: (workshop['logoUrl'] == null || workshop['logoUrl'].toString().isEmpty)
-                          ? const Icon(LucideIcons.wrench, color: Color(0xFF10B981), size: 24)
-                          : null,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              workshop['name'] ?? 'Taller Mecánico',
-                              style: GoogleFonts.outfit(
-                                color: const Color(0xFF0F172A),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                letterSpacing: -0.5,
+                        // Logo Overlay
+                        if (workshop['logoUrl'] != null && workshop['logoUrl'].toString().isNotEmpty)
+                          Positioned(
+                            bottom: -20,
+                            left: 20,
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                shadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  )
+                                ],
+                              ),
+                              child: CircleAvatar(
+                                backgroundColor: const Color(0xFFF8FAFC),
+                                backgroundImage: NetworkImage(workshop['logoUrl']),
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              workshop['address'] ?? 'Sin dirección',
-                              style: GoogleFonts.inter(
-                                color: const Color(0xFF64748B),
-                                fontSize: 13,
-                                height: 1.4,
+                          ),
+                      ],
+                    ),
+                    
+                    const SizedBox(height: 28),
+                    
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  workshop['name'] ?? 'Taller Mecánico',
+                                  style: GoogleFonts.outfit(
+                                    color: const Color(0xFF0F172A),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    letterSpacing: -0.5,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                              const Icon(LucideIcons.arrow_up_right, color: Color(0xFF10B981), size: 20),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              const Icon(LucideIcons.map_pin, color: Color(0xFF64748B), size: 14),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  workshop['address'] ?? 'Sin dirección',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.inter(
+                                    color: const Color(0xFF64748B),
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Wrap(
+                            spacing: 8,
+                            children: [
+                              if (workshop['category'] != null)
+                                _buildMiniBadge(
+                                  workshop['category']['name'] ?? 'General', 
+                                  const Color(0xFF10B981),
+                                ),
+                              _buildMiniBadge(
+                                'Ver Detalles', 
+                                const Color(0xFF0F172A),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      const Icon(LucideIcons.chevron_right, color: Color(0xFFCBD5E1), size: 20),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      if (workshop['category'] != null)
-                        _buildMiniBadge(workshop['category']['name'] ?? 'General', const Color(0xFF64748B).withOpacity(0.1), textColor: const Color(0xFF64748B)),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
-            ),
           ),
         );
       },

@@ -25,7 +25,7 @@ export default class QueryUserUCase extends UserModel {
                     if (f.countryId) return { countryId: f.countryId };
                     if (f.cityId) return { 
                         OR: [
-                            { country: { cities: { some: { id: f.cityId } } } },
+                            { cityId: f.cityId },
                             { workshop: { cityId: f.cityId } }
                         ]
                     };
@@ -53,7 +53,7 @@ export default class QueryUserUCase extends UserModel {
                     if (f.countryId) return { countryId: f.countryId };
                     if (f.cityId) return { 
                         OR: [
-                            { country: { cities: { some: { id: f.cityId } } } },
+                            { cityId: f.cityId },
                             { workshop: { cityId: f.cityId } }
                         ]
                     };

@@ -96,11 +96,32 @@ export class AuthService {
         // Hash de contraseña
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(registerDto.password, salt);
+        
+        // Resolve IDs if strings are names (compatibility with hardcoded mobile values)
+        let resolvedCountryId = registerDto.country;
+        let resolvedCityId = registerDto.city;
 
-        let userId = '';
+        if (resolvedCountryId && resolvedCountryId.length < 30) {
+            const country = await this.prisma.country.findFirst({ 
+                where: { OR: [{ name: { contains: resolvedCountryId, mode: 'insensitive' } }, { slug: resolvedCountryId.toLowerCase() }] }
+            });
+            if (country) resolvedCountryId = country.id;
+        }
+
+        if (resolvedCityId && resolvedCityId.length < 30) {
+            const city = await this.prisma.city.findFirst({ 
+                where: { OR: [{ name: { contains: resolvedCityId, mode: 'insensitive' } }, { slug: resolvedCityId.toLowerCase() }] }
+            });
+            if (city) resolvedCityId = city.id;
+        }
 
         console.log(registerDto);
         console.log(emailLower);
+
+        let userId = '';
+
+        // Enforce CLIENT role for public registration
+        registerDto.role = 'CLIENT' as any;
 
         // Automatización: Si es un taller, crear el taller con los datos enviados
         if (registerDto.role === 'TALLER') {
@@ -126,14 +147,16 @@ export class AuthService {
                         lastName: registerDto.lastName,
                         role: registerDto.role as any,
                         enabled: true,
+                        countryId: resolvedCountryId,
+                        cityId: resolvedCityId,
                         workshop: {
                             create: {
                                 name: workshopName,
                                 slug,
                                 images: [],
                                 address: address,
-                                country: { connect: { id: registerDto.country } },
-                                city: { connect: { id: registerDto.city } },
+                                country: { connect: { id: resolvedCountryId } },
+                                city: { connect: { id: resolvedCityId } },
                                 enabled: true,
                                 openingHours: 'Lun-Sáb 8:00 - 18:00',
                                 socialMedia: {},
@@ -158,6 +181,8 @@ export class AuthService {
                     lastName: registerDto.lastName,
                     role: registerDto.role as any,
                     enabled: true,
+                    countryId: resolvedCountryId,
+                    cityId: resolvedCityId,
                 },
             });
 

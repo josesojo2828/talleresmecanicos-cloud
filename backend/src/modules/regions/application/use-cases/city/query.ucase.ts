@@ -25,7 +25,7 @@ export default class QueryCityUCase extends CityModel {
                 const cityFilters = scope.OR.map((f: any) => f.cityId ? { id: f.cityId } : f);
                 where.AND = [{ OR: cityFilters }];
             }
-        } else if (!user) {
+        } else if (user?.role !== UserRole.ADMIN && user?.role !== UserRole.SUPPORT) {
             where.enabled = true;
         }
 
@@ -48,7 +48,7 @@ export default class QueryCityUCase extends CityModel {
                 const cityFilters = scope.OR.map((f: any) => f.cityId ? { id: f.cityId } : f);
                 finalWhere.AND.push({ OR: cityFilters });
             }
-        } else if (!user) {
+        } else if (user?.role !== UserRole.ADMIN && user?.role !== UserRole.SUPPORT) {
             finalWhere.AND.push({ enabled: true });
         }
 

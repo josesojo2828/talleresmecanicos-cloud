@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:workshops_mobile/database/database_service.dart';
 import 'package:workshops_mobile/services/api_client.dart';
 import 'package:workshops_mobile/screens/support/workshop_detail_screen.dart';
+import 'package:workshops_mobile/screens/support/create_workshop_screen.dart';
 import 'package:workshops_mobile/widgets/kinetic_header.dart';
 import 'package:workshops_mobile/widgets/kinetic_search.dart';
 import 'dart:convert';
@@ -75,7 +76,15 @@ class _SupportWorkshopsTabState extends State<SupportWorkshopsTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          await Navigator.push(context, MaterialPageRoute(builder: (_) => const CreateWorkshopScreen()));
+          _loadWorkshops();
+        },
+        backgroundColor: const Color(0xFF0F172A),
+        icon: const Icon(LucideIcons.plus, color: Colors.white, size: 18),
+        label: Text('AGREGAR TALLER', style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white)),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),

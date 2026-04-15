@@ -19,6 +19,7 @@ import { Map } from "@/components/molecules/Map";
 import { WorkshopSkeleton } from '@/components/atoms/Skeleton';
 import { SEO } from '@/components/atoms/SEO';
 import { SEOContent } from '@/features/directory/components/SEOContent';
+import { getFullImagePath } from '@/utils/image';
 
 // --- Types ---
 interface Country {
@@ -567,19 +568,30 @@ function DirectoryContent({ initialCountryId, initialCityId }: DirectoryClientPr
                           "rounded-2xl bg-slate-50 overflow-hidden relative shrink-0",
                           viewMode === 'grid' ? "w-full h-32" : "w-24 h-24"
                         )}>
-                          {shop.logoUrl ? (
-                            <Image
-                              unoptimized
-                              src={shop.logoUrl.startsWith('http') || shop.logoUrl.startsWith('/') ? shop.logoUrl : `/explorar-red/${shop.logoUrl}`}
-                              alt={shop.name}
-                              fill
-                              className="object-cover group-hover:scale-110 transition-transform duration-500"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-slate-200">
-                              <Wrench size={32} />
-                            </div>
+                          {/* Banner / Main Image */}
+                          <Image
+                            unoptimized
+                            src={getFullImagePath(shop.images?.[0] || shop.logoUrl) || 'https://placehold.co/400x300/f8fafc/94a3b8?text=...'}
+                            alt={shop.name}
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                          
+                          {/* Logo Overlay (si hay banner) */}
+                          {shop.logoUrl && shop.images?.[0] && (
+                             <div className="absolute bottom-2 left-2 w-8 h-8 rounded-lg bg-white p-0.5 shadow-lg border border-white/20 z-10 transition-transform group-hover:scale-110">
+                                <div className="relative w-full h-full rounded-md overflow-hidden">
+                                   <Image
+                                      unoptimized
+                                      src={getFullImagePath(shop.logoUrl)}
+                                      alt={`${shop.name} logo`}
+                                      fill
+                                      className="object-cover"
+                                   />
+                                </div>
+                             </div>
                           )}
+
                           <div className="absolute top-2 right-2 flex gap-1">
                             <button className="w-7 h-7 bg-white/60 backdrop-blur-md rounded-lg flex items-center justify-center text-slate-800 hover:bg-rose-500 hover:text-white transition-all shadow-sm active:scale-95">
                               <Heart size={12} />
@@ -767,9 +779,29 @@ function DirectoryContent({ initialCountryId, initialCityId }: DirectoryClientPr
                 <div key={shop.id} className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-white hover:shadow-xl transition-all">
                    <div className="flex items-start gap-5">
                       <div className="w-20 h-20 bg-slate-50 rounded-2xl overflow-hidden shadow-inner shrink-0 relative">
-                        {shop.logoUrl ? (
-                           <Image unoptimized src={shop.logoUrl.startsWith('http') || shop.logoUrl.startsWith('/') ? shop.logoUrl : `/explorar-red/${shop.logoUrl}`} alt={shop.name} fill className="object-cover" />
-                        ) : <div className="w-full h-full flex items-center justify-center text-slate-200"><Wrench size={24} /></div>}
+                        {/* Banner / Main Image */}
+                        <Image 
+                          unoptimized 
+                          src={getFullImagePath(shop.images?.[0] || shop.logoUrl) || 'https://placehold.co/400x300/f8fafc/94a3b8?text=...'} 
+                          alt={shop.name} 
+                          fill 
+                          className="object-cover" 
+                        />
+                        
+                        {/* Logo Overlay */}
+                        {shop.logoUrl && shop.images?.[0] && (
+                           <div className="absolute bottom-1.5 left-1.5 w-6 h-6 rounded-lg bg-white p-0.5 shadow-lg border border-white/20 z-10 transition-transform active:scale-110">
+                              <div className="relative w-full h-full rounded-md overflow-hidden">
+                                 <Image
+                                    unoptimized
+                                    src={getFullImagePath(shop.logoUrl)}
+                                    alt={`${shop.name} logo`}
+                                    fill
+                                    className="object-cover"
+                                 />
+                              </div>
+                           </div>
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                          <span className="text-[8px] font-black text-emerald-500 uppercase bg-emerald-50 px-2 py-1 rounded-lg">{(shop as any).specialty || 'General'}</span>

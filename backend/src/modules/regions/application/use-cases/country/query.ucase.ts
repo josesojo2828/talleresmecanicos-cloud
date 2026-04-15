@@ -30,7 +30,7 @@ export default class QueryCountryUCase extends CountryModel {
                 });
                 where.AND = [{ OR: countryFilters }];
             }
-        } else if (user?.role === 'PUBLIC' || !user) {
+        } else if (user?.role !== UserRole.ADMIN && user?.role !== UserRole.SUPPORT) {
             where.enabled = true;
         }
 
@@ -57,7 +57,7 @@ export default class QueryCountryUCase extends CountryModel {
                 });
                 finalWhere.AND.push({ OR: countryFilters });
             }
-        } else if (user?.role === 'PUBLIC' || !user) {
+        } else if (user?.role !== UserRole.ADMIN && user?.role !== UserRole.SUPPORT) {
             finalWhere.AND.push({ enabled: true });
         }
 

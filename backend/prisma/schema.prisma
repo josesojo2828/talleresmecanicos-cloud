@@ -19,6 +19,7 @@ model User {
   deletedAt          DateTime?           @map("deleted_at")
   enabled            Boolean             @default(true)
   countryId          String?             @map("country_id")
+  cityId             String?             @map("city_id")
   appointments       Appointment[]
   auditLogs          AuditLog[]
   chatMessages       ChatMessage[]
@@ -33,6 +34,7 @@ model User {
   sessions           Session[]
   supportAssignments SupportAssignment[]
   country            Country?            @relation("UserCountryPreference", fields: [countryId], references: [id])
+  city               City?               @relation(fields: [cityId], references: [id])
   works              Work[]
   workshopClients    WorkshopClient[]
   workshop           Workshop?

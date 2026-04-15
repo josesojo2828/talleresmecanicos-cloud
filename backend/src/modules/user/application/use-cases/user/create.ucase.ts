@@ -39,6 +39,8 @@ export default class CreateUserUCase extends UserModel {
                 phone,
                 role: (data.role as any) || 'CLIENT',
                 enabled: data.enabled ?? true,
+                countryId: data.countryId,
+                cityId: data.cityId,
                 profile: { create: {} },
             }
         });

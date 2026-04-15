@@ -18,8 +18,7 @@ import { AutocompleteInput } from "@/features/dashboard/components/AutocompleteI
 
 export const RegisterForm = () => {
     const t = useTranslations("auth.register");
-    const searchParams = useSearchParams();
-    const urlRole = searchParams.get("role")?.toUpperCase();
+    // Remover autodetección de rol, forzalo a CLIENTE
 
     const [step, setStep] = useState(1); 
     const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +37,7 @@ export const RegisterForm = () => {
     } = useForm({
         // Definimos valores por defecto para todos los campos
         defaultValues: {
-            role: (urlRole === 'TALLER' || urlRole === 'CLIENT' ? urlRole : 'CLIENT') as 'CLIENT' | 'TALLER' | null,
+            role: 'CLIENT' as 'CLIENT' | 'TALLER' | null,
             firstName: "",
             lastName: "",
             email: "",
@@ -161,7 +160,7 @@ export const RegisterForm = () => {
                                 type="button" 
                                 variant="PRIMARY" 
                                 className="w-full h-14 rounded-2xl shadow-xl shadow-emerald-500/20"
-                                onClick={() => { setValue("role", 'CLIENT'); nextStep(); }}
+                                onClick={nextStep}
                             >
                                 COMENCER EL REGISTRO
                             </Button>
@@ -258,34 +257,7 @@ export const RegisterForm = () => {
                             <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Ubicanos tu posición en el mapa</p>
                         </div>
 
-                        {/* Campos de Taller (Solo si es taller) */}
-                        {watch("role") === 'TALLER' && (
-                            <div className="space-y-4 bg-emerald-50/50 p-6 rounded-[2.5rem] border border-emerald-100">
-                                <Typography variant="P" className="text-[10px] font-black uppercase tracking-widest text-emerald-600 px-1 italic">Datos Comerciales</Typography>
-                                
-                                <FormField
-                                    label="Nombre del Taller"
-                                    placeholder="Ej: Mario Motors"
-                                    value={watch("workshopName")}
-                                    onChange={(e) => setValue("workshopName", e.target.value)}
-                                    error={fieldErrors.workshopName || formErrors.workshopName?.message}
-                                    icon="briefcase"
-                                    className="bg-white"
-                                    disabled={isLoading}
-                                />
-
-                                <FormField
-                                    label="Dirección"
-                                    placeholder="Calle principal..."
-                                    value={watch("workshopAddress")}
-                                    onChange={(e) => setValue("workshopAddress", e.target.value)}
-                                    error={fieldErrors.workshopAddress || formErrors.workshopAddress?.message}
-                                    icon="map"
-                                    className="bg-white"
-                                    disabled={isLoading}
-                                />
-                            </div>
-                        )}
+                        {/* Solo campos de Cliente/Ubicación */}
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-1.5">
