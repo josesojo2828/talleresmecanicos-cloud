@@ -14,7 +14,9 @@ export type InputType =
     | 'file'
     | 'image'
     | 'hidden'
-    | 'icon_picker';
+    | 'icon_picker'
+    | 'color'
+    | 'location_picker';
 
 export interface FormOption {
     label: string;
