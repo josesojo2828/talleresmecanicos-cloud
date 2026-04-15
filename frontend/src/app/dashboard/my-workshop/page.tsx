@@ -16,6 +16,7 @@ import { cn } from "@/utils/cn";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useAlertStore } from "@/store/useAlertStore";
 import { getFullImagePath } from "@/utils/image";
+import { LocationPicker } from "@/features/dashboard/components/LocationPicker";
 
 const DAYS = [
     { key: "monday", label: "Lunes" },
@@ -378,6 +379,37 @@ export default function MyWorkshopPage() {
                                     <span className="text-[10px] font-black uppercase tracking-widest leading-none">{cat.label}</span>
                                 </label>
                             ))}
+                        </div>
+                    </div>
+
+                    {/* Sección: Ubicación Geográfica (Mapa) */}
+                    <div className="bg-white rounded-[40px] p-8 md:p-10 border border-slate-100 shadow-sm relative overflow-hidden group">
+                        <header className="flex items-center gap-3 mb-8 relative">
+                            <div className="w-10 h-10 bg-slate-900 rounded-2xl flex items-center justify-center text-white">
+                                <MapPin size={20} />
+                            </div>
+                            <h3 className="text-sm font-black uppercase tracking-tight text-slate-800 italic">Coordenadas de la Sede</h3>
+                        </header>
+                        <div className="w-full h-[400px] rounded-[2rem] overflow-hidden border-2 border-slate-100">
+                             <Controller
+                                 name="latitude"
+                                 control={control}
+                                 render={({ field: latField }) => (
+                                     <Controller
+                                         name="longitude"
+                                         control={control}
+                                         render={({ field: lngField }) => (
+                                             <LocationPicker 
+                                                 value={{ lat: Number(latField.value) || 0, lng: Number(lngField.value) || 0 }}
+                                                 onChange={(loc) => {
+                                                     latField.onChange(loc.lat);
+                                                     lngField.onChange(loc.lng);
+                                                 }}
+                                             />
+                                         )}
+                                     />
+                                 )}
+                             />
                         </div>
                     </div>
 
