@@ -20,7 +20,7 @@ export class MyWorkshopController {
 
     @Get()
     async getMine(@CurrentUser() user: any) {
-        return await this.useCase.pagination({ skip: 0, take: 1, filters: { userId: user.id } }, user);
+        return await this.useCase.getMyProfile(user);
     }
 
     @Get('dashboard-stats')

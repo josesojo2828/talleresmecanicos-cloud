@@ -38,14 +38,7 @@ export function getScopeFilter(user: any, relation?: string) {
     }
 
     if (user.role === UserRole.TALLER) {
-        // En consultas generales, el TALLER puede ver todo lo habilitado de otros talleres, 
-        // pero solo lo propio si no está habilitado.
-        return {
-            OR: [
-                { enabled: true },
-                { userId: user.id }
-            ]
-        };
+        return { enabled: true };
     }
 
     return { enabled: true };

@@ -151,6 +151,14 @@ export class WorkshopUCase extends WorkshopModel {
         });
     }
 
+    async getMyProfile(user: any) {
+        const workshop = await this.persistence.find({ userId: user.id });
+        return {
+            data: workshop ? [workshop] : [],
+            meta: { totalItems: workshop ? 1 : 0 }
+        };
+    }
+
     async getDashboardStats(user: any) {
         const workshop = await this.persistence.find({ userId: user.id });
         if (!workshop) {
