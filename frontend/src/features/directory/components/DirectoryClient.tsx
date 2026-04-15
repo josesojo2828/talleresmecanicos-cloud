@@ -478,33 +478,7 @@ function DirectoryContent({ initialCountryId, initialCityId }: DirectoryClientPr
                   )}
                 </div>
 
-                <div className="space-y-4">
-                  <header className="px-2 flex items-center justify-between cursor-pointer group" onClick={() => setIsSpecialtyFilterOpen(!isSpecialtyFilterOpen)}>
-                    <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 group-hover:text-slate-600 transition-colors">
-                      <Settings size={14} /> Especialidad
-                    </h5>
-                    {isSpecialtyFilterOpen ? <Minus size={12} className="text-slate-300" /> : <Plus size={12} className="text-slate-300" />}
-                  </header>
-                  {isSpecialtyFilterOpen && (
-                    <div className="flex flex-wrap gap-2 px-2 pb-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                      <button
-                        onClick={() => setSelectedCategory(null)}
-                        className={cn("px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border", !selectedCategory ? "bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20" : "bg-white text-slate-400 border-slate-100 hover:border-emerald-200")}
-                      >
-                        Todas
-                      </button>
-                      {categories.map(cat => (
-                        <button
-                          key={cat.id}
-                          onClick={() => setSelectedCategory(cat.id)}
-                          className={cn("px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border", selectedCategory === cat.id ? "bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-500/20" : "bg-white text-slate-400 border-slate-100 hover:border-emerald-200")}
-                        >
-                          {cat.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+
               </div>
 
               <div className="mt-10 flex items-center justify-between mb-6 px-2">
@@ -572,6 +546,10 @@ function DirectoryContent({ initialCountryId, initialCityId }: DirectoryClientPr
                             alt={shop.name}
                             fill
                             className="object-cover group-hover:scale-110 transition-transform duration-500"
+                            onError={(e) => {
+                               e.currentTarget.srcset = '';
+                               e.currentTarget.src = 'https://placehold.co/400x300/f8fafc/94a3b8?text=...';
+                            }}
                           />
                           
                           {/* Logo Overlay (si hay banner) */}
@@ -584,6 +562,10 @@ function DirectoryContent({ initialCountryId, initialCityId }: DirectoryClientPr
                                       alt={`${shop.name} logo`}
                                       fill
                                       className="object-cover"
+                                      onError={(e) => {
+                                         e.currentTarget.srcset = '';
+                                         e.currentTarget.src = 'https://placehold.co/150x150/f8fafc/94a3b8?text=LOGO';
+                                      }}
                                    />
                                 </div>
                              </div>
@@ -726,22 +708,7 @@ function DirectoryContent({ initialCountryId, initialCityId }: DirectoryClientPr
                     </div>
                  </div>
 
-                 <div className="space-y-3">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Especialidad</label>
-                    <div className="flex flex-wrap gap-2">
-                        <button 
-                          onClick={() => setSelectedCategory(null)}
-                          className={cn("px-4 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all", !selectedCategory ? "bg-emerald-500 text-white" : "bg-slate-50 text-slate-400")}
-                        >Todas</button>
-                        {categories.map(cat => (
-                          <button 
-                             key={cat.id} 
-                             onClick={() => setSelectedCategory(cat.id)}
-                             className={cn("px-4 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all", selectedCategory === cat.id ? "bg-emerald-500 text-white" : "bg-slate-50 text-slate-400")}
-                          >{cat.name}</button>
-                        ))}
-                    </div>
-                 </div>
+
 
                  <button onClick={() => setShowMobileFilters(false)} className="w-full bg-slate-900 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-slate-900/20 active:scale-95 transition-all">
                     Aplicar
@@ -783,6 +750,10 @@ function DirectoryContent({ initialCountryId, initialCityId }: DirectoryClientPr
                           alt={shop.name} 
                           fill 
                           className="object-cover" 
+                          onError={(e) => {
+                             e.currentTarget.srcset = '';
+                             e.currentTarget.src = 'https://placehold.co/400x300/f8fafc/94a3b8?text=...';
+                          }}
                         />
                         
                         {/* Logo Overlay */}
@@ -795,6 +766,10 @@ function DirectoryContent({ initialCountryId, initialCityId }: DirectoryClientPr
                                     alt={`${shop.name} logo`}
                                     fill
                                     className="object-cover"
+                                    onError={(e) => {
+                                       e.currentTarget.srcset = '';
+                                       e.currentTarget.src = 'https://placehold.co/150x150/f8fafc/94a3b8?text=LOGO';
+                                    }}
                                  />
                               </div>
                            </div>

@@ -11,9 +11,10 @@ import { useCrud } from '@/features/dashboard/hooks/useCrud';
 import {
     Activity, Database, Settings, Users,
     Globe, Wrench,
-    Shield, Layers, Image as ImageIcon
+    Shield, Layers, Image as ImageIcon, MapPin
 } from 'lucide-react';
 import { GalleryManager } from '@/features/dashboard/components/GalleryManager';
+import { LocationPicker } from '@/features/dashboard/components/LocationPicker';
 import { UserRole } from '@/types/enums';
 import { Loader2 } from 'lucide-react';
 import CustomCrud from '@/features/dashboard/pages/CustomCrud';
@@ -74,6 +75,7 @@ export default function RecordDetailPage() {
         ];
         if (slug === 'workshop') {
             base.splice(2, 0, { id: 'gallery', label: t('ficha.tabs.gallery'), icon: <ImageIcon size={16} /> });
+            base.splice(3, 0, { id: 'location', label: 'Ubicación', icon: <MapPin size={16} /> });
         }
 
         if (slug === 'user' && data?.role === UserRole.SUPPORT) {
@@ -253,6 +255,17 @@ export default function RecordDetailPage() {
                     <GalleryManager
                         images={data.images}
                         onUpdate={updateRecord}
+                    />
+                </div>
+            )}
+
+            {activeTab === 'location' && slug === 'workshop' && (
+                <div className="max-w-4xl mx-auto bg-white/50 p-10 rounded-[2.5rem] border border-white shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <LocationPicker 
+                       value={{ lat: Number(data.latitude || 0), lng: Number(data.longitude || 0) }}
+                       onChange={(val) => {
+                           updateRecord({ latitude: val.lat, longitude: val.lng });
+                       }} 
                     />
                 </div>
             )}

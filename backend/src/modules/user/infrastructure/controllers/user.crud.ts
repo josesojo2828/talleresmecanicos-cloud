@@ -41,9 +41,9 @@ export class UserCrudController {
     }
 
     @Delete(':id')
-    @Roles(UserRole.ADMIN)
-    async delete(@Param('id') id: string) {
-        return await this.deleteUseCase.execute({ id });
+    @Roles(UserRole.ADMIN, UserRole.SUPPORT)
+    async delete(@Param('id') id: string, @CurrentUser() user: any) {
+        return await this.deleteUseCase.execute({ id, currentUser: user });
     }
 
     @Get(':id')

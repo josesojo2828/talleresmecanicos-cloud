@@ -2,14 +2,21 @@ import { Metadata } from 'next';
 import WorkshopClient from './WorkshopClient';
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+const getApiUrl = () => {
+    if (typeof window !== 'undefined') {
+        return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+    }
+    // SSR context
+    return process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://backend:9999/api/v1';
+};
 
 async function getWorkshop(id: string) {
     try {
-        const res = await axios.get(`${API_URL}/workshop/${id}`, { timeout: 2000 });
+        const url = `${getApiUrl()}/workshop/${id}`;
+        const res = await axios.get(url, { timeout: 2000 });
         return res.data?.body?.data || res.data?.data || res.data;
     } catch (error) {
-        console.error("[SSR] Error fetching workshop:", id);
+        // Suppress 404 trace in server logs
         return null;
     }
 }

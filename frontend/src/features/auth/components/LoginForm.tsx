@@ -60,7 +60,7 @@ export const LoginForm = () => {
                 required
             />
 
-            {/* Remember Me & Forgot Password */}
+            {/* Remember Me */}
             <div className="flex items-center justify-between px-1">
                 <label className="flex items-center gap-2 cursor-pointer group">
                     <input
@@ -72,12 +72,6 @@ export const LoginForm = () => {
                     />
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 group-hover:text-primary transition-colors">{t("remember")}</span>
                 </label>
-                <Link
-                    href="/recuperar-password"
-                    className="text-[10px] font-bold uppercase tracking-wider text-primary hover:text-primary-600 transition-colors"
-                >
-                    {t("forgot")}
-                </Link>
             </div>
 
             {/* Submit Button */}

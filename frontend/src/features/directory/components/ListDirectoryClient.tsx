@@ -227,22 +227,7 @@ export default function ListDirectoryClient() {
                      </select>
                   </div>
 
-                  {/* Category Quick Selector */}
-                  <div className="relative">
-                     <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400">
-                        <Wrench size={18} />
-                     </div>
-                     <select
-                        value={selectedCategory || ''}
-                        onChange={(e) => setSelectedCategory(e.target.value || null)}
-                        className="w-full bg-slate-50 border border-slate-200 pl-14 pr-10 py-5 text-[11px] font-black uppercase tracking-widest focus:bg-white focus:border-slate-950 appearance-none outline-none cursor-pointer"
-                     >
-                        <option value="">TODAS LAS ESPECIALIDADES</option>
-                        {categories.map(cat => (
-                           <option key={cat.id} value={cat.id}>{cat.name}</option>
-                        ))}
-                     </select>
-                  </div>
+
 
                </div>
             </div>
@@ -295,6 +280,10 @@ export default function ListDirectoryClient() {
                                  alt={shop.name}
                                  fill
                                  className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                                 onError={(e) => {
+                                    e.currentTarget.srcset = '';
+                                    e.currentTarget.src = 'https://placehold.co/800x600/020617/ffffff?text=TALLER';
+                                 }}
                               />
                            </div>
                            
@@ -308,6 +297,10 @@ export default function ListDirectoryClient() {
                                        alt={`${shop.name} logo`}
                                        fill
                                        className="object-cover"
+                                       onError={(e) => {
+                                          e.currentTarget.srcset = '';
+                                          e.currentTarget.src = 'https://placehold.co/150x150/020617/ffffff?text=LOGO';
+                                       }}
                                     />
                                  </div>
                               </div>

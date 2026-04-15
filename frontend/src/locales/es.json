@@ -148,6 +148,7 @@
         "website": "Sitio Web",
         "latitude": "Latitud",
         "longitude": "Longitud",
+        "location": "Ubicación en el Mapa",
         "logo": "Logo del Taller",
         "openingHours": "Horario de Atención",
         "country": "País",

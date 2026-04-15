@@ -22,8 +22,7 @@ export const WorkshopForm: FormStructure = {
         { name: 'phone', label: 'workshop.phone', type: 'text', gridCols: 2 },
         { name: 'whatsapp', label: 'workshop.whatsapp', type: 'text', gridCols: 2 },
         { name: 'website', label: 'workshop.website', type: 'text' },
-        { name: 'latitude', label: 'workshop.latitude', type: 'number', gridCols: 2 },
-        { name: 'longitude', label: 'workshop.longitude', type: 'number', gridCols: 2 },
+
         { name: 'openingHours', label: 'workshop.openingHours', type: 'text' },
         {
             name: 'countryId',

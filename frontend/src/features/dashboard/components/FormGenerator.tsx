@@ -130,11 +130,25 @@ export function FormGenerator({ structure, defaultValues, isUpdate, onSubmit, on
 
     const hasTranslatableFields = structure.fields.some(f => f.translatable);
 
-    const { register, handleSubmit, control, watch, setValue, formState: { errors } } = useForm<Record<string, unknown>>({
+    const { register, handleSubmit, control, watch, setValue, formState: { errors, dirtyFields } } = useForm<Record<string, unknown>>({
         defaultValues: defaultValues || {}
     });
 
     const formValues = watch();
+
+    const onSubmitFiltered = (data: Record<string, unknown>) => {
+        if (!isUpdate) {
+            onSubmit(data);
+            return;
+        }
+        
+        const dirtyData: Record<string, unknown> = {};
+        for (const key of Object.keys(dirtyFields)) {
+            dirtyData[key] = data[key];
+        }
+        
+        onSubmit(Object.keys(dirtyData).length > 0 ? dirtyData : {});
+    };
 
     useEffect(() => {
         // Auto-locate for Service Request if fields exist and no values provided
@@ -149,7 +163,7 @@ export function FormGenerator({ structure, defaultValues, isUpdate, onSubmit, on
     }, [structure.slug, isUpdate, setValue]);
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmitFiltered)} className="space-y-6">
 
             {hasTranslatableFields && (
                 <div className="flex gap-2 p-1 bg-base-200/50 rounded-2xl w-fit border border-base-300">

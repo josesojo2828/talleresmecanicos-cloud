@@ -13,10 +13,16 @@ export default class DeleteUserUCase extends UserModel {
         super()
     }
 
-    public async execute({ id }: { id: string }) {
+    public async execute({ id, currentUser }: { id: string, currentUser?: any }) {
         const entity = await this.findPersistence.find({ where: { id } });
 
         if (!entity) throw new BadRequestException('not_found');
+
+        if (currentUser && currentUser.role === 'SUPPORT') {
+            if (entity.role === 'ADMIN' || entity.role === 'SUPPORT') {
+                throw new BadRequestException('forbidden_action');
+            }
+        }
 
         const entityDeleted = await this.deletePersistence.delete({ id });
 
