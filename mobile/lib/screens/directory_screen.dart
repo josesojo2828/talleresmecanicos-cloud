@@ -403,6 +403,13 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
     );
   }
 
+  String _getImageUrl(String? path) {
+    if (path == null || path.isEmpty) return '';
+    if (path.startsWith('http')) return path;
+    if (path.startsWith('/')) return 'https://talleresmecanicos.quanticarch.com$path';
+    return 'https://talleresmecanicos.quanticarch.com/$path';
+  }
+
   Widget _buildWorkshopsList() {
     if (_isLoading) {
       return const SliverFillRemaining(
@@ -445,6 +452,11 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final workshop = _workshops[index];
+          final logoUrl = _getImageUrl(workshop['logoUrl']);
+          final bannerUrl = (workshop['images'] != null && workshop['images'] is List && workshop['images'].isNotEmpty) 
+            ? _getImageUrl(workshop['images'][0]) 
+            : null;
+
           return FadeInUp(
             delay: Duration(milliseconds: 100 * index),
             child: GestureDetector(
@@ -478,25 +490,25 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-                            image: (workshop['images'] != null && workshop['images'] is List && workshop['images'].isNotEmpty)
+                            image: bannerUrl != null && bannerUrl.isNotEmpty
                               ? DecorationImage(
-                                  image: NetworkImage(workshop['images'][0]),
+                                  image: NetworkImage(bannerUrl),
                                   fit: BoxFit.cover,
                                 )
-                              : (workshop['logoUrl'] != null && workshop['logoUrl'].toString().isNotEmpty)
+                              : logoUrl.isNotEmpty
                                 ? DecorationImage(
-                                    image: NetworkImage(workshop['logoUrl']),
+                                    image: NetworkImage(logoUrl),
                                     fit: BoxFit.cover,
                                   )
                                 : null,
                             color: const Color(0xFFF1F5F9),
                           ),
-                          child: (workshop['images'] == null || workshop['images'].isEmpty) && (workshop['logoUrl'] == null || workshop['logoUrl'].isEmpty)
+                          child: (bannerUrl == null || bannerUrl.isEmpty) && logoUrl.isEmpty
                             ? const Center(child: Icon(LucideIcons.wrench, color: Color(0xFFCBD5E1), size: 40))
                             : null,
                         ),
                         // Logo Overlay
-                        if (workshop['logoUrl'] != null && workshop['logoUrl'].toString().isNotEmpty)
+                        if (logoUrl.isNotEmpty)
                           Positioned(
                             bottom: -20,
                             left: 20,
@@ -517,7 +529,7 @@ class _DirectoryScreenState extends State<DirectoryScreen> {
                               ),
                               child: CircleAvatar(
                                 backgroundColor: const Color(0xFFF8FAFC),
-                                backgroundImage: NetworkImage(workshop['logoUrl']),
+                                backgroundImage: NetworkImage(logoUrl),
                               ),
                             ),
                           ),

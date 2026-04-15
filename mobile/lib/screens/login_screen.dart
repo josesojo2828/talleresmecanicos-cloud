@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 24),
               FadeInDown(
                 delay: const Duration(milliseconds: 200), 
-                child: Text('KINETIC ATELIER', style: GoogleFonts.outfit(color: const Color(0xFF0F172A), fontSize: 24, fontWeight: FontWeight.w900, letterSpacing: 2))
+                child: Text('TALLERES MECÁNICOS', style: GoogleFonts.outfit(color: const Color(0xFF0F172A), fontSize: 24, fontWeight: FontWeight.w900, letterSpacing: 2))
               ),
               const SizedBox(height: 8),
               FadeInDown(

@@ -70,10 +70,23 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
     );
   }
 
+  String _getImageUrl(String? path) {
+    if (path == null || path.isEmpty) return '';
+    if (path.startsWith('http')) return path;
+    if (path.startsWith('/')) return 'https://talleresmecanicos.quanticarch.com$path';
+    return 'https://talleresmecanicos.quanticarch.com/$path';
+  }
+
   Widget _buildHeroHeader(BuildContext context) {
-    final List<dynamic> images = (widget.workshop['images'] as List? ?? [])
-        .where((img) => img != null && img.toString().isNotEmpty)
-        .toList();
+    var rawImages = widget.workshop['images'];
+    List<dynamic> images = [];
+    if (rawImages is List && rawImages.isNotEmpty) {
+      images = rawImages.where((img) => img != null && img.toString().isNotEmpty).toList();
+    }
+    
+    if (images.isEmpty && widget.workshop['logoUrl'] != null && widget.workshop['logoUrl'].toString().isNotEmpty) {
+      images = [widget.workshop['logoUrl']];
+    }
     
     return SliverAppBar(
       expandedHeight: 280,
@@ -88,13 +101,13 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
           fit: StackFit.expand,
           children: [
             if (images.isEmpty)
-              Container(color: const Color(0xFF0F172A))
+              Container(color: const Color(0xFF0F172A), child: const Center(child: Icon(LucideIcons.image, size: 80, color: Colors.white12)))
             else
               PageView.builder(
                 itemCount: images.length,
                 itemBuilder: (context, index) {
                   return Image.network(
-                    images[index],
+                    _getImageUrl(images[index]),
                     fit: BoxFit.cover,
                   );
                 },
