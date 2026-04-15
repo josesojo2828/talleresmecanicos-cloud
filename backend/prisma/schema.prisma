@@ -143,6 +143,7 @@ model City {
   country            Country             @relation(fields: [countryId], references: [id])
   supportAssignments SupportAssignment[]
   workshops          Workshop[]
+  users              User[]
 
   @@unique([name, countryId])
   @@unique([slug, countryId])
@@ -332,27 +333,27 @@ model Appointment {
 }
 
 model Work {
-  id                  String     @id @default(uuid())
-  publicId            String     @unique @default(cuid()) @map("public_id")
-  workshopId          String     @map("workshop_id")
-  clientId            String?    @map("client_id")
+  id                  String          @id @default(uuid())
+  publicId            String          @unique @default(cuid()) @map("public_id")
+  workshopId          String          @map("workshop_id")
+  clientId            String?         @map("client_id")
   title               String
   description         String?
-  status              WorkStatus @default(OPEN)
+  status              WorkStatus      @default(OPEN)
   images              String[]
-  createdAt           DateTime   @default(now()) @map("created_at")
-  updatedAt           DateTime?  @updatedAt @map("updated_at")
-  deletedAt           DateTime?  @map("deleted_at")
-  clientName          String?    @map("client_name")
-  clientPhone         String?    @map("client_phone")
-  vehicleLicensePlate String?    @map("vehicle_license_plate")
-  laborPrice          Float?     @default(0) @map("labor_price")
-  currency            String?    @default("USD")
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime?       @updatedAt @map("updated_at")
+  deletedAt           DateTime?       @map("deleted_at")
+  clientName          String?         @map("client_name")
+  clientPhone         String?         @map("client_phone")
+  vehicleLicensePlate String?         @map("vehicle_license_plate")
+  laborPrice          Float?          @default(0) @map("labor_price")
+  currency            String?         @default("USD")
   partsUsed           WorkPart[]
-  workshopClientId    String?    @map("workshop_client_id")
+  workshopClientId    String?         @map("workshop_client_id")
   workshopClient      WorkshopClient? @relation(fields: [workshopClientId], references: [id])
-  client              User?      @relation(fields: [clientId], references: [id])
-  workshop            Workshop   @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  client              User?           @relation(fields: [clientId], references: [id])
+  workshop            Workshop        @relation(fields: [workshopId], references: [id], onDelete: Cascade)
 
   @@index([workshopId])
   @@index([clientId])
@@ -362,14 +363,14 @@ model Work {
 }
 
 model WorkshopClient {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   name       String
   phone      String?
   email      String?
-  workshopId String   @map("workshop_id")
-  userId     String?  @map("user_id") // Opcional: si el cliente se registra
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  workshopId String    @map("workshop_id")
+  userId     String?   @map("user_id") // Opcional: si el cliente se registra
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
   deletedAt  DateTime? @map("deleted_at")
 
   workshop Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)

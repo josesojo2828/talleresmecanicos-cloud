@@ -19,6 +19,8 @@ export interface IUpdateUserDto {
     role?: any; // UserRole enum
     enabled?: boolean;
     passwordHash?: string;
+    countryId?: string;
+    cityId?: string;
 }
 
 export interface ICreateProfileDto {

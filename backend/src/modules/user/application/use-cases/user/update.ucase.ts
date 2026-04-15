@@ -30,6 +30,8 @@ export default class UpdateUserUCase extends UserModel {
         if (phone) body.phone = phone;
         if (data.role) (body as any).role = data.role;
         if (data.enabled !== undefined) body.enabled = data.enabled;
+        if (data.countryId) body.country = { connect: { id: data.countryId } };
+        if (data.cityId) body.city = { connect: { id: data.cityId } };
         // if (status) body.status = status;
         // if (kycLevel) body.kycLevel = kycLevel;
 

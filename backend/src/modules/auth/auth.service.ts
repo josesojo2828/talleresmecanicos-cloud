@@ -181,8 +181,8 @@ export class AuthService {
                     lastName: registerDto.lastName,
                     role: registerDto.role as any,
                     enabled: true,
-                    countryId: resolvedCountryId,
-                    cityId: resolvedCityId,
+                    country: resolvedCountryId ? { connect: { id: resolvedCountryId } } : undefined,
+                    city: resolvedCityId ? { connect: { id: resolvedCityId } } : undefined,
                 },
             });
 
