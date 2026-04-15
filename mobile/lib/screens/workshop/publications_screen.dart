@@ -4,6 +4,7 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:workshops_mobile/services/api_client.dart';
 import 'package:workshops_mobile/widgets/kinetic_header.dart';
+import 'package:workshops_mobile/screens/workshop/create_publication_screen.dart';
 import 'dart:convert';
 
 class PublicationsScreen extends StatefulWidget {
@@ -103,8 +104,11 @@ class _PublicationsScreenState extends State<PublicationsScreen> {
       ),
       floatingActionButton: FadeInRight(
         child: FloatingActionButton.extended(
-          onPressed: () {
-            // TODO: Pantalla de crear publicación
+          onPressed: () async {
+            final result = await Navigator.push(context, MaterialPageRoute(builder: (_) => const CreatePublicationScreen()));
+            if (result == true) {
+              _loadData();
+            }
           },
           backgroundColor: const Color(0xFF0F172A),
           icon: const Icon(LucideIcons.plus, color: Colors.white),
