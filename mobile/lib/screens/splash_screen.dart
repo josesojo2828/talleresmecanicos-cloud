@@ -50,10 +50,11 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             ZoomIn(
               duration: const Duration(seconds: 1),
-              child: const Icon(
-                LucideIcons.gauge,
-                size: 100,
-                color: Color(0xFF10B981),
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: 120,
+                height: 120,
+                errorBuilder: (context, error, stackTrace) => const Icon(LucideIcons.gauge, size: 100, color: Color(0xFF10B981)),
               ),
             ),
             const SizedBox(height: 32),
@@ -62,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Column(
                 children: [
                   Text(
-                    'KINETIC',
+                    'TALLERES',
                     style: GoogleFonts.outfit(
                       fontSize: 32,
                       fontWeight: FontWeight.w900,
@@ -71,11 +72,11 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                   ),
                   Text(
-                    'ATELIER',
+                    'MECÁNICOS',
                     style: GoogleFonts.outfit(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      letterSpacing: 10,
+                      letterSpacing: 8,
                       color: const Color(0xFF10B981),
                     ),
                   ),

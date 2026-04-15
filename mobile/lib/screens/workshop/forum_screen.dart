@@ -39,7 +39,7 @@ class _ForumScreenState extends State<ForumScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F5F9),
       appBar: AppBar(
-        title: Text('COMUNIDAD KINETIC', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16)),
+        title: Text('COMUNIDAD TALLERES', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16)),
         backgroundColor: Colors.white, foregroundColor: const Color(0xFF0F172A), elevation: 0.5,
       ),
       body: _isLoading 

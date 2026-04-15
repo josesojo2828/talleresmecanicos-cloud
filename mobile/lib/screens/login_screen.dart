@@ -109,7 +109,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 10))
                     ]
                   ),
-                  child: const Icon(LucideIcons.gauge, size: 40, color: Color(0xFF10B981))
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(40),
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => const Icon(LucideIcons.gauge, size: 40, color: Color(0xFF10B981)),
+                    ),
+                  )
                 )
               ),
               const SizedBox(height: 24),
