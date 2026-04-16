@@ -151,18 +151,21 @@ export default class DashboardService {
                     { key: 'role', label: 'headers.role', type: 'badge' },
                     { key: 'enabled', label: 'headers.status', type: 'boolean' }
                 ],
-                form: isSupport ? {
+                form: {
                     ...UserForms.UserCreateForm,
                     fields: UserForms.UserCreateForm.fields.map(f => {
                         if (f.name === 'role') {
                             return {
                                 ...f,
-                                options: f.options?.filter(o => o.value === 'TALLER' || o.value === 'CLIENT')
+                                options: f.options?.filter(o => {
+                                    if (o.value === 'TALLER' || o.value === 'CLIENT') return true;
+                                    return isAdmin;
+                                })
                             };
                         }
                         return f;
                     })
-                } : UserForms.UserCreateForm
+                }
             });
 
             if (hasCountryAssignment) {

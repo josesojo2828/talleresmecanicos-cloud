@@ -48,10 +48,10 @@ export const UserUpdateForm: FormStructure = {
         { name: 'lastName', label: 'user.lastName', type: 'text', gridCols: 2 },
         {
             name: 'role', label: 'user.role', type: 'select', gridCols: 2, options: [
-                { label: 'user.role.client', value: 'CLIENT' },
-                { label: 'user.role.taller', value: 'TALLER' },
-                { label: 'user.role.support', value: 'SUPPORT' },
-                { label: 'user.role.admin', value: 'ADMIN' }
+                { label: 'user.role_labels.client', value: 'CLIENT' },
+                { label: 'user.role_labels.taller', value: 'TALLER' },
+                { label: 'user.role_labels.support', value: 'SUPPORT' },
+                { label: 'user.role_labels.admin', value: 'ADMIN' }
             ]
         },
         { name: 'enabled', label: 'user.status', type: 'switch' }
