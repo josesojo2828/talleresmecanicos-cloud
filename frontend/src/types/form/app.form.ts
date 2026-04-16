@@ -129,7 +129,6 @@ export const WorkForm: FormStructure = {
             label: 'work.client_registered',
             type: 'autocomplete',
             remote: { slug: 'USER' },
-            validation: { required: false },
             placeholder: 'Selecciona un cliente o deja vacío para manual'
         },
         { name: 'clientName', label: 'headers.name_manual', type: 'text', placeholder: 'Nombre del cliente (si no está registrado)' },
