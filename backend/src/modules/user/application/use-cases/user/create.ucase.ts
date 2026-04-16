@@ -25,9 +25,10 @@ export default class CreateUserUCase extends UserModel {
                 throw new ForbiddenException('No tienes permisos para crear este tipo de usuario.');
             }
         }
-        const { email, passwordHash, firstName, lastName, phone } = data;
+        const password = data.passwordHash || (data as any).password;
+        const { email, firstName, lastName, phone } = data;
 
-        if (!passwordHash) {
+        if (!password) {
             throw new BadRequestException('El campo contraseña es requerido.');
         }
 
@@ -37,7 +38,7 @@ export default class CreateUserUCase extends UserModel {
         }
 
         const salt = await bcrypt.genSalt(10);
-        const pass = await bcrypt.hash(passwordHash, salt);
+        const pass = await bcrypt.hash(password, salt);
 
         const emailLower = data.email.toLowerCase();
         const isTaller = data.role === 'TALLER';
