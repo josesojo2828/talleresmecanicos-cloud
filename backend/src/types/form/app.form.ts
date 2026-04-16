@@ -166,6 +166,20 @@ export const WorkForm: FormStructure = {
             gridCols: 2
         },
         { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text', validation: { required: true }, gridCols: 2 },
+        { name: 'laborPrice', label: 'work.laborPrice', type: 'number', gridCols: 2 },
+        { 
+            name: 'currency', 
+            label: 'work.currency', 
+            type: 'select', 
+            options: [
+                { label: 'COP', value: 'COP' },
+                { label: 'USD', value: 'USD' },
+                { label: 'ARS', value: 'ARS' },
+                { label: 'MXN', value: 'MXN' }
+            ],
+            defaultValue: 'USD',
+            gridCols: 2
+        },
         { 
             name: 'status', 
             label: 'work.status', 

@@ -133,6 +133,19 @@ export const WorkForm: FormStructure = {
         },
         { name: 'clientName', label: 'headers.name_manual', type: 'text', placeholder: 'Nombre del cliente (si no está registrado)' },
         { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text' },
+        { name: 'laborPrice', label: 'work.laborPrice', type: 'number' },
+        { 
+            name: 'currency', 
+            label: 'work.currency', 
+            type: 'select', 
+            options: [
+                { label: 'COP', value: 'COP' },
+                { label: 'USD', value: 'USD' },
+                { label: 'ARS', value: 'ARS' },
+                { label: 'MXN', value: 'MXN' }
+            ],
+            defaultValue: 'USD'
+        },
         { 
             name: 'status', 
             label: 'headers.status', 

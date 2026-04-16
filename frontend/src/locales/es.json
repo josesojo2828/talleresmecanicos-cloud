@@ -288,7 +288,9 @@
         "client_registered": "Cliente en la Plataforma (Vincular)",
         "status": "Estado del Trabajo",
         "publicId": "ID Público",
-        "images": "Evidencia Visual"
+        "images": "Evidencia Visual",
+        "laborPrice": "Costo de Mano de Obra",
+        "currency": "Moneda"
     },
     "headers": {
         "name": "Nombre",
