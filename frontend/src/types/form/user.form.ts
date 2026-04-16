@@ -19,6 +19,7 @@ export const UserCreateForm: FormStructure = {
         {
             name: 'role', label: 'user.permission', type: 'select', validation: { required: true }, options: [
                 { label: 'user.role_labels.taller', value: 'TALLER' },
+                { label: 'user.role_labels.client', value: 'CLIENT' },
                 { label: 'user.role_labels.support', value: 'SUPPORT' }
             ]
         },

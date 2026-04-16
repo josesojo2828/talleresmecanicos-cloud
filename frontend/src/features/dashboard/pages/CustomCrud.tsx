@@ -71,7 +71,6 @@ export default function CustomCrud({
 
     const getFormStructure = (currentSlug: string): FormStructure | null => {
         const localForms: Record<string, FormStructure> = {
-            'user': UserForms.UserCreateForm, 'address': UserForms.AddressCreateForm,
             'country': RegionForms.CountryForm, 'city': RegionForms.CityForm,
             'workshop': AppForms.WorkshopForm, 'workshop-category': AppForms.WorkshopCategoryForm,
             'forum-post': AppForms.ForumPostForm, 'publication': AppForms.PublicationForm,
