@@ -40,5 +40,6 @@ export const IDefaultCityInclude: ICityIncludeType = {
 export interface ICityQueryFilter {
     name?: string;
     countryId?: string;
+    country?: string;
     enabled?: boolean;
 }

@@ -34,7 +34,7 @@ class _SupportRegionsTabState extends State<SupportRegionsTab> {
     // Carga inicial rápida desde caché local
     final cachedRegions = await _auth.getUserRegions();
     if (cachedRegions.isNotEmpty) {
-      _processAssignments(cachedRegions);
+      await _processAssignments(cachedRegions);
       setState(() => _isLoading = false);
     }
 
@@ -52,7 +52,7 @@ class _SupportRegionsTabState extends State<SupportRegionsTab> {
         // Guardar en caché para la próxima vez
         await prefs.setString('user_regions', jsonEncode(assignments));
         
-        _processAssignments(assignments);
+        await _processAssignments(assignments);
       }
     } catch (e) {
       print('Error cargando regiones: $e');
@@ -61,18 +61,47 @@ class _SupportRegionsTabState extends State<SupportRegionsTab> {
     }
   }
 
-  void _processAssignments(List<dynamic> assignments) {
-    setState(() {
-      _assignedCountries = assignments
-          .where((a) => a['country'] != null && a['city'] == null)
-          .map((a) => a['country'])
-          .toList();
-      
-      _assignedCities = assignments
-          .where((a) => a['city'] != null)
-          .map((a) => a['city'])
-          .toList();
-    });
+  Future<void> _processAssignments(List<dynamic> assignments) async {
+    final countries = assignments
+        .where((a) => a['country'] != null && a['city'] == null)
+        .map((a) => a['country'])
+        .toList();
+    
+    final explicitCities = assignments
+        .where((a) => a['city'] != null)
+        .map((a) => a['city'])
+        .toList();
+
+    List<dynamic> allCities = List.from(explicitCities);
+
+    // Si tiene países asignados, cargamos TODAS las ciudades de esos países
+    for (var country in countries) {
+      try {
+        final response = await _api.get('/public/locations/cities?countryId=${country['id']}');
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          final countryCities = data['body']?['data'] ?? data['data'] ?? [];
+          
+          for (var city in countryCities) {
+            // Evitar duplicados
+            if (!allCities.any((c) => c['id'] == city['id'])) {
+              // Añadimos info del país para el subtítulo
+              city['country_name'] = country['name'];
+              allCities.add(city);
+            }
+          }
+        }
+      } catch (e) {
+        print('Error cargando ciudades para ${country['name']}: $e');
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _assignedCountries = countries;
+        _assignedCities = allCities;
+      });
+    }
   }
 
   @override
@@ -197,7 +226,7 @@ class _SupportRegionsTabState extends State<SupportRegionsTab> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(c['name'], style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: const Color(0xFF0F172A))),
-                    Text('México', style: GoogleFonts.outfit(fontSize: 12, color: const Color(0xFF94A3B8))), // Simplificado
+                    Text(c['country_name'] ?? (c['country']?['name'] ?? 'Región'), style: GoogleFonts.outfit(fontSize: 12, color: const Color(0xFF94A3B8))),
                   ],
                 ),
                 const Spacer(),

@@ -35,10 +35,11 @@ export default class QueryCityUCase extends CityModel {
     }
 
     public async pagination({ q, user }: { q: QueryOptions<City, ICityQueryFilter>, user: any }) {
-        const { search, filters, skip, take, orderBy } = q as any;
+        const { search, filters, skip, take, orderBy, ...others } = q as any;
 
         const parsedFilters = typeof filters === 'string' ? JSON.parse(filters) : filters;
-        const baseWhere = this.getWhere(parsedFilters || {}, search);
+        const combinedFilters = { ...(parsedFilters || {}), ...others };
+        const baseWhere = this.getWhere(combinedFilters, search);
         const scope = getScopeFilter(user) as any;
         
         const finalWhere: any = { AND: [baseWhere] };

@@ -204,6 +204,11 @@ async function main() {
                     userId: tallerUser.id,
                     countryId: country.id,
                     cityId: cityMap[citySlug],
+                    logoUrl: `https://api.dicebear.com/7.x/initials/png?seed=${ws.name}&backgroundColor=10b981`,
+                    images: [
+                        `https://picsum.photos/seed/${ws.name}1/800/600`,
+                        `https://picsum.photos/seed/${ws.name}2/800/600`
+                    ],
                     slug: ws.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
                 },
             });

@@ -23,6 +23,7 @@ export default class CityModel {
 
         // 1. Filtros
         if (param.countryId) wh.push({ countryId: param.countryId });
+        if (param.country) wh.push({ country: { name: param.country } });
         if (param.enabled !== undefined) {
              const isEnabled = String(param.enabled) === 'true';
              wh.push({ enabled: isEnabled });
