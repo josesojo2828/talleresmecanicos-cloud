@@ -27,6 +27,10 @@ export default class CreateUserUCase extends UserModel {
         }
         const { email, passwordHash, firstName, lastName, phone } = data;
 
+        if (!passwordHash) {
+            throw new BadRequestException('El campo contraseña es requerido.');
+        }
+
         const existingUser = await this.findPersistence.findFirst({ where: { email } });
         if (existingUser) {
             throw new BadRequestException('User with this email already exists');
