@@ -125,10 +125,11 @@ export const WorkForm: FormStructure = {
     fields: [
         { name: 'title', label: 'headers.title', type: 'text', validation: { required: true } },
         {
-            name: 'workshopClientId',
-            label: 'headers.client',
+            name: 'clientId',
+            label: 'work.client_registered',
             type: 'autocomplete',
-            remote: { slug: 'WORKSHOP_CLIENT' },
+            remote: { slug: 'USER' },
+            validation: { required: false },
             placeholder: 'Selecciona un cliente o deja vacío para manual'
         },
         { name: 'clientName', label: 'headers.name_manual', type: 'text', placeholder: 'Nombre del cliente (si no está registrado)' },

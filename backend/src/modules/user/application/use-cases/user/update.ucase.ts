@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, ForbiddenException } from "@nestjs/common";
 import UserModel from "src/modules/user/domain/models/user.model";
 import UpdateUserPersistence from "src/modules/user/infrastructure/persistence/user/update.persistence";
 import FindUserPersistence from "src/modules/user/infrastructure/persistence/user/find.persistence";
 import { IUpdateUserDto } from "src/modules/user/application/dtos/user.dto";
 import { IUserUpdateType } from "src/modules/user/application/dtos/user.schema";
 import * as bcrypt from 'bcrypt';
+import { UserRole } from "@prisma/client";
 
 @Injectable()
 export default class UpdateUserUCase extends UserModel {
@@ -16,11 +17,22 @@ export default class UpdateUserUCase extends UserModel {
         super()
     }
 
-    public async execute({ data, id }: { data: IUpdateUserDto, id: string }) {
+    public async execute({ data, id, currentUser }: { data: IUpdateUserDto, id: string, currentUser?: any }) {
         const { email, firstName, lastName, phone, passwordHash } = data;
 
         const entity = await this.findPersistence.find({ where: { id } });
         if (!entity) throw new BadRequestException('not_found');
+
+        // Bloqueo: Soporte NO puede editar Admins ni otros Soportes
+        // Tampoco puede promover a nadie a Admin o Soporte
+        if (currentUser && currentUser.role === UserRole.SUPPORT) {
+            if (entity.role === UserRole.ADMIN || entity.role === UserRole.SUPPORT) {
+                throw new ForbiddenException('No tienes permisos para editar este tipo de usuario.');
+            }
+            if (data.role === UserRole.ADMIN || data.role === UserRole.SUPPORT) {
+                throw new ForbiddenException('No puedes promover usuarios a este rol.');
+            }
+        }
 
         const body: IUserUpdateType = {};
 

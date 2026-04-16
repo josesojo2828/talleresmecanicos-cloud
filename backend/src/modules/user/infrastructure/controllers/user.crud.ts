@@ -24,8 +24,8 @@ export class UserCrudController {
 
     @Post()
     @Roles(UserRole.ADMIN, UserRole.SUPPORT)
-    async create(@Body() body: ICreateUserDto) {
-        return await this.createUseCase.execute({ data: body });
+    async create(@Body() body: ICreateUserDto, @CurrentUser() user: any) {
+        return await this.createUseCase.execute({ data: body, currentUser: user });
     }
 
     @Patch('profile')
@@ -36,8 +36,8 @@ export class UserCrudController {
 
     @Put(':id')
     @Roles(UserRole.ADMIN, UserRole.SUPPORT)
-    async update(@Param('id') id: string, @Body() body: IUpdateUserDto) {
-        return await this.updateUseCase.execute({ data: body, id });
+    async update(@Param('id') id: string, @Body() body: IUpdateUserDto, @CurrentUser() user: any) {
+        return await this.updateUseCase.execute({ data: body, id, currentUser: user });
     }
 
     @Delete(':id')

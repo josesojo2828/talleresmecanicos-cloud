@@ -151,7 +151,18 @@ export default class DashboardService {
                     { key: 'role', label: 'headers.role', type: 'badge' },
                     { key: 'enabled', label: 'headers.status', type: 'boolean' }
                 ],
-                form: UserForms.UserCreateForm
+                form: isSupport ? {
+                    ...UserForms.UserCreateForm,
+                    fields: UserForms.UserCreateForm.fields.map(f => {
+                        if (f.name === 'role') {
+                            return {
+                                ...f,
+                                options: f.options?.filter(o => o.value === 'TALLER' || o.value === 'CLIENT')
+                            };
+                        }
+                        return f;
+                    })
+                } : UserForms.UserCreateForm
             });
 
             if (hasCountryAssignment) {

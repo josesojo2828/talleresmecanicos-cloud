@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, ForbiddenException } from "@nestjs/common";
 import UserModel from "src/modules/user/domain/models/user.model";
 import CreateUserPersistence from "src/modules/user/infrastructure/persistence/user/create.persistence";
 import FindUserPersistence from "src/modules/user/infrastructure/persistence/user/find.persistence";
 import { ICreateUserDto } from "src/modules/user/application/dtos/user.dto";
 import { PrismaService } from "src/config/prisma.service";
 import * as bcrypt from 'bcrypt';
+import { UserRole } from "@prisma/client";
 
 @Injectable()
 export default class CreateUserUCase extends UserModel {
@@ -17,7 +18,13 @@ export default class CreateUserUCase extends UserModel {
         super()
     }
 
-    public async execute({ data }: { data: ICreateUserDto }) {
+    public async execute({ data, currentUser }: { data: ICreateUserDto, currentUser?: any }) {
+        // Bloqueo: Soporte NO puede crear ni Admins ni otros Soportes
+        if (currentUser && currentUser.role === UserRole.SUPPORT) {
+            if (data.role === UserRole.ADMIN || data.role === UserRole.SUPPORT) {
+                throw new ForbiddenException('No tienes permisos para crear este tipo de usuario.');
+            }
+        }
         const { email, passwordHash, firstName, lastName, phone } = data;
 
         const existingUser = await this.findPersistence.findFirst({ where: { email } });

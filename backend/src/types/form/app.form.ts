@@ -163,7 +163,7 @@ export const WorkForm: FormStructure = {
             label: 'work.client_registered', 
             type: 'autocomplete', 
             remote: { slug: 'USER' },
-            validation: { required: true },
+            validation: { required: false },
             gridCols: 2
         },
         { name: 'vehicleLicensePlate', label: 'headers.licensePlate', type: 'text', validation: { required: true }, gridCols: 2 },

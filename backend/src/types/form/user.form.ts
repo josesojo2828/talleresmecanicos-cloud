@@ -16,9 +16,10 @@ export const UserCreateForm: FormStructure = {
         { name: 'email', label: 'user.email', type: 'email', validation: { required: true, pattern: '^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$' } },
         { name: 'phone', label: 'user.phone', type: 'text', gridCols: 2 },
         {
-            name: 'role', label: 'user.role', type: 'select', validation: { required: true }, options: [
-                { label: 'user.role.taller', value: 'TALLER' },
-                { label: 'user.role.support', value: 'SUPPORT' }
+            name: 'role', label: 'user.permission', type: 'select', validation: { required: true }, options: [
+                { label: 'user.role_labels.taller', value: 'TALLER' },
+                { label: 'user.role_labels.client', value: 'CLIENT' },
+                { label: 'user.role_labels.support', value: 'SUPPORT' }
             ]
         },
         { name: 'enabled', label: 'user.status', type: 'switch', defaultValue: true },
