@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { StatCard } from "@/components/molecules/dashboard/StatCard";
 import { DashboardChart } from "@/components/molecules/dashboard/DashboardChart";
 import { WorkshopBanner } from "@/components/organisms/dashboard/WorkshopBanner";
-import { Wrench, Calendar, Store, Loader2, TrendingUp } from "lucide-react";
+import { Wrench, Calendar, Store, Loader2, TrendingUp, Star } from "lucide-react";
 import apiClient from '@/utils/api/api.client';
 
 interface Props {
@@ -46,11 +46,17 @@ export const WorkshopStatsDetail = ({ workshopId }: Props) => {
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
                 {/* Stats & Banner Area */}
                 <div className="col-span-3 space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <StatCard 
-                            label="Trabajos Totales" 
-                            value={stats.stats?.totalWorks || 0} 
-                            icon={<Wrench size={40} />} 
+                            label="Rating Promedio" 
+                            value={stats.stats?.reviews?.average?.toFixed(1) || "0.0"} 
+                            icon={<Star size={40} className="fill-amber-500 text-amber-500" />} 
+                            colorClass="text-amber-500" 
+                        />
+                        <StatCard 
+                            label="Finanzas" 
+                            value="-" 
+                            icon={<TrendingUp size={40} />} 
                             colorClass="text-emerald-500" 
                         />
                         <StatCard 
@@ -63,7 +69,7 @@ export const WorkshopStatsDetail = ({ workshopId }: Props) => {
                             label="Publicaciones" 
                             value={stats.stats?.totalPublications || 0} 
                             icon={<Store size={40} />} 
-                            colorClass="text-amber-500" 
+                            colorClass="text-slate-500" 
                         />
                     </div>
                     

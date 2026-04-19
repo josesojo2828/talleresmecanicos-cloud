@@ -16,6 +16,7 @@ import { WorkshopSkeleton } from '@/components/atoms/Skeleton';
 import { SEO } from '@/components/atoms/SEO';
 import { Header } from '@/components/organisms/Header';
 import { Footer } from '@/components/organisms/Footer';
+import { StarRating } from '@/components/atoms/StarRating';
 
 interface Country {
    id: string;
@@ -321,6 +322,12 @@ export default function ListDirectoryClient() {
                               <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
                                  <MapPin size={14} className="text-slate-300" /> {shop.city?.name}, {shop.country?.name}
                               </p>
+                              {shop.rating !== undefined && (
+                                 <div className="flex items-center gap-2">
+                                    <StarRating rating={Math.round(shop.rating)} size={10} />
+                                    <span className="text-[9px] font-black text-amber-500 italic">({shop.rating.toFixed(1)})</span>
+                                 </div>
+                              )}
                            </div>
 
                            <div className="pt-6 border-t border-slate-50 flex items-center justify-end">

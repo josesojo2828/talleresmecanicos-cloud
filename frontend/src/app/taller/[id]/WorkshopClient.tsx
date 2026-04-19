@@ -24,6 +24,7 @@ import { getFullImagePath } from "@/utils/image";
 import { Map } from "@/components/molecules/Map";
 import { useAuthStore } from "@/store/useAuthStore";
 import { toast } from "sonner";
+import { WorkshopReviews } from "@/features/directory/components/reviews/WorkshopReviews";
 
 interface Workshop {
     id: string;
@@ -433,6 +434,11 @@ export default function WorkshopClient() {
                                     }]}
                                 />
                             </div>
+                        </section>
+
+                        {/* REVIEWS SECTION */}
+                        <section className="pt-10 border-t border-slate-100">
+                            <WorkshopReviews workshopId={workshop.id} />
                         </section>
                     </div>
                 </div>
