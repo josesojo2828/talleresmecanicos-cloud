@@ -251,4 +251,34 @@ class WorkshopService {
       return [];
     }
   }
+
+  // --- Módulo Reviews ---
+
+  Future<List<dynamic>> getWorkshopReviews(String workshopId) async {
+    try {
+      final response = await _api.get('/workshop-review/workshop/$workshopId');
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        return decoded['body']?['data'] ?? decoded['data'] ?? [];
+      }
+      return [];
+    } catch (e) {
+      print('Error cargando reviews del taller: $e');
+      return [];
+    }
+  }
+
+  Future<bool> createWorkshopReview(String workshopId, int rating, String comment) async {
+    try {
+      final response = await _api.post('/workshop-review', {
+        'workshopId': workshopId,
+        'rating': rating,
+        'comment': comment,
+      });
+      return response.statusCode == 201 || response.statusCode == 200;
+    } catch (e) {
+      print('Error creando review: $e');
+      return false;
+    }
+  }
 }

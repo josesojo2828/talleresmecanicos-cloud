@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:workshops_mobile/services/auth_service.dart';
 import 'package:workshops_mobile/widgets/kinetic_button.dart';
+import 'package:workshops_mobile/widgets/workshop_reviews_section.dart';
 
 class WorkshopDetailScreen extends StatefulWidget {
   final Map<String, dynamic> workshop;
@@ -60,6 +61,8 @@ class _WorkshopDetailScreenState extends State<WorkshopDetailScreen> {
                   const SizedBox(height: 32),
                   _buildLocationAndHours(),
                   const SizedBox(height: 40),
+                  WorkshopReviewsSection(workshopId: workshop['id']),
+                  const SizedBox(height: 60),
                 ],
               ),
             ),
