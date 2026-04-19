@@ -9,6 +9,7 @@ import { PublicationCrudController } from "./infrastructure/controllers/publicat
 import { FinanceController } from "./infrastructure/controllers/finance.controller";
 import { PublicWorkshopController } from "./infrastructure/controllers/public-workshop.controller";
 import { WorkshopClientController } from "./infrastructure/controllers/workshop-client.controller";
+import { WorkshopReviewController } from "./infrastructure/controllers/workshop-review.controller";
 
 // Use Cases
 import { WorkshopUCase } from "./application/use-cases/workshop/workshop.ucase";
@@ -16,12 +17,14 @@ import { WorkshopCategoryUCase } from "./application/use-cases/workshop-category
 import { PublicationUCase } from "./application/use-cases/publication/publication.ucase";
 import { FinanceUCase } from "./application/use-cases/finance/finance.ucase";
 import { WorkshopClientUCase } from "./application/use-cases/workshop-client.ucase";
+import { WorkshopReviewUCase } from "./application/use-cases/workshop-review/workshop-review.ucase";
 
 // Persistence
 import WorkshopPersistence from "./infrastructure/persistence/workshop/persistence";
 import WorkshopCategoryPersistence from "./infrastructure/persistence/workshop-category/persistence";
 import PublicationPersistence from "./infrastructure/persistence/publication/persistence";
 import WorkshopClientPersistence from "./infrastructure/persistence/workshop-client.persistence";
+import WorkshopReviewPersistence from "./infrastructure/persistence/workshop-review/persistence";
 
 @Module({
     imports: [],
@@ -33,6 +36,7 @@ import WorkshopClientPersistence from "./infrastructure/persistence/workshop-cli
         FinanceController,
         PublicWorkshopController,
         WorkshopClientController,
+        WorkshopReviewController,
     ],
     providers: [
         PrismaService,
@@ -53,6 +57,10 @@ import WorkshopClientPersistence from "./infrastructure/persistence/workshop-cli
         // Workshop Client
         WorkshopClientUCase,
         WorkshopClientPersistence,
+
+        // Review
+        WorkshopReviewUCase,
+        WorkshopReviewPersistence,
     ],
     exports: [
         WorkshopPersistence,

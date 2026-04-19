@@ -188,7 +188,8 @@ export class WorkshopUCase extends WorkshopModel {
             recentAppointments,
             recentWorks,
             recentPublications,
-            worksTimeline
+            worksTimeline,
+            reviewStats
         ] = await Promise.all([
             // Status breakdown
             (this.persistence as any).prisma.work.groupBy({
@@ -232,6 +233,12 @@ export class WorkshopUCase extends WorkshopModel {
                 },
                 select: { createdAt: true },
                 orderBy: { createdAt: 'asc' }
+            }),
+            // Review stats
+            (this.persistence as any).prisma.workshopReview.aggregate({
+                where: { workshopId, deletedAt: null },
+                _avg: { rating: true },
+                _count: { rating: true }
             })
         ]);
 
@@ -269,6 +276,10 @@ export class WorkshopUCase extends WorkshopModel {
                 },
                 inventory: {
                     total: inventoryCount
+                },
+                reviews: {
+                    average: (reviewStats as any)._avg.rating || 0,
+                    total: (reviewStats as any)._count.rating || 0
                 }
             },
             timeline: timelineData,

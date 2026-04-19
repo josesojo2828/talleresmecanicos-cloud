@@ -38,6 +38,7 @@ model User {
   works              Work[]
   workshopClients    WorkshopClient[]
   workshop           Workshop?
+  workshopReviews    WorkshopReview[]    @relation("UserWorkshopReviews")
 
   @@map("users")
 }
@@ -211,6 +212,7 @@ model Workshop {
   city               City                 @relation(fields: [cityId], references: [id])
   country            Country              @relation(fields: [countryId], references: [id])
   user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviews            WorkshopReview[]     @relation("WorkshopToReviews")
 
   @@map("workshops")
 }
@@ -450,4 +452,21 @@ enum WorkStatus {
   IN_PROGRESS
   COMPLETED
   DELIVERED
+}
+
+model WorkshopReview {
+  id         String   @id @default(uuid())
+  rating     Int
+  comment    String?  @db.Text
+  userId     String   @map("user_id")
+  workshopId String   @map("workshop_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  user     User     @relation("UserWorkshopReviews", fields: [userId], references: [id], onDelete: Cascade)
+  workshop Workshop @relation("WorkshopToReviews", fields: [workshopId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workshopId])
+  @@map("workshop_reviews")
 }
